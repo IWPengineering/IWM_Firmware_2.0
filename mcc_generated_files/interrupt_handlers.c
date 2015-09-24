@@ -110,6 +110,13 @@ void Timer4Handler(void)
     // To read the battery level
     
     // It should be called every 1800 s (30 minutes))
+
+    // Pick the battery channel
+    ADC1_ChannelSelect(ADC1_BATTERY_SENSOR);
+    
+    // Start sampling, then go away, the ADC interrupt will
+    //  do all of the buffering etc.
+    ADC1_Start();
 }
 
 void Timer5Handler(void)
