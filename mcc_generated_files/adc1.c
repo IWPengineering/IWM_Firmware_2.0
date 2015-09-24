@@ -214,12 +214,16 @@ void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void) {
             case ADC1_DEPTH_SENSOR :
                 ADC0Handler();
                 break;
+                /*
+                 
             case ADC1_XAXIS_ACCELEROMETER :
                 ADC15Handler();
                 break;
             case ADC1_YAXIS_ACCELEROMETER :
                 ADC11Handler();
                 break;
+                  
+                 */
             default : 
                 // Do nothing
                 break;
