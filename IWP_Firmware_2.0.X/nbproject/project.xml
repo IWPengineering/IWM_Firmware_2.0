@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>com.microchip.mplab.nbide.embedded.makeproject</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/make-project/1">
+            <name>IWP_Firmware_2.0</name>
+            <creation-uuid>34688eca-58c4-4dc9-90d7-797aeafc1bab</creation-uuid>
+            <make-project-type>0</make-project-type>
+            <c-extensions/>
+            <cpp-extensions/>
+            <header-extensions/>
+            <asminc-extensions/>
+            <make-dep-projects/>
+            <sourceEncoding>UTF-8</sourceEncoding>
+        </data>
+    </configuration>
+</project>
