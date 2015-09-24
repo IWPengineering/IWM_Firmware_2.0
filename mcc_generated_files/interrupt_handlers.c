@@ -144,8 +144,6 @@ void ADC0Handler(void)
         if (depthBufferDepth == DEPTH_BUFFER_SIZE)
             depthBufferIsFull = true;
     }
-    
-    ADC1_Stop();
 }
 
 void ADC11Handler(void)
@@ -165,9 +163,7 @@ void ADC11Handler(void)
         // with the ADC samples
         if (yAxisBufferDepth == Y_AXIS_BUFFER_SIZE)
             yAxisBufferIsFull = true;
-    }
-    
-    ADC1_Stop();
+    }   
 }
 
 void ADC12Handler(void)
@@ -188,8 +184,6 @@ void ADC12Handler(void)
         if (batteryBufferDepth == BATTERY_BUFFER_SIZE)
             batteryBufferIsFull = true;
     }
-    
-    ADC1_Stop();
 }
 
 void ADC15Handler(void)
@@ -210,6 +204,4 @@ void ADC15Handler(void)
         if (xAxisBufferDepth == X_AXIS_BUFFER_SIZE)
             xAxisBufferIsFull = true;
     }
-    
-    ADC1_Stop();
 }

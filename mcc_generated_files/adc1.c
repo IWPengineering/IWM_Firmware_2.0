@@ -204,6 +204,7 @@ void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void) {
     // Check if we finished a conversion
     if (ADC1_IsConversionComplete())
     {
+        ADC1_Stop();
         // figure out what channel the conversion was
         ADC1_CHANNEL chn = AD1CHS;
         switch (chn)
