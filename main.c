@@ -64,7 +64,7 @@ int main(void) {
         
         if(batteryBufferIsFull)
         {
-            
+            handleBatteryBufferEvent();
         }
     }
 

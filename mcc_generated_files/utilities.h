@@ -49,6 +49,13 @@ extern bool isBatteryLow;
 extern uint16_t batteryAccumulator;
 extern uint16_t batteryAccumAmt;
 
+// Volume accumulator array
+extern float volumeArray[12];
+// Longest leak rate recorded for the day
+extern float longestLeakRate;
+// Longest prime time recorded for the day
+extern float longestPrime;
+
 /*
  Private Variables
  */
