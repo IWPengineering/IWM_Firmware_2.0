@@ -32,6 +32,97 @@ bool batteryBufferIsFull = false;
 bool yAxisBufferIsFull = false;
 bool xAxisBufferIsFull = false;
 bool isMidnightPassed = false;
+bool isNetlightOn = false;
+bool isWaterPresent = false;
+
+static bool prevWPSValue = false;
+static bool prevSimNetlightValue = false;
+static bool prevSimStatusValue = false;
+
+void InitIOCInterrupt(void)
+{
+    // Set Change Notification priority to 7 (lowest))
+    IPC4bits.CNIP = 0b111;
+    
+    // Enable change notification interrupt
+    IEC1bits.CNIE = true;
+    
+    // Enable specific pins
+    CNEN1bits.CN9IE = true; // SimStatus Change
+    CNEN1bits.CN12IE = true; // SimNetlight Change
+    CNEN2bits.CN27IE = true; // WPS Change
+}
+void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void)
+{
+    // Clear the interrupt flag
+    IFS1bits.CNIF = false;
+    // Handle the interrupt
+    IOCHandler();
+}
+void IOCHandler(void)
+{
+    if (wpsMeasure_GetValue() != prevWPSValue)
+    {
+        // We must have measured a WPS event
+        UpdateWaterStatus();
+    }
+    
+    if (simNetlight_GetValue() != prevSimNetlightValue)
+    {
+        // We must have measured a Netlight event
+        UpdateNetStatus();
+    }
+    
+    if (simStatus_GetValue() != prevSimStatusValue)
+    {
+        // Sim Status changed
+        prevSimStatusValue = simStatus_GetValue();
+    }
+}
+
+void UpdateWaterStatus(void)
+{
+    TMR2_Stop();
+    // Always compare to 0
+    uint16_t periodTicks = TMR2_Counter16BitGet();
+    
+    if (periodTicks >= WaterPeriodLowBound && 
+            periodTicks <= WaterPeriodHighBound)
+    {
+        isWaterPresent = true;
+    }
+    else
+    {
+        isWaterPresent = false;
+    }
+    
+    // Set the timer back to zero
+    TMR2_Counter16BitSet(0);
+    
+    // Start it again for the next event
+    TMR2_Start();
+}
+
+void UpdateNetStatus(void)
+{
+    TMR3_Stop();
+    
+    uint16_t periodTicks = TMR3_Counter16BitGet();
+    
+    if (periodTicks >= NetlightPeriodLowBound &&
+            periodTicks <= NetlightPeriodHighBound)
+    {
+        isNetlightOn = true;
+    }
+    else
+    {
+        isNetlightOn = false;
+    }
+    
+    TMR3_Counter16BitSet(0);
+    
+    TMR3_Start();
+}
 
 /*
  NOTE: This code is blocking.

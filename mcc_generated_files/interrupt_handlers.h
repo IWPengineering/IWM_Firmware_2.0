@@ -39,6 +39,11 @@
 #define Y_AXIS_BUFFER_SIZE          8
 #define X_AXIS_BUFFER_SIZE          8
 
+#define WaterPeriodLowBound         0x0000
+#define WaterPeriodHighBound        0x0001
+#define NetlightPeriodLowBound      0x0000
+#define NetlightPeriodHighBound     0x0001
+
 extern uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 extern uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
 extern uint16_t yAxisBuffer[Y_AXIS_BUFFER_SIZE];
@@ -62,6 +67,15 @@ extern bool yAxisBufferIsFull;
 extern bool xAxisBufferIsFull;
 extern bool isMidnightPassed;
 
+extern bool isNetlightOn;
+extern bool isWaterPresent;
+
+void InitIOCInterrupt(void);
+void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void);
+void IOCHandler(void);
+
+void UpdateWaterStatus(void);
+void UpdateNetStatus(void);
 
 void Timer1Handler(void);
 void Timer4Handler(void);
