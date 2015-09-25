@@ -33,6 +33,7 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include "mcc.h"
+#include "interrupt_handlers.h"
 
 /*
  Definitions
