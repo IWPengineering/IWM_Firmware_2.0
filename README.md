@@ -18,3 +18,5 @@ Currently implemented functionality:
 7. Delay functions (delayS, delayMS, delayUS)
 8. Check RTCC Time via I2C every 1 sec. 
  	If detection fails via timeout, time remains unchanged
+9. Build UART Function to send char[]
+10. Updated main to catch midnight event and send correct chars via SIM text message
