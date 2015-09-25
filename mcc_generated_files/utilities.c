@@ -70,10 +70,31 @@ uint8_t sendUART1(uint8_t *dataPtr, uint16_t dataCnt)
 
 void turnOnSim(void)
 {
+    simVioPin_SetHigh();
+    if (!IsSimOn())
+    {
+        // If sim isn't on, set pwrkey Low
+        simPwrKey_SetLow();
+    }
     
+    while(!IsSimOn()) 
+    {
+        // Wait for the sim to come on
+    }
+    // Set PwrKey back to high
+    simPwrKey_SetHigh();
 }
 
 void turnOffSim(void)
 {
-    
+    if(IsSimOn())
+    {
+        // Assert pwrkey low to toggle
+        simPwrKey_SetLow();
+    }
+    while(IsSimOn()) 
+    {
+        // Wait for sim to turn off
+    } 
+    simPwrKey_SetHigh();
 }
