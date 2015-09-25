@@ -35,6 +35,7 @@
 #include "mcc.h"
 
 struct tm GetTime(void);
+uint8_t TwoDigitBCDToBinary(uint8_t bcdValue);
 
 // TODO Insert appropriate #include <>
 

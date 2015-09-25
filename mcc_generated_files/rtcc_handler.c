@@ -6,11 +6,14 @@
  */
 
 
+#include "xc.h"
 #include "rtcc_handler.h"
 #include "mcc.h"
+#include "interrupt_handlers.h"
 
 #define RTCC_RETRY_MAX      100
-#define RTCC_ADDRESS        0x00
+#define RTCC_WRITE_ADDRESS  0xDE
+#define RTCC_READ_ADDRESS   0xDF
 #define RTCC_TIMEOUT        50
 
 uint8_t RTCC_Read(
@@ -36,7 +39,7 @@ uint8_t RTCC_Read(
         
         while (status != I2C1_MESSAGE_FAIL)
         {
-            I2C1_MasterWrite(writeBuffer, 2, RTCC_ADDRESS, &status);
+            I2C1_MasterWrite(writeBuffer, 2, RTCC_WRITE_ADDRESS, &status);
             
             while (status == I2C1_MESSAGE_PENDING)
             {
@@ -64,7 +67,7 @@ uint8_t RTCC_Read(
             
             while (status != I2C1_MESSAGE_FAIL)
             {
-                I2C1_MasterRead(pD, 1, RTCC_ADDRESS, &status);
+                I2C1_MasterRead(pD, 1, RTCC_READ_ADDRESS, &status);
                 
                 while (status == I2C1_MESSAGE_PENDING)
                 {
@@ -123,11 +126,21 @@ struct tm GetTime(void)
         
         // We have to translate the values from their BCD
         //  to decimal values that are expected on our end
-        
+        cTime.tm_sec = TwoDigitBCDToBinary(rtcc_ret_array[0] & 0x7F); // Get rid of top bit
+        cTime.tm_min = TwoDigitBCDToBinary(rtcc_ret_array[1] & 0x7F); // Get rid of top bit
+        cTime.tm_hour = TwoDigitBCDToBinary(rtcc_ret_array[2] & 0x3F); // Get rid of top two digits
+        cTime.tm_wday = TwoDigitBCDToBinary(rtcc_ret_array[3] & 0x07);
+        cTime.tm_mday = TwoDigitBCDToBinary(rtcc_ret_array[4] & 0x3F);
+        cTime.tm_mon = TwoDigitBCDToBinary(rtcc_ret_array[5] & 0x1F);
+        cTime.tm_year = TwoDigitBCDToBinary(rtcc_ret_array[6]);
     }
     else
     {
         // We didn't find success :(
+        
+        // Set current time to whatever it was previously,
+        //  so we don't try to send a text message
+        cTime = CurrentTime;
     }
     
     /*
@@ -140,4 +153,12 @@ struct tm GetTime(void)
     */
     return cTime;
     
+}
+
+uint8_t TwoDigitBCDToBinary(uint8_t bcdValue)
+{
+    uint8_t msbBCDDigits = bcdValue >> 4;
+    uint8_t lsbBCDDigits = bcdValue & 0x0F;
+    
+    return (msbBCDDigits * 10) + lsbBCDDigits;
 }
