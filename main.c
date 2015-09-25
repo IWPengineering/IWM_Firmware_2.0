@@ -4,7 +4,7 @@
 #include "mcc_generated_files/utilities.h"
 
 #define MESSAGE_LENGTH          160
-uint8_t TextMessageString[MESSAGE_LENGTH] = {
+char TextMessageString[MESSAGE_LENGTH] = {
     0,
     0,
     0,
@@ -15,7 +15,7 @@ uint8_t TextMessageString[MESSAGE_LENGTH] = {
     0,
 };
 
-uint8_t phoneNumber[12] = "+17178211882";
+char phoneNumber[12] = "+17178211882";
 /*
                          Main application
  */
@@ -44,7 +44,7 @@ int main(void) {
             DelayMS(100); // Delay to give SIM time to switch
             sendUART1("AT+CMGS=\"", 9);
             sendUART1(phoneNumber, sizeof(phoneNumber));
-            sendUART1("\"\r\n");
+            sendUART1("\"\r\n", 5);
             DelayMS(100);
             sendUART1(TextMessageString, sizeof(TextMessageString));
             

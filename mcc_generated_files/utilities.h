@@ -57,7 +57,7 @@ bool IsSimOn(void);
 bool IsSimOnNetwork(void);
 bool IsThereWater(void);
 
-uint8_t sendUART1(uint8_t *dataPtr, uint16_t dataCnt);
+uint8_t sendUART1(char *dataPtr, uint16_t dataCnt);
 void turnOnSim(void);
 void turnOffSim(void);
 
