@@ -10,9 +10,16 @@
 #include "mcc.h"
 #include "interrupt_handlers.h"
 
+#define FCY         2000000UL // Instruction cycle frequency
+#include <libpic30.h>
+
+void DelayUS(int us)
+{
+    __delay_us(us);
+}
 void DelayMS(int ms)
 {
-    
+    __delay_ms(ms);
 }
 
 void DelayS(int s)

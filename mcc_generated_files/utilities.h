@@ -50,6 +50,7 @@
 /*
  Public Functions
  */
+void DelayUS(int us);
 void DelayMS(int ms);
 void DelayS(int sec);
 bool IsSimOn(void);
