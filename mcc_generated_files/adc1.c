@@ -51,6 +51,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <xc.h>
 #include "adc1.h"
+//#include "interrupt_handlers.h"
 #include "interrupt_handlers.h"
 
 /**
@@ -194,12 +195,14 @@ void DRV_ADC1_ChannelSelect(DRV_ADC1_CHANNEL channel) {
     ADC1_ChannelSelect(channel);
 }
 
+void ADC1_ReferenceSelect(ADC1_REFERENCE reference) {
+    AD1CON2bits.PVCFG = reference;
+}
+
 void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void) {
     // clear the ADC interrupt flag
     IFS0bits.AD1IF = false;
     
-    // Stop sampling
-    ADC1_Stop();
     
     // Check if we finished a conversion
     if (ADC1_IsConversionComplete())

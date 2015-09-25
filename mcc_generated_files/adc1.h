@@ -108,6 +108,13 @@ extern "C" {
         DRV_ADC1_XAXIS_ACCELEROMETER = 0x0F,
         DRV_ADC1_MAX_CHANNEL_COUNT = 4
     } DRV_ADC1_CHANNEL;
+    
+    typedef enum {
+        ADC1_REFERENCE_4VBG = 0b11,
+        ADC1_REFERENCE_2VBG = 0b10,
+        ADC1_REFERENCE_VREF_EXTERN = 0b01,
+        ADC1_REFERENCE_AVDD = 0b00
+    } ADC1_REFERENCE;
     /**
       Section: Interface Routines
      */
@@ -344,6 +351,9 @@ extern "C" {
      */
     void DRV_ADC1_ChannelSelect(DRV_ADC1_CHANNEL channel) __attribute__((deprecated("\nThis will be removed in future MCC releases. \nUse ADC1_ChannelSelect instead. ")));
 
+    
+    void ADC1_ReferenceSelect(ADC1_REFERENCE reference);
+    
 
 
 #ifdef __cplusplus  // Provide C++ Compatibility

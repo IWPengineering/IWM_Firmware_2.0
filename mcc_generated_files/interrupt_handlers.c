@@ -54,6 +54,9 @@ void Timer1Handler(void)
     ADC1_CHANNEL xChan = ADC1_XAXIS_ACCELEROMETER;
     ADC1_CHANNEL yChan = ADC1_YAXIS_ACCELEROMETER;
     
+    // Change our reference to VDD
+    ADC1_ReferenceSelect(ADC1_REFERENCE_AVDD);
+    
     if (!xAxisBufferIsFull)
     {
         // Set our x ADC Channel
@@ -102,6 +105,10 @@ void Timer1Handler(void)
         if (yAxisBufferDepth == Y_AXIS_BUFFER_SIZE)
             yAxisBufferIsFull = true;
     }
+    
+    // Switch the reference back to the band gap
+    ADC1_ReferenceSelect(ADC1_REFERENCE_2VBG);
+    
 
     
 }
