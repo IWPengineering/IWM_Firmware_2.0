@@ -9,9 +9,13 @@
 #include "xc.h"
 #include "mcc.h"
 #include "interrupt_handlers.h"
+#include "utilities.h"
 
 #define FCY         2000000UL // Instruction cycle frequency
 #include <libpic30.h>
+
+uint16_t batteryAccumulator = 0;
+uint16_t batteryAccumAmt = 0;
 
 void DelayUS(int us)
 {
@@ -97,4 +101,31 @@ void turnOffSim(void)
         // Wait for sim to turn off
     } 
     simPwrKey_SetHigh();
+}
+
+void handleAccelBufferEvent(void)
+{
+    // TONY: Handle a new set of accel data here
+    
+    // Data is stored in xAxisBuffer and yAxisBuffer respectively,
+    //  w/ size of X_AXIS_BUFFER_SIZE and Y_AXIS_BUFFER_SIZE
+    
+    // Reset pointer as desired for where you want samples to go in the buffer
+    //  Ptr is yAxisBufferDepth and xAxisBufferDepth. Should be set to
+    //  sizeof(xAxisBuffer && yAxisBuffer) when this event is called.
+}
+
+void handleBatteryBufferEvent(void)
+{
+    // Accumulates battery voltage for an end of day
+    //  average
+    for(int i = 0; i < BATTERY_BUFFER_SIZE; i++)
+    {
+        if(batteryBuffer[i] <= BATTERY_LOW_THRESHOLD)
+        {
+            isBatteryLow = true;
+        }
+        batteryAccumulator += batteryBuffer[i];
+        batteryAccumAmt++;
+    }
 }

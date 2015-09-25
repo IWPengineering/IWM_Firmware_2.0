@@ -38,10 +38,16 @@
 /*
  Definitions
  */
+#define BATTERY_LOW_THRESHOLD           400 // Check this value
 
 /*
  Public Variables
  */
+extern bool isBatteryLow;
+
+// Accumulates battery voltage for an end of day average
+extern uint16_t batteryAccumulator;
+extern uint16_t batteryAccumAmt;
 
 /*
  Private Variables
@@ -60,6 +66,9 @@ bool IsThereWater(void);
 uint8_t sendUART1(char *dataPtr, uint16_t dataCnt);
 void turnOnSim(void);
 void turnOffSim(void);
+
+void handleAccelBufferEvent(void);
+void handleBatteryBufferEvent(void);
 
 /*
  Private Functions

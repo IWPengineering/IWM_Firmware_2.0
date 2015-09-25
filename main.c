@@ -51,6 +51,21 @@ int main(void) {
             DelayMS(5000);
             turnOffSim();
         }
+        
+        if(xAxisBufferIsFull && yAxisBufferIsFull)
+        {
+            handleAccelBufferEvent();
+        }
+        
+        if(depthBufferIsFull)
+        {
+            
+        }
+        
+        if(batteryBufferIsFull)
+        {
+            
+        }
     }
 
     return -1;
