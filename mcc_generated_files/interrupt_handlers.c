@@ -8,6 +8,7 @@
 
 #include "xc.h"
 #include "interrupt_handlers.h"
+#include "rtcc_handler.h"
 
 uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
@@ -30,6 +31,7 @@ bool depthBufferIsFull = false;
 bool batteryBufferIsFull = false;
 bool yAxisBufferIsFull = false;
 bool xAxisBufferIsFull = false;
+bool isMidnightPassed = false;
 
 /*
  NOTE: This code is blocking.
@@ -124,6 +126,16 @@ void Timer5Handler(void)
     // This function handlers a timer interrupt
     // It occurs every 1 second, and says that
     // we need to read the RTCC over I2C
+    
+    PreviousTime = CurrentTime;
+    CurrentTime = GetTime();
+    
+    // If the day isn't the same
+    if (PreviousTime.tm_mday != CurrentTime.tm_mday)
+    {
+        // Then trigger a midnight event
+        isMidnightPassed = true;
+    }
 }
 
 void ADC0Handler(void)
