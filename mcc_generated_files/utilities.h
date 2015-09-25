@@ -80,6 +80,8 @@ uint8_t sendUART1(char *dataPtr, uint16_t dataCnt);
 void turnOnSim(void);
 void turnOffSim(void);
 
+void assembleMidnightMessage(void);
+
 void handleAccelBufferEvent(void);
 void handleBatteryBufferEvent(void);
 

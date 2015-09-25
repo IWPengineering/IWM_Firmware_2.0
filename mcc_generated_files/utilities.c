@@ -182,6 +182,11 @@ void turnOffSim(void)
     simPwrKey_SetHigh();
 }
 
+void assembleMidnightMessage(void)
+{
+    
+}
+
 float curVolume = 0;
 void handleAccelBufferEvent(void)
 {
