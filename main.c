@@ -5,7 +5,6 @@
 
 #define MESSAGE_LENGTH          160
 char TextMessageString[MESSAGE_LENGTH] = {
-    //"(\"t\":\"d\",\"d\":(\"l\":",
     '(', '"', 't', '"', ':', '"', 'd', '"', ',', '"', 'd', '"', ':', '(', '"',
     'l', '"', ':',
     '0', // Leakage
@@ -13,21 +12,18 @@ char TextMessageString[MESSAGE_LENGTH] = {
     '0',
     '.',
     '0',
-    //",\"p\":",
     ',', '"', 'p', '"', ':',
     '0', // Longest Prime
     '0',
     '.',
     '0',
     '0',
-    //",\"b\":",
     ',', '"', 'b', '"', ':', 
     '0', // Battery Voltage
     '.',
     '0',
     '0',
     '0',
-    //",\"v\":<",
     ',', '"', 'v', '"', ':',
     0x3C, // < sign 
     '0', // Volume 1
@@ -102,7 +98,6 @@ char TextMessageString[MESSAGE_LENGTH] = {
     '.',
     '0',
     ',',
-    //">))",
     '>', ')', ')'
 };
 
