@@ -66,6 +66,12 @@ extern float longestPrime;
 void DelayUS(int us);
 void DelayMS(int ms);
 void DelayS(int sec);
+// len of data must INCLUDE decimal point
+//  Cannot handle higher than 6 decimal precision due to implementation
+void floatToAscii(float value, int decimalPrecision, 
+        char *dataPtr, uint8_t dataLen);
+int numDigits(uint32_t num);
+uint32_t tenToPower(int exponent);
 bool IsSimOn(void);
 bool IsSimOnNetwork(void);
 bool IsThereWater(void);

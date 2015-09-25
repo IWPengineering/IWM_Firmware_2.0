@@ -36,6 +36,79 @@ void DelayS(int s)
 {
     DelayMS(s * 1000);
 }
+
+void floatToAscii(float value, int decimalPrecision, char *dataPtr, uint8_t dataLen)
+{
+    // multiply value by 10^precision, then load into 32 bit int
+    uint32_t endValue = 0;
+    
+    int i, multiplier = 1;
+    for (i = 0; i < decimalPrecision; i++)
+    {
+        multiplier *= 10;
+    }
+    
+    // This is int with correct decimal precision
+    endValue = (uint32_t)(value * multiplier);
+    int nDigits = numDigits(endValue);
+    
+    char *pD = dataPtr;
+    
+    for (i = 0; i < dataLen; i++)
+    {
+        if(i == (dataLen - decimalPrecision))
+            *pD = '.'; // This is the decimal point
+        else
+        {
+            uint32_t diviser = tenToPower(nDigits);
+            int value = endValue / diviser;
+            // We'll need this for the next iteration
+            endValue %= diviser;
+            
+            // Get the value of the digit
+            *pD = (char)(value + 48);
+            // Decrement numDigits when we calc a value
+            nDigits--;
+        }
+        
+        // We always have to increment the pointer
+        pD++;
+        
+    }
+    
+}
+
+// Call this to get the number of digits
+int numDigits(uint32_t num)
+{
+    if (num < 0) return 1;
+    if (num < 10) return 1;
+    if (num < 100) return 2;
+    if (num < 1000) return 3;
+    if (num < 10000) return 4;
+    if (num < 100000) return 5;
+    if (num < 1000000) return 6;
+    if (num < 10000000) return 7;
+    if (num < 100000000) return 8;
+    if (num < 1000000000) return 9;
+    
+    // If we are above 9 digits (32 bit uints go to 4,294,967,295)
+    return 10;
+}
+
+// returns 10^exponent
+uint32_t tenToPower(int exponent)
+{
+    int i;
+    uint32_t val = 1;
+    for(i = 0; i < exponent; i++)
+    {
+        val *= 10;
+    }
+    
+    return val;
+}
+
 bool IsSimOn(void)
 {
     return simStatus_GetValue();
