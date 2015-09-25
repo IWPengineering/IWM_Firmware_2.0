@@ -36,13 +36,6 @@
 
 struct tm GetTime(void);
 
-static int GetSecond(void);
-static int GetMinute(void);
-static int GetHour(void);
-static int GetDay(void);
-static int GetMonth(void);
-static int GetYear(void);
-
 // TODO Insert appropriate #include <>
 
 // TODO Insert C++ class definitions if appropriate

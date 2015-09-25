@@ -115,7 +115,7 @@ struct tm GetTime(void)
     uint16_t rtcc_cnt = 7;
     uint16_t start_addr = 0x00;
     
-    int status = RTCC_Read(start_addr, &rtcc_ret_array, rtcc_cnt);
+    int status = RTCC_Read(start_addr, rtcc_ret_array, rtcc_cnt);
     
     if (status == 1)
     {
@@ -140,34 +140,4 @@ struct tm GetTime(void)
     */
     return cTime;
     
-}
-
-static int GetSecond(void)
-{
-    return 0;
-}
-
-static int GetMinute(void)
-{
-    return 0;
-}
-
-static int GetHour(void)
-{
-    return 0;
-}
-
-static int GetDay(void)
-{
-    return 0;
-}
-
-static int GetMonth(void)
-{
-    return 0;
-}
-
-static int GetYear(void)
-{
-    return 0;
 }
