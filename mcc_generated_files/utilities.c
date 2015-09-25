@@ -40,3 +40,27 @@ bool IsThereWater(void)
 {
     return isWaterPresent;
 }
+
+uint8_t sendUART1(uint8_t *dataPtr, uint16_t dataCnt)
+{
+    // Make a pointer to work with, at the current data location
+    uint8_t *pD = dataPtr;
+    // Number of bytes that have been sent already
+    unsigned int bytesSent = 0;
+    // Status of UART state machine
+    
+    while (bytesSent < dataCnt)
+    {
+        if (!(UART1_TransferStatusGet() == UART1_TRANSFER_STATUS_TX_FULL))
+        {
+            // If the buffer is not full
+            UART1_Write(*(pD));
+            // We added a byte
+            bytesSent++;
+            // So we need to move our pointer
+            pD++;
+        }
+        
+        // We can do something else here if we want to
+    }
+}

@@ -222,13 +222,20 @@ struct tm GetTime(void)
         
         // We have to translate the values from their BCD
         //  to decimal values that are expected on our end
-        cTime.tm_sec = TwoDigitBCDToBinary(rtcc_ret_array[0] & 0x7F); // Get rid of top bit
-        cTime.tm_min = TwoDigitBCDToBinary(rtcc_ret_array[1] & 0x7F); // Get rid of top bit
-        cTime.tm_hour = TwoDigitBCDToBinary(rtcc_ret_array[2] & 0x3F); // Get rid of top two digits
-        cTime.tm_wday = TwoDigitBCDToBinary(rtcc_ret_array[3] & 0x07);
-        cTime.tm_mday = TwoDigitBCDToBinary(rtcc_ret_array[4] & 0x3F);
-        cTime.tm_mon = TwoDigitBCDToBinary(rtcc_ret_array[5] & 0x1F);
-        cTime.tm_year = TwoDigitBCDToBinary(rtcc_ret_array[6]);
+        cTime.tm_sec = TwoDigitBCDToBinary(
+                rtcc_ret_array[0] & 0x7F); // Get rid of top bit
+        cTime.tm_min = TwoDigitBCDToBinary(
+                rtcc_ret_array[1] & 0x7F); // Get rid of top bit
+        cTime.tm_hour = TwoDigitBCDToBinary(
+                rtcc_ret_array[2] & 0x3F); // Get rid of top two digits
+        cTime.tm_wday = TwoDigitBCDToBinary(
+                rtcc_ret_array[3] & 0x07);
+        cTime.tm_mday = TwoDigitBCDToBinary(
+                rtcc_ret_array[4] & 0x3F);
+        cTime.tm_mon = TwoDigitBCDToBinary(
+                rtcc_ret_array[5] & 0x1F);
+        cTime.tm_year = TwoDigitBCDToBinary(
+                rtcc_ret_array[6]);
     }
     else
     {
