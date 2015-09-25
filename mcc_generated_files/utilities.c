@@ -62,5 +62,18 @@ uint8_t sendUART1(uint8_t *dataPtr, uint16_t dataCnt)
         }
         
         // We can do something else here if we want to
+        // Like cleaning up our daily variables, etc.
     }
+    
+    return 0;
+}
+
+void turnOnSim(void)
+{
+    
+}
+
+void turnOffSim(void)
+{
+    
 }
