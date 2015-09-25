@@ -16,3 +16,5 @@ Currently implemented functionality:
 6. Check if WPS is sensing water via IOC & Frequency Counter from WPS Pin
 	Threshold not set
 7. Delay functions (delayS, delayMS, delayUS)
+8. Check RTCC Time via I2C every 1 sec. 
+ 	If detection fails via timeout, time remains unchanged
