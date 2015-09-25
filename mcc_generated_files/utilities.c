@@ -8,6 +8,7 @@
 
 #include "xc.h"
 #include "mcc.h"
+#include "interrupt_handlers.h"
 
 void DelayMS(int ms)
 {
@@ -25,10 +26,10 @@ bool IsSimOn(void)
 
 bool IsSimOnNetwork(void)
 {
-    
+    return isNetlightOn;
 }
 
 bool IsThereWater(void)
 {
-    
+    return isWaterPresent;
 }
