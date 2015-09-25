@@ -142,15 +142,7 @@ struct tm GetTime(void)
         //  so we don't try to send a text message
         cTime = CurrentTime;
     }
-    
-    /*
-    cTime.tm_sec = GetSecond();
-    cTime.tm_min = GetMinute();
-    cTime.tm_hour = GetHour();
-    cTime.tm_mday = GetDay();
-    cTime.tm_mon = GetMonth();
-    cTime.tm_year = GetYear();
-    */
+
     return cTime;
     
 }

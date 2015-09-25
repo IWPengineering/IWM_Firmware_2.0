@@ -122,6 +122,8 @@ void Timer4Handler(void)
 
     // Pick the battery channel
     ADC1_ChannelSelect(ADC1_BATTERY_SENSOR);
+    // Select 2xVBG as reference voltage
+    ADC1_ReferenceSelect(ADC1_REFERENCE_2VBG);
     
     // Start sampling, then go away, the ADC interrupt will
     //  do all of the buffering etc.
