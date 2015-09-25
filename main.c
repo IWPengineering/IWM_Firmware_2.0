@@ -46,6 +46,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "mcc_generated_files/mcc.h"
 #include "mcc_generated_files/interrupt_handlers.h"
+#include "mcc_generated_files/rtcc_handler.h"
 
 /*
                          Main application
@@ -53,6 +54,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
+    InitIOCInterrupt(); // Initialize IOC Interrupts
+    InitRTCC(); // Initialize I2C RTCC
+    
 
     while (1) {
         // Add your application code

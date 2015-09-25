@@ -34,6 +34,7 @@
 #include <xc.h> // include processor files - each processor file is guarded. 
 #include "mcc.h"
 
+void InitRTCC(void);
 struct tm GetTime(void);
 uint8_t TwoDigitBCDToBinary(uint8_t bcdValue);
 

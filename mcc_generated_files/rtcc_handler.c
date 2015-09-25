@@ -10,11 +10,24 @@
 #include "rtcc_handler.h"
 #include "mcc.h"
 #include "interrupt_handlers.h"
+#include "utilities.h"
 
 #define RTCC_RETRY_MAX      100
 #define RTCC_WRITE_ADDRESS  0xDE
 #define RTCC_READ_ADDRESS   0xDF
 #define RTCC_TIMEOUT        50
+
+// This is the time that will get programmed into
+//  the RTCC on startup
+uint8_t InitialTime[7] = {
+    0, // Sec in BCD
+    0, // Min in BCD
+    0, // Hr in BCD
+    0, // wkDay in BCD
+    0, // mnthDay in BCD
+    0, // Month in BCD
+    0, // Year in BCD
+};
 
 uint8_t RTCC_Read(
                     uint16_t address,
@@ -44,6 +57,7 @@ uint8_t RTCC_Read(
             while (status == I2C1_MESSAGE_PENDING)
             {
                 // Delay
+                DelayMS(1);
                 
                 if (slaveTimeOut == RTCC_TIMEOUT)
                     return 0;
@@ -72,6 +86,7 @@ uint8_t RTCC_Read(
                 while (status == I2C1_MESSAGE_PENDING)
                 {
                     // Delay
+                    DelayMS(1);
                     
                     if (slaveTimeOut == RTCC_TIMEOUT)
                         return 0;
@@ -101,6 +116,87 @@ uint8_t RTCC_Read(
     return 1;
 }
 
+uint8_t RTCC_Write(uint16_t dataAddress,
+        uint8_t *pData,
+        uint16_t nCount)
+{
+    I2C1_MESSAGE_STATUS status = I2C1_MESSAGE_PENDING;
+    uint8_t writeBuffer[3];
+    uint8_t *pD;
+    uint16_t counter, timeOut, slaveTimeOut;
+    
+    pD = pData;
+    
+    for (counter = 0; counter < nCount; counter++)
+    {
+        writeBuffer[0] = (dataAddress >> 8);
+        writeBuffer[1] = (uint8_t)(dataAddress);
+        
+        writeBuffer[2] = *pD;
+        
+        timeOut = 0;
+        slaveTimeOut = 0;
+        
+        while (status != I2C1_MESSAGE_FAIL)
+        {
+            I2C1_MasterWrite( writeBuffer, 3, 
+                    RTCC_WRITE_ADDRESS, &status);
+            
+            while(status == I2C1_MESSAGE_PENDING)
+            {
+                DelayMS(1);
+                if (slaveTimeOut == RTCC_TIMEOUT)
+                {
+                    return 0;
+                    break;
+                }
+                else
+                {
+                    slaveTimeOut++;
+                }
+            }
+            
+            if ((slaveTimeOut == RTCC_TIMEOUT) ||
+                    (status == I2C1_MESSAGE_COMPLETE))
+                break;
+            
+            if (timeOut == RTCC_RETRY_MAX)
+                break;
+            else
+                timeOut++;
+        }
+        
+        if (status == I2C1_MESSAGE_FAIL)
+        {
+            return 0;
+            break;
+        }
+        
+        dataAddress++;
+        pD++;
+    }
+    
+    return 1;
+}
+
+void InitRTCC(void)
+{
+    InitialTime[2] &= 0x3F; // Make sure we're in 24 hr time
+    InitialTime[3] |= 0x28; // Enable VBAT, Enable OSCRUN
+    
+    // 0x00 = Starting Address
+    int status = RTCC_Write(0x00, 
+            InitialTime, sizeof(InitialTime));
+    
+    if (status == 1)
+    {
+        // We successfully wrote the time
+    }
+    else
+    {
+        // we failed to write the time
+    }
+}
 struct tm GetTime(void)
 {
     struct tm cTime;
