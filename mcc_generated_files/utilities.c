@@ -107,7 +107,6 @@ char TextMessageString[MESSAGE_LENGTH] = {
     '0',
     '.',
     '0',
-    ',',
     '>', ')', ')'
 };
 
@@ -143,17 +142,32 @@ void updateMessageVolume(void)
 
 void updateMessageBattery(void)
 {
+    float avgBatVoltage = 0;
+    if(batteryAccumAmt != 0)
+    {
+        // Get the average battery voltage
+        //  throughout the day
+        avgBatVoltage = batteryAccumulator / 
+                batteryAccumAmt;
+    }
     
+    // Update the text message
+    //  38 is the first position of battery voltage
+    floatToAscii(avgBatVoltage, 3, TextMessageString+38, 5);
 }
 
 void updateMessagePrime(void)
 {
-    
+    // Update the text message
+    //  28 is the first digit of the prime in text message
+    floatToAscii(longestPrime, 2, TextMessageString+28, 5);
 }
 
 void updateMessageLeakage(void)
 {
-    
+    // Update the text message
+    //  18 is the first position of the leakage in text message
+    floatToAscii(longestLeakRate, 1, TextMessageString+18, 5);
 }
 
 void floatToAscii(float value, int decimalPrecision, char *dataPtr, uint8_t dataLen)
