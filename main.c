@@ -22,11 +22,14 @@ int main(void) {
         {
             // We need to send our midnight message
             turnOnSim();
-            
+            int timeOutMS = 0;
             while(!IsSimOnNetwork())
             {
+                if(timeOutMS == NETWORK_SEARCH_TIMEOUT)
+                    break; // We can't find network. IDK how to recover from this
                 // The sim is not online yet
                 DelayMS(1); // Wait to check, and resets WDT
+                timeOutMS++;
             }
             
             // Update values in text message
@@ -44,7 +47,7 @@ int main(void) {
             
             // TODO: Teach it to listen for the SIM's response on RX, and 
             //  respond appropriately.
-            DelayMS(5000);
+            DelayS(5);
             turnOffSim();
         }
         

@@ -40,6 +40,8 @@
  */
 #define BATTERY_LOW_THRESHOLD           400 // Check this value
 #define MESSAGE_LENGTH                  160
+#define NETWORK_SEARCH_TIMEOUT          300000 // Time in MS that we will keep
+                                               //  looking for network
 
 /*
  Public Variables
