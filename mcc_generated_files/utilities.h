@@ -39,10 +39,13 @@
  Definitions
  */
 #define BATTERY_LOW_THRESHOLD           400 // Check this value
+#define MESSAGE_LENGTH                  160
 
 /*
  Public Variables
  */
+extern char TextMessageString[MESSAGE_LENGTH];
+extern char phoneNumber[12];
 extern bool isBatteryLow;
 
 // Accumulates battery voltage for an end of day average
