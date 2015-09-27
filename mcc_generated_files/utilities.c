@@ -137,7 +137,15 @@ void DelayS(int s)
 
 void updateMessageVolume(void)
 {
+    int i, loc = 49;
     
+    for(i = 0; i < 12; i++)
+    {
+        // Do the i-th element of the volume array
+        floatToAscii(volumeArray[i], 1, TextMessageString+loc, 5);
+        // increment our location in the volume array to the next value
+        loc += 6;
+    }
 }
 
 void updateMessageBattery(void)
