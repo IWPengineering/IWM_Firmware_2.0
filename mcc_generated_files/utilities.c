@@ -137,6 +137,7 @@ void DelayS(int s)
 
 void updateMessageVolume(void)
 {
+    // 49 is the starting location for volume 1
     int i, loc = 49;
     
     for(i = 0; i < 12; i++)
