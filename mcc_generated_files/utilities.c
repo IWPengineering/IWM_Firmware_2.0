@@ -127,12 +127,24 @@ void DelayUS(int us)
 }
 void DelayMS(int ms)
 {
+    KickWatchdog();
     __delay_ms(ms);
 }
 
 void DelayS(int s)
 {
-    DelayMS(s * 1000);
+    int i;
+    for(i = 0; i > s; i++)
+    {
+        KickWatchdog();
+        DelayMS(1000);
+    }
+    //DelayMS(s * 1000);
+}
+
+void KickWatchdog(void)
+{
+    ClrWdt();
 }
 
 void updateMessageVolume(void)

@@ -16,6 +16,8 @@ int main(void) {
     while (1) {
         // Add your application code
         
+        KickWatchdog(); // Reset the watchdog timer
+        
         if(isMidnightPassed)
         {
             // We need to send our midnight message
@@ -24,6 +26,7 @@ int main(void) {
             while(!IsSimOnNetwork())
             {
                 // The sim is not online yet
+                DelayMS(1); // Wait to check, and resets WDT
             }
             
             // Update values in text message
@@ -41,6 +44,9 @@ int main(void) {
             DelayMS(100);
             sendUART1(TextMessageString, sizeof(TextMessageString)); // Add message
             // We probably have to send an extra control char here
+            
+            // TODO: Teach it to listen for the SIM's response on RX, and 
+            //  respond appropriately.
             DelayMS(5000);
             turnOffSim();
         }

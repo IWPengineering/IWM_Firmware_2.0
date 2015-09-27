@@ -69,6 +69,7 @@ extern float longestPrime;
 void DelayUS(int us);
 void DelayMS(int ms);
 void DelayS(int sec);
+void KickWatchdog(void);
 
 void updateMessageVolume(void);
 void updateMessageBattery(void);
