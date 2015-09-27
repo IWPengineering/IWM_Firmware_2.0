@@ -30,10 +30,7 @@ int main(void) {
             }
             
             // Update values in text message
-            updateMessageVolume();
-            updateMessageBattery();
-            updateMessagePrime();
-            updateMessageLeakage();
+            assembleMidnightMessage();
             
             // Enter text mode
             sendUART1("AT+CMGF=1/r/n", 13);
@@ -43,7 +40,7 @@ int main(void) {
             sendUART1("\"\r\n", 5); // end of phone number
             DelayMS(100);
             sendUART1(TextMessageString, sizeof(TextMessageString)); // Add message
-            // We probably have to send an extra control char here
+            // TODO: We probably have to send an extra control char here
             
             // TODO: Teach it to listen for the SIM's response on RX, and 
             //  respond appropriately.

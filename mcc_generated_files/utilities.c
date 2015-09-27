@@ -338,7 +338,10 @@ void turnOffSim(void)
 
 void assembleMidnightMessage(void)
 {
-    
+    updateMessageVolume();
+    updateMessageBattery();
+    updateMessagePrime();
+    updateMessageLeakage();
 }
 
 float curVolume = 0;
