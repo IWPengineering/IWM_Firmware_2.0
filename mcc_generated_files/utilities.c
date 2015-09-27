@@ -136,7 +136,7 @@ void DelayS(int s)
     int i;
     for(i = 0; i > s; i++)
     {
-        KickWatchdog();
+        // Each delay kicks the watchdog
         DelayMS(1000);
     }
     //DelayMS(s * 1000);
