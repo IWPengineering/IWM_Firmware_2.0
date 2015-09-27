@@ -26,15 +26,21 @@ int main(void) {
                 // The sim is not online yet
             }
             
+            // Update values in text message
+            updateMessageVolume();
+            updateMessageBattery();
+            updateMessagePrime();
+            updateMessageLeakage();
+            
             // Enter text mode
             sendUART1("AT+CMGF=1/r/n", 13);
             DelayMS(100); // Delay to give SIM time to switch
-            sendUART1("AT+CMGS=\"", 9);
-            sendUART1(phoneNumber, sizeof(phoneNumber));
-            sendUART1("\"\r\n", 5);
+            sendUART1("AT+CMGS=\"", 9); // Start sending a text
+            sendUART1(phoneNumber, sizeof(phoneNumber)); // Send phone number
+            sendUART1("\"\r\n", 5); // end of phone number
             DelayMS(100);
-            sendUART1(TextMessageString, sizeof(TextMessageString));
-            
+            sendUART1(TextMessageString, sizeof(TextMessageString)); // Add message
+            // We probably have to send an extra control char here
             DelayMS(5000);
             turnOffSim();
         }

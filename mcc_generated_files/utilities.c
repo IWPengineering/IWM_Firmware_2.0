@@ -136,6 +136,26 @@ void DelayS(int s)
     DelayMS(s * 1000);
 }
 
+void updateMessageVolume(void)
+{
+    
+}
+
+void updateMessageBattery(void)
+{
+    
+}
+
+void updateMessagePrime(void)
+{
+    
+}
+
+void updateMessageLeakage(void)
+{
+    
+}
+
 void floatToAscii(float value, int decimalPrecision, char *dataPtr, uint8_t dataLen)
 {
     // multiply value by 10^precision, then load into 32 bit int

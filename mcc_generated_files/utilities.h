@@ -69,6 +69,11 @@ extern float longestPrime;
 void DelayUS(int us);
 void DelayMS(int ms);
 void DelayS(int sec);
+
+void updateMessageVolume(void);
+void updateMessageBattery(void);
+void updateMessagePrime(void);
+void updateMessageLeakage(void);
 // len of data must INCLUDE decimal point
 //  Cannot handle higher than 6 decimal precision due to implementation
 void floatToAscii(float value, int decimalPrecision, 
