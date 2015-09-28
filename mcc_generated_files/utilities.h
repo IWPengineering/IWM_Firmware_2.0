@@ -66,8 +66,8 @@ extern float longestPrime;
  Private Variables
  */
 
-static float RadToDegrees;
-static int AdjustmentFactor;
+const static float RadToDegrees;
+const static int AdjustmentFactor;
 
 /*
  Public Functions
@@ -94,7 +94,7 @@ bool IsSimOnNetwork(void);
 bool IsThereWater(void);
 
 uint8_t sendUART1(char *dataPtr, uint16_t dataCnt);
-bool receiveUART1(char *ptr, uint16_t ptrLen);
+uint8_t receiveUART1(char *ptr, uint16_t ptrLen);
 void turnOnSim(void);
 void turnOffSim(void);
 

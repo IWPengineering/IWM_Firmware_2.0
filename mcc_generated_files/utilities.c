@@ -122,8 +122,8 @@ float volumeArray[12] = { 0 };
 float longestLeakRate = 0;
 float longestPrime = 0;
 
-static float RadToDegrees = 57.2957914; // 180 / pi()
-static int AdjustmentFactor = 2047; // 1/2 of 12 bit ADC
+const static float RadToDegrees = 57.2957914; // 180 / pi()
+const static int AdjustmentFactor = 2047; // 1/2 of 12 bit ADC
 
 void DelayUS(int us)
 {
