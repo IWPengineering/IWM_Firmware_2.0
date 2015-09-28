@@ -327,7 +327,7 @@ uint8_t sendUART1(char *dataPtr, uint16_t dataCnt)
     return 0;
 }
 
-bool receiveUART1(char *ptr, uint16_t ptrLen)
+uint8_t receiveUART1(char *ptr, uint16_t ptrLen)
 {
     if (UART1_ReceiveBufferIsEmpty())
     {
@@ -345,11 +345,12 @@ bool receiveUART1(char *ptr, uint16_t ptrLen)
             if (status & UART1_TRANSFER_STATUS_RX_DATA_PRESENT)
             {
                 *pD = (char)UART1_Read();
+                numBytes++;
                 pD++;
             }
         }
         
-        return true;
+        return numBytes;
     }
 }
 
