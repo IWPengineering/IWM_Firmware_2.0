@@ -405,6 +405,10 @@ void handleBatteryBufferEvent(void)
         {
             isBatteryLow = true;
         }
+        else
+        {
+            isBatteryLow = false;
+        }
         batteryAccumulator += batteryBuffer[i];
         batteryAccumAmt++;
     }
