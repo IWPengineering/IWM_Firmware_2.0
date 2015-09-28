@@ -397,26 +397,37 @@ void assembleMidnightMessage(void)
 bool didMessageSend(void)
 {
     char buf[8]; // Build an array to hold a response
-    uint8_t charsReceived = receiveUART1(buf, sizeof(buf));
     
-    if (charsReceived == 0)
+    // If there is something in the array
+    if(UART1_ReceiveBufferSizeGet() > 1)
     {
-        // We didn't receive anything
-        return false;
-    }
-    else
-    {
-        char *s;
-        s = strstr(buf, "OK");
-        if (s != NULL)
+        uint8_t charsReceived = receiveUART1(buf, sizeof(buf));
+
+        if (charsReceived == 0)
         {
-            return true;
+            // We didn't receive anything
+            return false;
         }
         else
         {
-            return false;
+            char *s;
+            s = strstr(buf, "OK");
+            if (s != NULL)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
+    // There is nothing in the receive buffer
+    else
+    {
+        return false;
+    }
+
 }
 
 void sendMidnightMessage(void)
