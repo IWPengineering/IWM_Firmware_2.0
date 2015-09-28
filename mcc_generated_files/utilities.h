@@ -77,7 +77,7 @@ void DelayMS(int ms);
 void DelayS(int sec);
 void KickWatchdog(void);
 
-float getHandleAngle(void);
+float getHandleAngle(uint16_t xAxis, uint16_t yAxis);
 
 void updateMessageVolume(void);
 void updateMessageBattery(void);
