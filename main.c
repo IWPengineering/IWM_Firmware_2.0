@@ -12,6 +12,12 @@ int main(void) {
     InitIOCInterrupt(); // Initialize IOC Interrupts
     InitRTCC(); // Initialize I2C RTCC
     
+    TMR1_Start();
+    TMR2_Start();
+    TMR3_Start();
+    TMR4_Start();
+    TMR5_Start();
+    
     while (1) {
         // Add your application code
         
