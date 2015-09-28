@@ -7,6 +7,7 @@
 
 
 #include "xc.h"
+#include "math.h"
 #include "mcc.h"
 #include "interrupt_handlers.h"
 #include "utilities.h"
@@ -121,6 +122,9 @@ float volumeArray[12] = { 0 };
 float longestLeakRate = 0;
 float longestPrime = 0;
 
+static float RadToDegrees = 57.2957914; // 180 / pi()
+static int AdjustmentFactor = 511;
+
 void DelayUS(int us)
 {
     __delay_us(us);
@@ -144,6 +148,25 @@ void DelayS(int s)
 void KickWatchdog(void)
 {
     ClrWdt();
+}
+
+float getHandleAngle(uint16_t xAxis, uint16_t yAxis)
+{
+    signed int xValue = xAxis - AdjustmentFactor;
+    signed int yValue = yAxis - AdjustmentFactor;
+    
+    float angle = atan2(yValue, xValue) * RadToDegrees;
+    
+    if (angle > 20)
+    {
+        angle = 20;
+    }
+    else if (angle < -30)
+    {
+        angle = -30;
+    }
+    
+    return angle;
 }
 
 void updateMessageVolume(void)

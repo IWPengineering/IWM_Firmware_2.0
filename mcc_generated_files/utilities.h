@@ -32,6 +32,7 @@
 #define	XC_HEADER_TEMPLATE_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
+#include <math.h>
 #include "mcc.h"
 #include "interrupt_handlers.h"
 
@@ -65,6 +66,9 @@ extern float longestPrime;
  Private Variables
  */
 
+static float RadToDegrees;
+static int AdjustmentFactor;
+
 /*
  Public Functions
  */
@@ -72,6 +76,8 @@ void DelayUS(int us);
 void DelayMS(int ms);
 void DelayS(int sec);
 void KickWatchdog(void);
+
+float getHandleAngle(void);
 
 void updateMessageVolume(void);
 void updateMessageBattery(void);
