@@ -88,6 +88,7 @@ bool IsSimOnNetwork(void);
 bool IsThereWater(void);
 
 uint8_t sendUART1(char *dataPtr, uint16_t dataCnt);
+bool receiveUART1(char *ptr, uint16_t ptrLen);
 void turnOnSim(void);
 void turnOffSim(void);
 

@@ -25,7 +25,7 @@ int main(void) {
             int timeOutMS = 0;
             while(!IsSimOnNetwork())
             {
-                if(timeOutMS == NETWORK_SEARCH_TIMEOUT)
+                if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
                     break; // We can't find network. IDK how to recover from this
                 // The sim is not online yet
                 DelayMS(1); // Wait to check, and resets WDT

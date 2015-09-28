@@ -139,7 +139,6 @@ void DelayS(int s)
         // Each delay kicks the watchdog
         DelayMS(1000);
     }
-    //DelayMS(s * 1000);
 }
 
 void KickWatchdog(void)
@@ -303,6 +302,32 @@ uint8_t sendUART1(char *dataPtr, uint16_t dataCnt)
     }
     
     return 0;
+}
+
+bool receiveUART1(char *ptr, uint16_t ptrLen)
+{
+    if (UART1_ReceiveBufferIsEmpty())
+    {
+        // The buffer is empty, so we aren't going to fill the ptr array
+        return false;
+    }
+    else
+    {
+        char *pD = ptr;
+        UART1_TRANSFER_STATUS status;
+        int numBytes = 0;
+        while (numBytes < ptrLen)
+        {
+            status = UART1_TransferStatusGet();
+            if (status & UART1_TRANSFER_STATUS_RX_DATA_PRESENT)
+            {
+                *pD = (char)UART1_Read();
+                pD++;
+            }
+        }
+        
+        return true;
+    }
 }
 
 void turnOnSim(void)
