@@ -12,6 +12,8 @@ int main(void) {
     InitIOCInterrupt(); // Initialize IOC Interrupts
     InitRTCC(); // Initialize I2C RTCC
     
+    _GIE();
+    
 
     while (1) {
         // Add your application code
