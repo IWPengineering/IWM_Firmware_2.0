@@ -8,6 +8,7 @@
 
 #include "xc.h"
 #include "math.h"
+#include "string.h"
 #include "mcc.h"
 #include "interrupt_handlers.h"
 #include "utilities.h"
@@ -332,7 +333,7 @@ uint8_t receiveUART1(char *ptr, uint16_t ptrLen)
     if (UART1_ReceiveBufferIsEmpty())
     {
         // The buffer is empty, so we aren't going to fill the ptr array
-        return false;
+        return 0;
     }
     else
     {
@@ -391,6 +392,64 @@ void assembleMidnightMessage(void)
     updateMessageBattery();
     updateMessagePrime();
     updateMessageLeakage();
+}
+
+bool didMessageSend(void)
+{
+    char buf[8]; // Build an array to hold a response
+    uint8_t charsReceived = receiveUART1(buf, sizeof(buf));
+    
+    if (charsReceived == 0)
+    {
+        // We didn't receive anything
+        return false;
+    }
+    else
+    {
+        char *s;
+        s = strstr(buf, "OK");
+        if (s != NULL)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+void sendMidnightMessage(void)
+{
+    // We need to send our midnight message
+    turnOnSim();
+    int timeOutMS = 0;
+    while(!IsSimOnNetwork())
+    {
+        if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
+            break; // We can't find network. IDK how to recover from this
+        // The sim is not online yet
+        DelayMS(1); // Wait to check, and resets WDT
+        timeOutMS++;
+    }
+
+    // Update values in text message
+    assembleMidnightMessage();
+
+    // Enter text mode
+    sendUART1("AT+CMGF=1/r/n", 13);
+    DelayMS(100); // Delay to give SIM time to switch
+    sendUART1("AT+CMGS=\"", 9); // Start sending a text
+    sendUART1(phoneNumber, sizeof(phoneNumber)); // Send phone number
+    sendUART1("\"\r\n", 5); // end of phone number
+    DelayMS(100);
+    sendUART1(TextMessageString, sizeof(TextMessageString)); // Add message
+    // TODO: We probably have to send an extra control char here
+
+    // TODO: Teach it to listen for the SIM's response on RX, and 
+    //  respond appropriately.
+    DelayS(5);
+    turnOffSim();
 }
 
 float curVolume = 0;

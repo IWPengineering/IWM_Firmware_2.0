@@ -33,6 +33,7 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <math.h>
+#include <string.h>
 #include "mcc.h"
 #include "interrupt_handlers.h"
 
@@ -99,6 +100,8 @@ void turnOnSim(void);
 void turnOffSim(void);
 
 void assembleMidnightMessage(void);
+bool didMessageSend(void);
+void sendMidnightMessage(void);
 
 void handleAccelBufferEvent(void);
 void handleBatteryBufferEvent(void);
