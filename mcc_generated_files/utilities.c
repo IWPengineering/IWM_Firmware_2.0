@@ -467,13 +467,16 @@ void sendMidnightMessage(void)
 }
 
 float curVolume = 0;
+bool lastEventWasPriming = false;
+float primingUpstroke = 0;
+
 void handleAccelBufferEvent(void)
 {
     // TONY: Handle a new set of accel data here
     
     // Data is stored in xAxisBuffer and yAxisBuffer respectively,
     //  w/ size of X_AXIS_BUFFER_SIZE and Y_AXIS_BUFFER_SIZE
-    int i;
+    int i, curUpstroke = 0;
     for(i = 0; i < xAxisBufferDepth; i++)
     {
         // Get the current angle
@@ -488,7 +491,8 @@ void handleAccelBufferEvent(void)
     yAxisBufferDepth = 0;
     
     // Check if our angle changed
-    if (abs(curHandleAngle - prevHandleAngle) >= 
+    // This isn't ABS because we just want upstroke
+    if ((curHandleAngle - prevHandleAngle) >= 
             HANDLE_MOVEMENT_THRESHOLD)
     {
         // The handle is moving
@@ -496,11 +500,28 @@ void handleAccelBufferEvent(void)
         {
             // There is water & the handle is moving
             // So we are pumping volume
+            
+            // Reset our priming event flag
+            lastEventWasPriming = false;
+            // Take our accumulated priming upstroke and check
+            //  if it is the new longest prime.
+            //  If it is, save it as longest prime.
+            if(upstrokeToMeters(primingUpstroke) > longestPrime)
+                longestPrime = upstrokeToMeters(primingUpstroke);
+            
+            // Accumulate handle movements in totalUpstroke
+            curUpstroke = (curHandleAngle - prevHandleAngle);
         }
         else
         {
             // The handle is moving and no water,
             // so we are priming
+            if(lastEventWasPriming)
+            {
+                primingUpstroke += (curHandleAngle - prevHandleAngle);
+            }
+            // Set our event flag, to show we were here
+            lastEventWasPriming = true;
         }
     }
     else
@@ -524,7 +545,17 @@ void handleAccelBufferEvent(void)
     curHour >>= 1; // One bit shift to divide by two
     // This makes it so we can avoid a switch case
     
-    volumeArray[curHour] += curVolume;
+    volumeArray[curHour] += upstrokeToLiters(curUpstroke);
+}
+
+float upstrokeToMeters(float upstroke)
+{
+    
+}
+
+float upstrokeToLiters(float upstroke)
+{
+    
 }
 
 void handleBatteryBufferEvent(void)
