@@ -64,19 +64,21 @@ void IOCHandler(void)
     if (wpsMeasure_GetValue() != prevWPSValue)
     {
         // We must have measured a WPS event
+        prevWPSValue = !prevWPSValue;
         UpdateWaterStatus();
     }
     
     if (simNetlight_GetValue() != prevSimNetlightValue)
     {
         // We must have measured a Netlight event
+        prevSimNetlightValue = !prevSimNetlightValue;
         UpdateNetStatus();
     }
     
     if (simStatus_GetValue() != prevSimStatusValue)
     {
         // Sim Status changed
-        prevSimStatusValue = simStatus_GetValue();
+        prevSimStatusValue = !prevSimStatusValue;
     }
 }
 
