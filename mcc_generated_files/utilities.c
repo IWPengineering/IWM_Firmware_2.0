@@ -120,11 +120,11 @@ uint16_t batteryAccumulator = 0;
 uint16_t batteryAccumAmt = 0;
 
 float volumeArray[12] = { 0 };
-float longestLeakRate = 0;
+float fastestLeakRate = 0;
 float longestPrime = 0;
 
 float curHandleAngle = 0;
-float prevHandleHangle = 0;
+float prevHandleAngle = 0;
 
 const static float RadToDegrees = 57.2957914; // 180 / pi()
 const static int AdjustmentFactor = 2047; // 1/2 of 12 bit ADC
@@ -214,7 +214,7 @@ void updateMessageLeakage(void)
 {
     // Update the text message
     //  18 is the first position of the leakage in text message
-    floatToAscii(longestLeakRate, 1, TextMessageString+18, 5);
+    floatToAscii(fastestLeakRate, 1, TextMessageString+18, 5);
 }
 
 void floatToAscii(float value, int decimalPrecision, char *dataPtr, uint8_t dataLen)
@@ -470,6 +470,7 @@ float curVolume = 0;
 bool lastEventWasPriming = false;
 bool lastEventWasLeaking = false;
 float primingUpstroke = 0;
+uint16_t leakTime = 0;
 
 void handleAccelBufferEvent(void)
 {
@@ -484,7 +485,7 @@ void handleAccelBufferEvent(void)
         float angle = getHandleAngle(xAxisBuffer[i], yAxisBuffer[i]);
         // Average angle in to curAngle
         curHandleAngle += angle;
-        curHandleAngle >>= 1; // divide by 2 to get average
+        curHandleAngle /= 2; // divide by 2 to get average
     }
     
     // Reset the ADXL buffers
@@ -538,7 +539,18 @@ void handleAccelBufferEvent(void)
             // then we are leaking
             if(lastEventWasLeaking)
             {
-                
+                // Add 10ms*sizeof(buffer) to the leak time
+                //  This is how long its been since we've been in this loop.
+                leakTime += (10 * sizeof(xAxisBuffer)); 
+            }
+            else
+            {
+                if (leakMilliSecondsToRate(leakTime) < fastestLeakRate)
+                {
+                    // If leak is less than longest, then we should record
+                    //  that, because its faster
+                    fastestLeakRate = leakMilliSecondsToRate(leakTime);
+                }
             }
             lastEventWasLeaking = true;
         }
@@ -548,6 +560,9 @@ void handleAccelBufferEvent(void)
             lastEventWasLeaking = false;
         }
     }
+    
+    // Reset our handle angle for next entry
+    prevHandleAngle = curHandleAngle;
     
     // UNDER ASSUMPTION THAT CUR VOLUME WILL BE FILLED
     //  WITH PROPER VALUE
@@ -561,12 +576,17 @@ void handleAccelBufferEvent(void)
 
 float upstrokeToMeters(float upstroke)
 {
-    
+    return 0;
 }
 
 float upstrokeToLiters(float upstroke)
 {
-    
+    return 0;
+}
+
+float leakMilliSecondsToRate(uint16_t milsec)
+{
+    return 0;
 }
 
 void handleBatteryBufferEvent(void)

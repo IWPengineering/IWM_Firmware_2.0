@@ -60,7 +60,7 @@ extern uint16_t batteryAccumAmt;
 // Volume accumulator array
 extern float volumeArray[12];
 // Longest leak rate recorded for the day
-extern float longestLeakRate;
+extern float fastestLeakRate;
 // Longest prime time recorded for the day
 extern float longestPrime;
 
@@ -110,6 +110,8 @@ void sendMidnightMessage(void);
 void handleAccelBufferEvent(void);
 
 float upstrokeToMeters(float upstroke);
+float upstrokeToLiters(float upstroke);
+float leakMilliSecondsToRate(uint16_t milsec);
 
 void handleBatteryBufferEvent(void);
 
