@@ -123,6 +123,9 @@ float volumeArray[12] = { 0 };
 float longestLeakRate = 0;
 float longestPrime = 0;
 
+float curHandleAngle = 0;
+float prevHandleHangle = 0;
+
 const static float RadToDegrees = 57.2957914; // 180 / pi()
 const static int AdjustmentFactor = 2047; // 1/2 of 12 bit ADC
 
@@ -470,13 +473,49 @@ void handleAccelBufferEvent(void)
     
     // Data is stored in xAxisBuffer and yAxisBuffer respectively,
     //  w/ size of X_AXIS_BUFFER_SIZE and Y_AXIS_BUFFER_SIZE
+    int i;
+    for(i = 0; i < xAxisBufferDepth; i++)
+    {
+        // Get the current angle
+        float angle = getHandleAngle(xAxisBuffer[i], yAxisBuffer[i]);
+        // Average angle in to curAngle
+        curHandleAngle += angle;
+        curHandleAngle >>= 1; // divide by 2 to get average
+    }
     
-    // Reset pointer as desired for where you want samples to go in the buffer
-    //  Ptr is yAxisBufferDepth and xAxisBufferDepth. Should be set to
-    //  sizeof(xAxisBuffer && yAxisBuffer) when this event is called.
+    // Reset the ADXL buffers
+    xAxisBufferDepth = 0;
+    yAxisBufferDepth = 0;
     
-    // You can also check if there is water or not using the
-    //  IsThereWater() function (returns bool)
+    // Check if our angle changed
+    if (abs(curHandleAngle - prevHandleAngle) >= 
+            HANDLE_MOVEMENT_THRESHOLD)
+    {
+        // The handle is moving
+        if(IsThereWater())
+        {
+            // There is water & the handle is moving
+            // So we are pumping volume
+        }
+        else
+        {
+            // The handle is moving and no water,
+            // so we are priming
+        }
+    }
+    else
+    {
+        // The handle is not moving
+        if(IsThereWater())
+        {
+            // If there is water and the handle is not moving
+            // then we are leaking
+        }
+        else
+        {
+            // Apparently nothing is happening.
+        }
+    }
     
     // UNDER ASSUMPTION THAT CUR VOLUME WILL BE FILLED
     //  WITH PROPER VALUE

@@ -44,6 +44,7 @@
 #define MESSAGE_LENGTH                  160
 #define NETWORK_SEARCH_TIMEOUT          300000 // Time in MS that we will keep
                                                //  looking for network
+#define HANDLE_MOVEMENT_THRESHOLD       2
 
 /*
  Public Variables
@@ -62,6 +63,9 @@ extern float volumeArray[12];
 extern float longestLeakRate;
 // Longest prime time recorded for the day
 extern float longestPrime;
+
+extern float curHandleAngle;
+extern float prevHandleAngle;
 
 /*
  Private Variables
