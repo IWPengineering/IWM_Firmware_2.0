@@ -483,7 +483,7 @@ void handleAccelBufferEvent(void)
     {
         // Get the current angle
         float angle = getHandleAngle(xAxisBuffer[i], yAxisBuffer[i]);
-        // Average angle in to curAngle
+        // Average angle in to curAngle (which starts same as prevHandleAngle)
         curHandleAngle += angle;
         curHandleAngle /= 2; // divide by 2 to get average
     }
@@ -498,6 +498,12 @@ void handleAccelBufferEvent(void)
             HANDLE_MOVEMENT_THRESHOLD)
     {
         lastEventWasLeaking = false;
+        if(leakMilliSecondsToRate(leakTime) > fastestLeakRate)
+        {
+            fastestLeakRate = leakMilliSecondsToRate(leakTime);
+            leakTime = 0;
+        }
+        
         // The handle is moving
         if(IsThereWater())
         {
@@ -545,19 +551,21 @@ void handleAccelBufferEvent(void)
             }
             else
             {
-                if (leakMilliSecondsToRate(leakTime) < fastestLeakRate)
-                {
-                    // If leak is less than longest, then we should record
-                    //  that, because its faster
-                    fastestLeakRate = leakMilliSecondsToRate(leakTime);
-                }
+                // Last event was not leaking
+                // But now it is
+                lastEventWasLeaking = true;
+                leakTime += (10 * sizeof(xAxisBuffer));
             }
-            lastEventWasLeaking = true;
         }
         else
         {
             // Apparently nothing is happening.
             lastEventWasLeaking = false;
+            if(leakMilliSecondsToRate(leakTime) > fastestLeakRate)
+            {
+                fastestLeakRate = leakMilliSecondsToRate(leakTime);
+                leakTime = 0;
+            }
         }
     }
     
