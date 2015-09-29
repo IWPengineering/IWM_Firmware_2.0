@@ -500,9 +500,9 @@ void handleAccelBufferEvent(void)
         lastEventWasLeaking = false;
         if(leakMilliSecondsToRate(leakTime) > fastestLeakRate)
         {
-            fastestLeakRate = leakMilliSecondsToRate(leakTime);
-            leakTime = 0;
+            fastestLeakRate = leakMilliSecondsToRate(leakTime);        
         }
+        leakTime = 0;
         
         // The handle is moving
         if(IsThereWater())
@@ -564,8 +564,8 @@ void handleAccelBufferEvent(void)
             if(leakMilliSecondsToRate(leakTime) > fastestLeakRate)
             {
                 fastestLeakRate = leakMilliSecondsToRate(leakTime);
-                leakTime = 0;
             }
+            leakTime = 0;
         }
     }
     
