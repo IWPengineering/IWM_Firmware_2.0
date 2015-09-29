@@ -468,6 +468,7 @@ void sendMidnightMessage(void)
 
 float curVolume = 0;
 bool lastEventWasPriming = false;
+bool lastEventWasLeaking = false;
 float primingUpstroke = 0;
 
 void handleAccelBufferEvent(void)
@@ -495,6 +496,7 @@ void handleAccelBufferEvent(void)
     if ((curHandleAngle - prevHandleAngle) >= 
             HANDLE_MOVEMENT_THRESHOLD)
     {
+        lastEventWasLeaking = false;
         // The handle is moving
         if(IsThereWater())
         {
@@ -507,9 +509,11 @@ void handleAccelBufferEvent(void)
             //  if it is the new longest prime.
             //  If it is, save it as longest prime.
             if(upstrokeToMeters(primingUpstroke) > longestPrime)
-                longestPrime = upstrokeToMeters(primingUpstroke);
+            {
+                longestPrime = upstrokeToMeters(primingUpstroke);               
+            }
             
-            // Accumulate handle movements in totalUpstroke
+            // Get our handle movements for this ADXL event
             curUpstroke = (curHandleAngle - prevHandleAngle);
         }
         else
@@ -526,15 +530,22 @@ void handleAccelBufferEvent(void)
     }
     else
     {
+        lastEventWasPriming = false;
         // The handle is not moving
         if(IsThereWater())
         {
             // If there is water and the handle is not moving
             // then we are leaking
+            if(lastEventWasLeaking)
+            {
+                
+            }
+            lastEventWasLeaking = true;
         }
         else
         {
             // Apparently nothing is happening.
+            lastEventWasLeaking = false;
         }
     }
     
