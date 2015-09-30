@@ -563,11 +563,7 @@ void handleAccelBufferEvent(void)
             HANDLE_MOVEMENT_THRESHOLD)
     {
         lastEventWasLeaking = false;
-        if(leakMilliSecondsToRate(leakTime) > fastestLeakRate)
-        {
-            fastestLeakRate = leakMilliSecondsToRate(leakTime);        
-        }
-        leakTime = 0;
+        finishCalcLeak();
         
         // The handle is moving
         if(IsThereWater())
@@ -626,11 +622,7 @@ void handleAccelBufferEvent(void)
         {
             // Apparently nothing is happening.
             lastEventWasLeaking = false;
-            if(leakMilliSecondsToRate(leakTime) > fastestLeakRate)
-            {
-                fastestLeakRate = leakMilliSecondsToRate(leakTime);
-            }
-            leakTime = 0;
+            finishCalcLeak();
         }
     }
     
@@ -660,6 +652,18 @@ float upstrokeToLiters(float upstroke)
 float leakMilliSecondsToRate(uint16_t milsec)
 {
     return 0;
+}
+
+void finishCalcLeak(void)
+{
+    if(leakMilliSecondsToRate(leakTime) > fastestLeakRate)
+    {
+        fastestLeakRate = leakMilliSecondsToRate(leakTime);
+    }
+    
+    // Somewhere in here, we should remove the leaked water
+    //  from the total volume for this time period.
+    leakTime = 0;
 }
 
 void handleBatteryBufferEvent(void)

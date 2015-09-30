@@ -110,10 +110,10 @@ bool didMessageSend(void);
 void sendMidnightMessage(void);
 
 void handleAccelBufferEvent(void);
-
 float upstrokeToMeters(float upstroke);
 float upstrokeToLiters(float upstroke);
 float leakMilliSecondsToRate(uint16_t milsec);
+void finishCalcLeak(void);
 
 void handleBatteryBufferEvent(void);
 
