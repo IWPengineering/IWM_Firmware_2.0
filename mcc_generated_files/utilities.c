@@ -119,6 +119,7 @@ bool isBatteryLow = false;
 const float MKIILiterPerDegree = .002949606; // .169 L/Rad converted to L/Deg
 // .169 L/Rad Specified in 1.0 Firmware "IWPUtilities.c"
 const float UpstrokeToMeters = 0.01287;
+const float MaxLitersToLeak = 0.01781283;
 
 uint16_t batteryAccumulator = 0;
 uint16_t batteryAccumAmt = 0;
@@ -633,15 +634,12 @@ void handleAccelBufferEvent(void)
     // Reset our handle angle for next entry
     prevHandleAngle = curHandleAngle;
     
-    // UNDER ASSUMPTION THAT CUR VOLUME WILL BE FILLED
-    //  WITH PROPER VALUE
-    
     int curHour = CurrentTime.tm_hour;
     curHour >>= 1; // One bit shift to divide by two
     // This makes it so we can avoid a switch case
     
     volumeArray[curHour] += upstrokeToLiters(curUpstroke);
-    // Subtract leaking. 10mS per sample = .01 sec/sample. Leak rate = L/sec?
+    // Subtract leaking. 10mS per sample = .01 sec/sample. Leak rate in L/sec
     // This has to be in an if statement because if the handle isn't moving we don't
     // subtract
     if(curUpstroke > 0)
@@ -668,7 +666,8 @@ float upstrokeToLiters(float upstroke)
 
 float leakMilliSecondsToRate(uint16_t milsec)
 {
-    return 0;
+    // Returns liters per second (L/s)
+    return (MaxLitersToLeak / (milsec * 1000));
 }
 
 void finishCalcLeak(void)

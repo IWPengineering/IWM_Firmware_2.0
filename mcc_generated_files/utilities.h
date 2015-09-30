@@ -54,6 +54,7 @@ extern char phoneNumber[12];
 extern bool isBatteryLow;
 extern const float MKIILiterPerDegree;
 extern const float UpstrokeToMeters;
+extern const float MaxLitersToLeak;
 
 // Accumulates battery voltage for an end of day average
 extern uint16_t batteryAccumulator;
