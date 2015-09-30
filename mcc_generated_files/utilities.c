@@ -116,8 +116,9 @@ char phoneNumber[12] = "+17178211882";
 
 bool isBatteryLow = false;
 
-float MKIILiterPerDegree = .002949606 // .169 L/Rad converted to L/Deg
+const float MKIILiterPerDegree = .002949606; // .169 L/Rad converted to L/Deg
 // .169 L/Rad Specified in 1.0 Firmware "IWPUtilities.c"
+const float UpstrokeToMeters = 0.01287;
 
 uint16_t batteryAccumulator = 0;
 uint16_t batteryAccumAmt = 0;
@@ -657,7 +658,7 @@ void handleAccelBufferEvent(void)
 
 float upstrokeToMeters(float upstroke)
 {
-    return 0;
+    return (upstroke * UpstrokeToMeters);
 }
 
 float upstrokeToLiters(float upstroke)
