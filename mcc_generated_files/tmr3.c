@@ -85,11 +85,11 @@ static TMR_OBJ tmr3_obj;
 
 
 void TMR3_Initialize(void) {
-    //TSIDL disabled; TGATE disabled; TCS FOSC/2; TCKPS 1:8; TON enabled; 
-    T3CON = 0x8010;
+    //TSIDL disabled; TGATE disabled; TCS FOSC/2; TCKPS 1:256; TON enabled; 
+    T3CON = 0x8030;
     //TMR3 0; 
     TMR3 = 0x0000;
-    //Period Value = 262.136 ms; PR3 65534; 
+    //Period Value = 8.388 s; PR3 65534; 
     PR3 = 0xFFFE;
 
 

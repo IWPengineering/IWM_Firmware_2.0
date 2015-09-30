@@ -39,10 +39,10 @@
 #define Y_AXIS_BUFFER_SIZE          8
 #define X_AXIS_BUFFER_SIZE          8
 
-#define WaterPeriodLowBound         0x0000
-#define WaterPeriodHighBound        0x0001
-#define NetlightPeriodLowBound      0x0000
-#define NetlightPeriodHighBound     0x0001
+#define WaterPeriodLowBound         250 // ~1kHz
+#define WaterPeriodHighBound        385 // ~650Hz
+#define NetlightPeriodLowBound      19500 // ~2.5 seconds
+#define NetlightPeriodHighBound     27350 // ~3.5 seconds
 
 extern uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 extern uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];

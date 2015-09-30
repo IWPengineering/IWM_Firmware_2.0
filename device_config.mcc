@@ -278,21 +278,21 @@
             <initializer comment="Get Netlight Frequency - When netlight pulses, set this timer to 0, check how high it ticks" name="Initialize">
                 <setting name="TSIDL" option="disabled" register="T3CON"/>
                 <setting name="TGATE" option="disabled" register="T3CON"/>
-                <setting name="TCKPS" option="1:8" register="T3CON"/>
+                <setting name="TCKPS" option="1:256" register="T3CON"/>
                 <setting name="TCS" option="FOSC/2" register="T3CON"/>
                 <setting name="TON" option="enabled" register="T3CON"/>
                 <setting name="TMR3" option="0" register="TMR3"/>
                 <setting name="PR3" option="65534" register="PR3"/>
                 <additionalSetting name="timerFrequency" option="2000000.0"/>
                 <additionalSetting name="tmrReloadValue" option="0"/>
-                <additionalSetting name="tmrPeriod" option="262.136 ms"/>
+                <additionalSetting name="tmrPeriod" option="8.388 s"/>
                 <additionalSetting name="tickerPeriod" option="1"/>
                 <additionalSetting name="tmrPeriodValue" option="65534"/>
-                <additionalSetting name="tickerInSec" option="262.136 ms"/>
+                <additionalSetting name="tickerInSec" option="8.388 s"/>
             </initializer>
             <setting name="TI" option="false"/>
             <setting name="tmrUpperHalf" option="0"/>
-            <file checksum="3784932584" modified="false" name="tmr3.c" path="mcc_generated_files/tmr3.c"/>
+            <file checksum="2116385929" modified="false" name="tmr3.c" path="mcc_generated_files/tmr3.c"/>
             <file checksum="4213414962" modified="false" name="tmr3.h" path="mcc_generated_files/tmr3.h"/>
         </module>
         <module generated="true" mode="TMR" name="TMR5" order="7" reloadPin="auto" type="tmr_32b">
