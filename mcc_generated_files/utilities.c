@@ -219,7 +219,8 @@ void updateMessageLeakage(void)
 {
     // Update the text message
     //  18 is the first position of the leakage in text message
-    floatToAscii(fastestLeakRate, 1, TextMessageString+18, 5);
+    //  3600 multiplier converts from L/sec to L/Hr
+    floatToAscii(fastestLeakRate * 3600, 1, TextMessageString+18, 5);
 }
 
 void floatToAscii(float value, uint8_t decimalPrecision,
