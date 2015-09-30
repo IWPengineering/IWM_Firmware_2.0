@@ -52,6 +52,7 @@
 extern char TextMessageString[MESSAGE_LENGTH];
 extern char phoneNumber[12];
 extern bool isBatteryLow;
+extern float MKIILiterPerDegree;
 
 // Accumulates battery voltage for an end of day average
 extern uint16_t batteryAccumulator;

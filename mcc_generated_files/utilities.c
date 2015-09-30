@@ -116,6 +116,9 @@ char phoneNumber[12] = "+17178211882";
 
 bool isBatteryLow = false;
 
+float MKIILiterPerDegree = .002949606 // .169 L/Rad converted to L/Deg
+// .169 L/Rad Specified in 1.0 Firmware "IWPUtilities.c"
+
 uint16_t batteryAccumulator = 0;
 uint16_t batteryAccumAmt = 0;
 
@@ -646,7 +649,7 @@ float upstrokeToMeters(float upstroke)
 
 float upstrokeToLiters(float upstroke)
 {
-    return 0;
+    return (upstroke * MKIILiterPerDegree);
 }
 
 float leakMilliSecondsToRate(uint16_t milsec)
