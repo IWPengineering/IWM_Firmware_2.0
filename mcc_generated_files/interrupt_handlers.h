@@ -73,6 +73,8 @@ extern bool isWaterPresent;
 void InitIOCInterrupt(void);
 void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void);
 void IOCHandler(void);
+void TurnOffWPSIOC(void);
+void TurnOnWPSIOC(void);
 
 void UpdateWaterStatus(void);
 void UpdateNetStatus(void);

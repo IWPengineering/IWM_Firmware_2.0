@@ -86,6 +86,16 @@ void IOCHandler(void)
     }
 }
 
+void TurnOffWPSIOC(void)
+{
+    CNEN2bits.CN27IE = false;
+}
+
+void TurnOnWPSIOC(void)
+{
+    CNEN2bits.CN27IE = true;
+}
+
 void UpdateWaterStatus(void)
 {
     TMR2_Stop();
