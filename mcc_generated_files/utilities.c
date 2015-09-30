@@ -312,6 +312,15 @@ uint32_t tenToPower(int exponent)
  */
 bool isNumberTooBig(uint32_t value, uint8_t dataLen)
 {
+    // if value < 10^(dataLen-2): we're checking if value won't fit
+    //  within the bounds of dataLen.
+    // Example: 12.2345 w/ prec 2 dataLen 6 will hand this function
+    //  122345. We have 6 locations and 2 decimal precision, so without
+    //  padding 0's on the front, we would return 122.34 from floatToAscii.
+    // This function helps floatToAscii by telling it that we need to pad
+    //  a zero, and thus return 012.23 in our dataLen of 6.
+    // dataLen would be -1 logically, but -2 keeps the decimal point
+    // which is carried through floatToAscii in dataLen.
     if(value < tenToPower(dataLen-2))
     {
         return true;
@@ -328,6 +337,13 @@ bool isNumberTooBig(uint32_t value, uint8_t dataLen)
  */
 bool isBinTooSmall(float value, uint8_t prec, uint8_t len)
 {
+    // If value is greater than 10^(dataLen - prec+1 (+1 due to decimal point))
+    // , then we know
+    //  that the bin is too small (ie. we have to increase len or dec prec).
+    // This function helps floatToAscii by detecting a condition where
+    //  we need to reduce the precision to fit the desired float into the bin.
+    // Its important because we don't always know the order of magnitude of
+    //  the float that is passed to floatToAscii.
     if(value > tenToPower(len - (prec + 1)))
     {
         return true;
