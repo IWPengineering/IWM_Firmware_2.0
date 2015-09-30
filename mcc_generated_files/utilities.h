@@ -90,7 +90,7 @@ void updateMessagePrime(void);
 void updateMessageLeakage(void);
 // len of data must INCLUDE decimal point
 //  Cannot handle higher than 6 decimal precision due to implementation
-void floatToAscii(float value, int decimalPrecision, 
+void floatToAscii(float value, uint8_t decimalPrecision, 
         char *dataPtr, uint8_t dataLen);
 int numDigits(uint32_t num);
 uint32_t tenToPower(int exponent);
