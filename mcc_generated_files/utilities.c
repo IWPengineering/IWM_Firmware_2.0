@@ -217,30 +217,41 @@ void updateMessageLeakage(void)
     floatToAscii(fastestLeakRate, 1, TextMessageString+18, 5);
 }
 
-void floatToAscii(float value, int decimalPrecision, char *dataPtr, uint8_t dataLen)
+void floatToAscii(float value, uint8_t decimalPrecision,
+        char *dataPtr, uint8_t dataLen)
 {
     // multiply value by 10^precision, then load into 32 bit int
-    uint32_t endValue = 0;
-    
-    int i, multiplier = 1;
-    for (i = 0; i < decimalPrecision; i++)
-    {
-        multiplier *= 10;
-    }
+    uint32_t endValue;
     
     // This is int with correct decimal precision
-    endValue = (uint32_t)(value * multiplier);
+    endValue = (uint32_t)(value * tenToPower(decimalPrecision));
     int nDigits = numDigits(endValue);
     
     char *pD = dataPtr;
     
+    while(isBinTooSmall(value, decimalPrecision, dataLen))
+    {
+        decimalPrecision--;
+    }
+    
+    while(isNumberTooBig(endValue, dataLen))
+    {
+        // If number is too big, put a zero in front
+        *pD = '0';
+        // move ptr
+        pD++;
+        // Reduce dataLen to compensate
+        dataLen--;
+    }
+    
+    int i;
     for (i = 0; i < dataLen; i++)
     {
-        if(i == (dataLen - decimalPrecision))
+        if(i + 1 == (dataLen - decimalPrecision))
             *pD = '.'; // This is the decimal point
         else
         {
-            uint32_t diviser = tenToPower(nDigits);
+            uint32_t diviser = tenToPower(nDigits - 1);
             int value = endValue / diviser;
             // We'll need this for the next iteration
             endValue %= diviser;
@@ -287,6 +298,30 @@ uint32_t tenToPower(int exponent)
     }
     
     return val;
+}
+
+bool isNumberTooBig(uint32_t value, uint8_t dataLen)
+{
+    if(value < tenToPower(dataLen-2))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool isBinTooSmall(float value, uint8_t prec, uint8_t len)
+{
+    if(value > tenToPower(len - (prec + 1)))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool IsSimOn(void)

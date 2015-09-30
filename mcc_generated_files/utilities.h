@@ -94,6 +94,8 @@ void floatToAscii(float value, int decimalPrecision,
         char *dataPtr, uint8_t dataLen);
 int numDigits(uint32_t num);
 uint32_t tenToPower(int exponent);
+bool isNumberTooBig(uint32_t value, uint8_t dataLen);
+bool isBinTooSmall(float value, uint8_t prec, uint8_t len);
 bool IsSimOn(void);
 bool IsSimOnNetwork(void);
 bool IsThereWater(void);
