@@ -269,7 +269,13 @@ void floatToAscii(float value, uint8_t decimalPrecision,
     
 }
 
-// Call this to get the number of digits
+/*
+ Function: numDigits
+ Params: num
+    uint32_t num: value to get number of digits of
+ Return: int
+    Returns number of digits in num
+ */
 int numDigits(uint32_t num)
 {
     if (num < 0) return 1;
@@ -300,6 +306,10 @@ uint32_t tenToPower(int exponent)
     return val;
 }
 
+/*
+ Checks if value is too big for dataLen
+ This function is used in floatToAscii
+ */
 bool isNumberTooBig(uint32_t value, uint8_t dataLen)
 {
     if(value < tenToPower(dataLen-2))
@@ -312,6 +322,10 @@ bool isNumberTooBig(uint32_t value, uint8_t dataLen)
     }
 }
 
+/*
+ Checks if value has too much precision to fit in len
+ This function is used in float to Ascii
+ */
 bool isBinTooSmall(float value, uint8_t prec, uint8_t len)
 {
     if(value > tenToPower(len - (prec + 1)))
