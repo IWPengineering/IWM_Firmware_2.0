@@ -640,6 +640,19 @@ void handleAccelBufferEvent(void)
     // This makes it so we can avoid a switch case
     
     volumeArray[curHour] += upstrokeToLiters(curUpstroke);
+    // Subtract leaking. 10mS per sample = .01 sec/sample. Leak rate = L/sec?
+    // This has to be in an if statement because if the handle isn't moving we don't
+    // subtract
+    if(curUpstroke > 0)
+    {
+        float leakAmount = (fastestLeakRate * sizeof(xAxisBuffer)) / 100;
+        // If it is leaking faster than pumping, there is no volume
+        if(leakAmount > upstrokeToLiters(curUpstroke))
+        {
+            leakAmount = upstrokeToLiters(curUpstroke);
+        }
+        volumeArray[curHour] -= ((fastestLeakRate * sizeof(xAxisBuffer)) / 100);
+    }       
 }
 
 float upstrokeToMeters(float upstroke)
