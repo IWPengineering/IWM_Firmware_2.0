@@ -13,13 +13,9 @@
 
 uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
-uint16_t yAxisBuffer[Y_AXIS_BUFFER_SIZE];
-uint16_t xAxisBuffer[X_AXIS_BUFFER_SIZE];
 
 uint8_t depthBufferDepth = 0;
 uint8_t batteryBufferDepth = 0;
-uint8_t yAxisBufferDepth = 0;
-uint8_t xAxisBufferDepth = 0;
 
 struct tm PreviousTime;
 struct tm CurrentTime;
@@ -257,26 +253,6 @@ void ADC0Handler(void)
     }
 }
 
-void ADC11Handler(void)
-{
-    if (yAxisBufferDepth == Y_AXIS_BUFFER_SIZE)
-    {
-        yAxisBufferIsFull = true;
-    }
-    else
-    {
-        // Save the ADC's information
-        yAxisBuffer[yAxisBufferDepth] = ADC1_ConversionResultGet();
-        // Increment where we are
-        yAxisBufferDepth++;
-        
-        // Set a flag for the main processor to do what it wants
-        // with the ADC samples
-        if (yAxisBufferDepth == Y_AXIS_BUFFER_SIZE)
-            yAxisBufferIsFull = true;
-    }   
-}
-
 void ADC12Handler(void)
 {
     if (batteryBufferDepth == BATTERY_BUFFER_SIZE)
@@ -294,25 +270,5 @@ void ADC12Handler(void)
         // with the ADC samples
         if (batteryBufferDepth == BATTERY_BUFFER_SIZE)
             batteryBufferIsFull = true;
-    }
-}
-
-void ADC15Handler(void)
-{
-    if (xAxisBufferDepth == X_AXIS_BUFFER_SIZE)
-    {
-        xAxisBufferIsFull = true;
-    }
-    else
-    {
-        // Save the ADC's information
-        xAxisBuffer[xAxisBufferDepth] = ADC1_ConversionResultGet();
-        // Increment where we are
-        xAxisBufferDepth++;
-        
-        // Set a flag for the main processor to do what it wants
-        // with the ADC samples
-        if (xAxisBufferDepth == X_AXIS_BUFFER_SIZE)
-            xAxisBufferIsFull = true;
     }
 }

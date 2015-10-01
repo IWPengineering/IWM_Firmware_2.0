@@ -29,11 +29,6 @@ int main(void) {
             sendMidnightMessage();
         }
         
-        if(xAxisBufferIsFull && yAxisBufferIsFull)
-        {
-            handleAccelBufferEvent();
-        }
-        
         if(!IsQueueEmpty(&xQueue) && !IsQueueEmpty(&yQueue))
         {
             processAccelQueue();

@@ -48,13 +48,9 @@
 
 extern uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 extern uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
-extern uint16_t yAxisBuffer[Y_AXIS_BUFFER_SIZE];
-extern uint16_t xAxisBuffer[X_AXIS_BUFFER_SIZE];
 
 extern uint8_t depthBufferDepth;
 extern uint8_t batteryBufferDepth;
-extern uint8_t yAxisBufferDepth;
-extern uint8_t xAxisBufferDepth;
 
 extern struct tm PreviousTime;
 extern struct tm CurrentTime;

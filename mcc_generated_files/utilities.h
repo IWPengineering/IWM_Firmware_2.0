@@ -122,11 +122,9 @@ void sendMidnightMessage(void);
 void processAccelQueue(void);
 pumping_state GetPumpingState(float curAngle, float prevAngle);
 void AccumulateVolume(float angleDelta);
-void handleAccelBufferEvent(void);
 float upstrokeToMeters(float upstroke);
 float upstrokeToLiters(float upstroke);
 float leakMilliSecondsToRate(uint16_t milsec);
-void finishCalcLeak(void);
 
 void handleBatteryBufferEvent(void);
 
