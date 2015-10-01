@@ -42,6 +42,14 @@ typedef struct {
     int cnt;
 } queue;
 
+typedef struct {
+    float *contents;
+    int front;
+    int back;
+    int maxSize;
+    int cnt;
+} floatqueue;
+
 bool InitQueue(queue *queueP, uint8_t queueSize);
 bool DestroyQueue(queue *queueP);
 bool IsQueueEmpty(queue *queueP);
@@ -49,6 +57,15 @@ bool IsQueueFull(queue *queueP);
 bool ClearQueue(queue *queueP);
 bool PushQueue(queue *queueP, uint16_t element);
 uint16_t PullQueue(queue *queueP);
+
+bool InitFloatQueue(floatqueue *queueP, uint8_t queueSize);
+bool DestroyFloatQueue(floatqueue *queueP);
+bool IsFloatQueueEmpty(floatqueue *queueP);
+bool IsFloatQueueFull(floatqueue *queueP);
+bool ClearFloatQueue(floatqueue *queueP);
+bool PushFloatQueue(floatqueue *queueP, float element);
+float PullFloatQueue(floatqueue *queueP);
+float AverageFloatQueueElements(floatqueue *queueP);
 
 
 

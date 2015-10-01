@@ -46,6 +46,13 @@
                                                //  looking for network
 #define HANDLE_MOVEMENT_THRESHOLD       5
 
+typedef enum {
+            PRIMING,
+            EXTRACTING_VOLUME,
+            LEAKING,
+            NO_ACTION
+} pumping_state;
+
 /*
  Public Variables
  */
@@ -113,6 +120,7 @@ bool didMessageSend(void);
 void sendMidnightMessage(void);
 
 void processAccelQueue(void);
+pumping_state GetPumpingState(float curAngle, float prevAngle);
 void handleAccelBufferEvent(void);
 float upstrokeToMeters(float upstroke);
 float upstrokeToLiters(float upstroke);

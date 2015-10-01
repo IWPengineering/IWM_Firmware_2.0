@@ -542,6 +542,11 @@ void processAccelQueue(void)
     
 }
 
+pumping_state GetPumpingState(float curAngle, float prevAngle)
+{
+    
+}
+
 float curVolume = 0;
 bool lastEventWasPriming = false;
 bool lastEventWasLeaking = false;
