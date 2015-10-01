@@ -557,6 +557,8 @@ void ResetAccumulators(void)
     memset(volumeArray, 0, sizeof(volumeArray));
     fastestLeakRate = 0;
     longestPrime = 0;
+    batteryAccumulator = 0;
+    batteryAccumAmt = 0;
 }
 
 static float curAngle;
