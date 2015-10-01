@@ -128,9 +128,6 @@ float volumeArray[12] = { 0 };
 float fastestLeakRate = 0;
 float longestPrime = 0;
 
-float curHandleAngle = 0;
-float prevHandleAngle = 0;
-
 const static float RadToDegrees = 57.2957914; // 180 / pi()
 const static int AdjustmentFactor = 2047; // 1/2 of 12 bit ADC
 
@@ -551,6 +548,15 @@ void sendMidnightMessage(void)
     // Regardless of if it sends, we have to turn off
     //  the SIM to conserve power.
     turnOffSim();
+    
+    ResetAccumulators();
+}
+
+void ResetAccumulators(void)
+{
+    memset(volumeArray, 0, sizeof(volumeArray));
+    fastestLeakRate = 0;
+    longestPrime = 0;
 }
 
 static float curAngle;

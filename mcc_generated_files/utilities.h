@@ -75,9 +75,6 @@ extern float fastestLeakRate;
 // Longest prime time recorded for the day
 extern float longestPrime;
 
-extern float curHandleAngle;
-extern float prevHandleAngle;
-
 /*
  Private Variables
  */
@@ -119,6 +116,7 @@ void turnOffSim(void);
 void assembleMidnightMessage(void);
 bool didMessageSend(void);
 void sendMidnightMessage(void);
+void ResetAccumulators(void);
 
 void processAccelQueue(void);
 pumping_state GetPumpingState(float curAngle, float prevAngle);
