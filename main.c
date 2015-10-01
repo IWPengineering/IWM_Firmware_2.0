@@ -30,10 +30,10 @@ int main(void) {
             sendMidnightMessage();
         }
         
-        if(!stackIsEmpty(&xAxisStack) && !stackIsEmpty(&yAxisStack))
+        if(xAxisBufferIsFull && yAxisBufferIsFull)
         {
-            handleAccelBuffer();
-        }        
+            handleAccelBufferEvent();
+        }
         
         if(depthBufferIsFull)
         {

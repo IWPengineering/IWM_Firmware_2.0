@@ -269,8 +269,10 @@ void floatToAscii(float value, uint8_t decimalPrecision,
         }
         
         // We always have to increment the pointer
-        pD++;   
-    }   
+        pD++;
+        
+    }
+    
 }
 
 /*
@@ -541,122 +543,117 @@ bool lastEventWasLeaking = false;
 float primingUpstroke = 0;
 uint16_t leakTime = 0;
 
-void handleAccelBuffer(void)
+void handleAccelBufferEvent(void)
 {
-    // Event occurs when x and y stack are not empty
+    // TONY: Handle a new set of accel data here
     
+    // Data is stored in xAxisBuffer and yAxisBuffer respectively,
+    //  w/ size of X_AXIS_BUFFER_SIZE and Y_AXIS_BUFFER_SIZE
+    int i, curUpstroke = 0;
+    for(i = 0; i < xAxisBufferDepth; i++)
+    {
+        // Get the current angle
+        float angle = getHandleAngle(xAxisBuffer[i], yAxisBuffer[i]);
+        // Average angle in to curAngle (which starts same as prevHandleAngle)
+        curHandleAngle += angle;
+        curHandleAngle /= 2; // divide by 2 to get average
+    }
+    
+    // Reset the ADXL buffers
+    xAxisBufferDepth = 0;
+    yAxisBufferDepth = 0;
+    
+    // Check if our angle changed
+    // This isn't ABS because we just want upstroke
+    if ((curHandleAngle - prevHandleAngle) >= 
+            HANDLE_MOVEMENT_THRESHOLD)
+    {
+        lastEventWasLeaking = false;
+        finishCalcLeak();
+        
+        // The handle is moving
+        if(IsThereWater())
+        {
+            // There is water & the handle is moving
+            // So we are pumping volume
+            
+            // Reset our priming event flag
+            lastEventWasPriming = false;
+            // Take our accumulated priming upstroke and check
+            //  if it is the new longest prime.
+            //  If it is, save it as longest prime.
+            if(upstrokeToMeters(primingUpstroke) > longestPrime)
+            {
+                longestPrime = upstrokeToMeters(primingUpstroke);               
+            }
+            
+            // Get our handle movements for this ADXL event
+            curUpstroke = (curHandleAngle - prevHandleAngle);
+        }
+        else
+        {
+            // The handle is moving and no water,
+            // so we are priming
+            if(lastEventWasPriming)
+            {
+                primingUpstroke += (curHandleAngle - prevHandleAngle);
+            }
+            // Set our event flag, to show we were here
+            lastEventWasPriming = true;
+        }
+    }
+    else
+    {
+        lastEventWasPriming = false;
+        // The handle is not moving
+        if(IsThereWater())
+        {
+            // If there is water and the handle is not moving
+            // then we are leaking
+            if(lastEventWasLeaking)
+            {
+                // Add 10ms*sizeof(buffer) to the leak time
+                //  This is how long its been since we've been in this loop.
+                leakTime += (10 * sizeof(xAxisBuffer)); 
+            }
+            else
+            {
+                // Last event was not leaking
+                // But now it is
+                lastEventWasLeaking = true;
+                leakTime += (10 * sizeof(xAxisBuffer));
+            }
+        }
+        else
+        {
+            // Apparently nothing is happening.
+            lastEventWasLeaking = false;
+            finishCalcLeak();
+        }
+    }
+    
+    // Reset our handle angle for next entry
+    prevHandleAngle = curHandleAngle;
+    
+    int curHour = CurrentTime.tm_hour;
+    curHour >>= 1; // One bit shift to divide by two
+    // This makes it so we can avoid a switch case
+    
+    volumeArray[curHour] += upstrokeToLiters(curUpstroke);
+    // Subtract leaking. 10mS per sample = .01 sec/sample. Leak rate in L/sec
+    // This has to be in an if statement because if the handle isn't moving we don't
+    // subtract
+    if(curUpstroke > 0)
+    {
+        float leakAmount = (fastestLeakRate * sizeof(xAxisBuffer)) / 100;
+        // If it is leaking faster than pumping, there is no volume
+        if(leakAmount > upstrokeToLiters(curUpstroke))
+        {
+            leakAmount = upstrokeToLiters(curUpstroke);
+        }
+        volumeArray[curHour] -= ((fastestLeakRate * sizeof(xAxisBuffer)) / 100);
+    }       
 }
-//void handleAccelBufferEvent(void)
-//{
-//    // TONY: Handle a new set of accel data here
-//    
-//    // Data is stored in xAxisBuffer and yAxisBuffer respectively,
-//    //  w/ size of X_AXIS_BUFFER_SIZE and Y_AXIS_BUFFER_SIZE
-//    int i, curUpstroke = 0;
-//    for(i = 0; i < xAxisBufferDepth; i++)
-//    {
-//        // Get the current angle
-//        float angle = getHandleAngle(xAxisBuffer[i], yAxisBuffer[i]);
-//        // Average angle in to curAngle (which starts same as prevHandleAngle)
-//        curHandleAngle += angle;
-//        curHandleAngle /= 2; // divide by 2 to get average
-//    }
-//    
-//    // Reset the ADXL buffers
-//    xAxisBufferDepth = 0;
-//    yAxisBufferDepth = 0;
-//    
-//    // Check if our angle changed
-//    // This isn't ABS because we just want upstroke
-//    if ((curHandleAngle - prevHandleAngle) >= 
-//            HANDLE_MOVEMENT_THRESHOLD)
-//    {
-//        lastEventWasLeaking = false;
-//        finishCalcLeak();
-//        
-//        // The handle is moving
-//        if(IsThereWater())
-//        {
-//            // There is water & the handle is moving
-//            // So we are pumping volume
-//            
-//            // Reset our priming event flag
-//            lastEventWasPriming = false;
-//            // Take our accumulated priming upstroke and check
-//            //  if it is the new longest prime.
-//            //  If it is, save it as longest prime.
-//            if(upstrokeToMeters(primingUpstroke) > longestPrime)
-//            {
-//                longestPrime = upstrokeToMeters(primingUpstroke);               
-//            }
-//            
-//            // Get our handle movements for this ADXL event
-//            curUpstroke = (curHandleAngle - prevHandleAngle);
-//        }
-//        else
-//        {
-//            // The handle is moving and no water,
-//            // so we are priming
-//            if(lastEventWasPriming)
-//            {
-//                primingUpstroke += (curHandleAngle - prevHandleAngle);
-//            }
-//            // Set our event flag, to show we were here
-//            lastEventWasPriming = true;
-//        }
-//    }
-//    else
-//    {
-//        lastEventWasPriming = false;
-//        // The handle is not moving
-//        if(IsThereWater())
-//        {
-//            // If there is water and the handle is not moving
-//            // then we are leaking
-//            if(lastEventWasLeaking)
-//            {
-//                // Add 10ms*sizeof(buffer) to the leak time
-//                //  This is how long its been since we've been in this loop.
-//                leakTime += (10 * sizeof(xAxisBuffer)); 
-//            }
-//            else
-//            {
-//                // Last event was not leaking
-//                // But now it is
-//                lastEventWasLeaking = true;
-//                leakTime += (10 * sizeof(xAxisBuffer));
-//            }
-//        }
-//        else
-//        {
-//            // Apparently nothing is happening.
-//            lastEventWasLeaking = false;
-//            finishCalcLeak();
-//        }
-//    }
-//    
-//    // Reset our handle angle for next entry
-//    prevHandleAngle = curHandleAngle;
-//    
-//    int curHour = CurrentTime.tm_hour;
-//    curHour >>= 1; // One bit shift to divide by two
-//    // This makes it so we can avoid a switch case
-//    
-//    volumeArray[curHour] += upstrokeToLiters(curUpstroke);
-//    // Subtract leaking. 10mS per sample = .01 sec/sample. Leak rate in L/sec
-//    // This has to be in an if statement because if the handle isn't moving we don't
-//    // subtract
-//    if(curUpstroke > 0)
-//    {
-//        float leakAmount = (fastestLeakRate * sizeof(xAxisBuffer)) / 100;
-//        // If it is leaking faster than pumping, there is no volume
-//        if(leakAmount > upstrokeToLiters(curUpstroke))
-//        {
-//            leakAmount = upstrokeToLiters(curUpstroke);
-//        }
-//        volumeArray[curHour] -= ((fastestLeakRate * sizeof(xAxisBuffer)) / 100);
-//    }       
-//}
 
 float upstrokeToMeters(float upstroke)
 {
