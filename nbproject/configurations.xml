@@ -51,6 +51,8 @@
       <itemPath>mcc_generated_files/rtcc_handler.h</itemPath>
       <itemPath>mcc_generated_files/utilities.h</itemPath>
       <itemPath>mcc_generated_files/utilities.c</itemPath>
+      <itemPath>mcc_generated_files/stack.h</itemPath>
+      <itemPath>mcc_generated_files/stack.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

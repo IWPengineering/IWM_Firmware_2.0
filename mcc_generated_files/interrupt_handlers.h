@@ -33,6 +33,7 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.
 #include "mcc.h"
+#include "stack.h"
 
 #define DEPTH_BUFFER_SIZE           8
 #define BATTERY_BUFFER_SIZE         8
@@ -48,6 +49,8 @@ extern uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 extern uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
 extern uint16_t yAxisBuffer[Y_AXIS_BUFFER_SIZE];
 extern uint16_t xAxisBuffer[X_AXIS_BUFFER_SIZE];
+
+extern stack_t yAxisStack, xAxisStack;
 
 extern uint8_t depthBufferDepth;
 extern uint8_t batteryBufferDepth;
@@ -75,6 +78,8 @@ void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void);
 void IOCHandler(void);
 void TurnOffWPSIOC(void);
 void TurnOnWPSIOC(void);
+
+void InitBufferStacks(void);
 
 void UpdateWaterStatus(void);
 void UpdateNetStatus(void);

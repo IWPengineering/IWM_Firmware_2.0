@@ -18,6 +18,8 @@ int main(void) {
     TMR4_Start();
     TMR5_Start();
     
+    InitBufferStacks();
+    
     while (1) {
         // Add your application code
         
