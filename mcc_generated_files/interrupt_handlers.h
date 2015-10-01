@@ -33,6 +33,7 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.
 #include "mcc.h"
+#include "queue.h"
 
 #define DEPTH_BUFFER_SIZE           8
 #define BATTERY_BUFFER_SIZE         8
@@ -57,6 +58,9 @@ extern uint8_t xAxisBufferDepth;
 extern struct tm PreviousTime;
 extern struct tm CurrentTime;
 
+extern queue xQueue;
+extern queue yQueue;
+
 /**
  Event Flags
  **/
@@ -75,6 +79,8 @@ void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void);
 void IOCHandler(void);
 void TurnOffWPSIOC(void);
 void TurnOnWPSIOC(void);
+
+void InitQueues(void);
 
 void UpdateWaterStatus(void);
 void UpdateNetStatus(void);

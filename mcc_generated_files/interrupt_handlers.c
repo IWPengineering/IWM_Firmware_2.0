@@ -9,6 +9,7 @@
 #include "xc.h"
 #include "interrupt_handlers.h"
 #include "rtcc_handler.h"
+#include "queue.h"
 
 uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
@@ -22,6 +23,9 @@ uint8_t xAxisBufferDepth = 0;
 
 struct tm PreviousTime;
 struct tm CurrentTime;
+
+queue xQueue;
+queue yQueue;
 
 /**
  Event Flags
@@ -96,6 +100,12 @@ void TurnOnWPSIOC(void)
     CNEN2bits.CN27IE = true;
 }
 
+void InitQueues(void)
+{
+    InitQueue(&xQueue, X_AXIS_BUFFER_SIZE);
+    InitQueue(&yQueue, Y_AXIS_BUFFER_SIZE);
+}
+
 void UpdateWaterStatus(void)
 {
     TMR2_Stop();
@@ -164,60 +174,31 @@ void Timer1Handler(void)
     // Change our reference to VDD
     ADC1_ReferenceSelect(ADC1_REFERENCE_AVDD);
     
-    if (!xAxisBufferIsFull)
-    {
-        // Set our x ADC Channel
-        ADC1_ChannelSelect(xChan);
-        // Turn on the ADC
-        ADC1_Start();
-
-        while (!ADC1_IsConversionComplete())
-        {
-            // Conversion is not complete yet
-        }
-
-        // Stop the ADC so we can deal with the buffer
-        ADC1_Stop();
-        
-        // Load the buffer with the new result
-        xAxisBuffer[xAxisBufferDepth] = ADC1_ConversionResultGet();  
-        // Increment the buffer pointer
-        xAxisBufferDepth++;
-        
-        // Check if we are full
-        if (xAxisBufferDepth == X_AXIS_BUFFER_SIZE)
-            xAxisBufferIsFull = true;
-    }
-    
-    if (!yAxisBufferIsFull)
-    {
-        // Set our y ADC Channel
-        ADC1_ChannelSelect(yChan);
-        // Turn on the ADC
-        ADC1_Start();
-        
-        while (!ADC1_IsConversionComplete())
-        {
-            
-        }
-        // Stop the ADC so we can deal with the buffer
-        ADC1_Stop();
-        
-        // Load the buffer with the new result
-        yAxisBuffer[yAxisBufferDepth] = ADC1_ConversionResultGet();
-        // Increment our buffer pointer
-        yAxisBufferDepth++;
-        
-        // check if our buffer is now full
-        if (yAxisBufferDepth == Y_AXIS_BUFFER_SIZE)
-            yAxisBufferIsFull = true;
-    }
+    // Select our ADC channel as X
+    ADC1_ChannelSelect(xChan);
+    // Start taking a measurement
+    ADC1_Start();
+    // Wait for measurement to complete
+    while (!ADC1_IsConversionComplete())
+    { }
+    // Stop ADC when measurement is complete
+    ADC1_Stop();
+    // Push result to xQueue
+    PushQueue(&xQueue, ADC1_ConversionResultGet());
+    // Select our ADC Channel as Y
+    ADC1_ChannelSelect(yChan);
+    // Start taking a measurement
+    ADC1_Start();
+    // Wait for measurement to complete
+    while (!ADC1_IsConversionComplete())
+    { }
+    // Stop ADC when measurement is complete
+    ADC1_Stop();
+    // Push result to yQueue
+    PushQueue(&yQueue, ADC1_ConversionResultGet());
     
     // Switch the reference back to the band gap
-    ADC1_ReferenceSelect(ADC1_REFERENCE_2VBG);
-    
-
-    
+    ADC1_ReferenceSelect(ADC1_REFERENCE_2VBG); 
 }
 
 void Timer4Handler(void)

@@ -11,6 +11,7 @@ int main(void) {
     SYSTEM_Initialize();
     InitIOCInterrupt(); // Initialize IOC Interrupts
     InitRTCC(); // Initialize I2C RTCC
+    InitQueues(); // Start ADC queues
     
     TMR1_Start();
     TMR2_Start();
