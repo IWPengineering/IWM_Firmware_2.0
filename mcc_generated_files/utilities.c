@@ -561,7 +561,7 @@ void processAccelQueue(void)
             
             break;
         case EXTRACTING_VOLUME:
-            
+            AccumulateVolume(curAngle - prevAngle);
             break;
         case LEAKING:
             
@@ -598,6 +598,30 @@ pumping_state GetPumpingState(float curAngle, float prevAngle)
             return NO_ACTION;
         }
     }
+}
+
+void AccumulateVolume(float angleDelta)
+{
+    // Get the current hour
+    int curHour = CurrentTime.tm_hour;
+    curHour >>= 1; // One bit shift to divide by two
+    // This makes it so we can avoid a switch case
+    
+    volumeArray[curHour] += upstrokeToLiters(angleDelta);
+    // Subtract leaking. 10mS per sample = .01 sec/sample. Leak rate in L/sec
+    // This has to be in an if statement because if the handle isn't moving we don't
+    // subtract
+    if(angleDelta > 0)
+    {
+        // Assuming 10mS
+        float leakAmount = (fastestLeakRate / 100);
+        // If it is leaking faster than pumping, there is no volume
+        if(leakAmount > upstrokeToLiters(angleDelta))
+        {
+            leakAmount = upstrokeToLiters(angleDelta);
+        }
+        volumeArray[curHour] -= (fastestLeakRate / 100);
+    } 
 }
 
 float curVolume = 0;
