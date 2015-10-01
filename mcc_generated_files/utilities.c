@@ -522,18 +522,34 @@ void sendMidnightMessage(void)
     assembleMidnightMessage();
 
     // Enter text mode
-    sendUART1("AT+CMGF=1/r/n", 13);
+    sendUART1("AT+CMGF=1/r/n", sizeof("AT+CMGF=1/r/n"));
     DelayMS(100); // Delay to give SIM time to switch
-    sendUART1("AT+CMGS=\"", 9); // Start sending a text
+    sendUART1("AT+CMGS=\"", sizeof("AT+CMGS=\"")); // Start sending a text
     sendUART1(phoneNumber, sizeof(phoneNumber)); // Send phone number
-    sendUART1("\"\r\n", 5); // end of phone number
+    sendUART1("\"\r\n", sizeof("\"\r\n")); // end of phone number
     DelayMS(100);
     sendUART1(TextMessageString, sizeof(TextMessageString)); // Add message
     // TODO: We probably have to send an extra control char here
+    sendUART1(" \r \n", sizeof(" \r \n"));
 
     // TODO: Teach it to listen for the SIM's response on RX, and 
     //  respond appropriately.
-    DelayS(5);
+    bool suc = false;
+    int timeout = 0;
+    while(!suc || (timeout < SIM_TIMEOUT_SECONDS))
+    {
+        DelayS(1);
+        timeout++;
+        suc = didMessageSend();
+        
+        if(suc)
+        {
+            turnOffSim();
+        }   
+    }
+    
+    // Regardless of if it sends, we have to turn off
+    //  the SIM to conserve power.
     turnOffSim();
 }
 

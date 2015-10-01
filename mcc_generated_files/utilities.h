@@ -45,6 +45,7 @@
 #define NETWORK_SEARCH_TIMEOUT          300000 // Time in MS that we will keep
                                                //  looking for network
 #define HANDLE_MOVEMENT_THRESHOLD       5
+#define SIM_TIMEOUT_SECONDS             30
 
 typedef enum {
             PRIMING,
