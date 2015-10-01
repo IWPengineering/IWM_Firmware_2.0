@@ -26,6 +26,8 @@ bool InitQueue(queue *queueP, uint8_t queueSize)
     queueP->cnt = 0;
     queueP->front = -1;
     queueP->back = -1;
+    
+    return true;
 }
 
 bool DestroyQueue(queue *queueP)
@@ -37,6 +39,8 @@ bool DestroyQueue(queue *queueP)
     queueP->cnt = 0;
     queueP->front = -1;
     queueP->back = -1;
+    
+    return true;
 }
 
 bool IsQueueEmpty(queue *queueP)
