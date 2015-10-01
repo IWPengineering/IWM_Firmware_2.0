@@ -173,54 +173,74 @@ void Timer1Handler(void)
     // Change our reference to VDD
     ADC1_ReferenceSelect(ADC1_REFERENCE_AVDD);
     
-    if (!xAxisBufferIsFull)
-    {
-        // Set our x ADC Channel
-        ADC1_ChannelSelect(xChan);
-        // Turn on the ADC
-        ADC1_Start();
-
-        while (!ADC1_IsConversionComplete())
-        {
-            // Conversion is not complete yet
-        }
-
-        // Stop the ADC so we can deal with the buffer
-        ADC1_Stop();
-        
-        // Load the buffer with the new result
-        xAxisBuffer[xAxisBufferDepth] = ADC1_ConversionResultGet();  
-        // Increment the buffer pointer
-        xAxisBufferDepth++;
-        
-        // Check if we are full
-        if (xAxisBufferDepth == X_AXIS_BUFFER_SIZE)
-            xAxisBufferIsFull = true;
-    }
+    ADC1_ChannelSelect(xChan);
+    ADC1_Start();
     
-    if (!yAxisBufferIsFull)
-    {
-        // Set our y ADC Channel
-        ADC1_ChannelSelect(yChan);
-        // Turn on the ADC
-        ADC1_Start();
-        
-        while (!ADC1_IsConversionComplete())
-        {
-            
-        }
-        // Stop the ADC so we can deal with the buffer
-        ADC1_Stop();
-        
-        // Load the buffer with the new result
-        yAxisBuffer[yAxisBufferDepth] = ADC1_ConversionResultGet();
-        // Increment our buffer pointer
-        yAxisBufferDepth++;
-        
-        // check if our buffer is now full
-        if (yAxisBufferDepth == Y_AXIS_BUFFER_SIZE)
-            yAxisBufferIsFull = true;
-    }
+    while (!ADC1_IsConversionComplete()) { }
+    
+    ADC1_Stop();
+    
+    stackPush(&xAxisStack, 
+            ADC1_ConversionResultGet());
+    
+    ADC1_ChannelSelect(yChan);
+    ADC1_Start();
+    
+    while (!ADC1_IsConversionComplete()) { }
+    
+    ADC1_Stop();
+    
+    stackPush(&yAxisStack,
+            ADC1_ConversionResultGet());
+    
+//    if (!xAxisBufferIsFull)
+//    {
+//        // Set our x ADC Channel
+//        ADC1_ChannelSelect(xChan);
+//        // Turn on the ADC
+//        ADC1_Start();
+//
+//        while (!ADC1_IsConversionComplete())
+//        {
+//            // Conversion is not complete yet
+//        }
+//
+//        // Stop the ADC so we can deal with the buffer
+//        ADC1_Stop();
+//        
+//        // Load the buffer with the new result
+//        xAxisBuffer[xAxisBufferDepth] = ADC1_ConversionResultGet();  
+//        // Increment the buffer pointer
+//        xAxisBufferDepth++;
+//        
+//        // Check if we are full
+//        if (xAxisBufferDepth == X_AXIS_BUFFER_SIZE)
+//            xAxisBufferIsFull = true;
+//    }
+//    
+//    if (!yAxisBufferIsFull)
+//    {
+//        // Set our y ADC Channel
+//        ADC1_ChannelSelect(yChan);
+//        // Turn on the ADC
+//        ADC1_Start();
+//        
+//        while (!ADC1_IsConversionComplete())
+//        {
+//            
+//        }
+//        // Stop the ADC so we can deal with the buffer
+//        ADC1_Stop();
+//        
+//        // Load the buffer with the new result
+//        yAxisBuffer[yAxisBufferDepth] = ADC1_ConversionResultGet();
+//        // Increment our buffer pointer
+//        yAxisBufferDepth++;
+//        
+//        // check if our buffer is now full
+//        if (yAxisBufferDepth == Y_AXIS_BUFFER_SIZE)
+//            yAxisBufferIsFull = true;
+//    }
     
     // Switch the reference back to the band gap
     ADC1_ReferenceSelect(ADC1_REFERENCE_2VBG);
