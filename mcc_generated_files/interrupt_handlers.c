@@ -9,14 +9,11 @@
 #include "xc.h"
 #include "interrupt_handlers.h"
 #include "rtcc_handler.h"
-#include "stack.h"
 
 uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
 uint16_t yAxisBuffer[Y_AXIS_BUFFER_SIZE];
 uint16_t xAxisBuffer[X_AXIS_BUFFER_SIZE];
-
-stack_t yAxisStack, xAxisStack;
 
 uint8_t depthBufferDepth = 0;
 uint8_t batteryBufferDepth = 0;
@@ -97,12 +94,6 @@ void TurnOffWPSIOC(void)
 void TurnOnWPSIOC(void)
 {
     CNEN2bits.CN27IE = true;
-}
-
-void InitBufferStacks(void)
-{
-    stackInit(&yAxisStack, Y_AXIS_BUFFER_SIZE);
-    stackInit(&xAxisStack, X_AXIS_BUFFER_SIZE);
 }
 
 void UpdateWaterStatus(void)
