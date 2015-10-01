@@ -39,6 +39,7 @@
 #define BATTERY_BUFFER_SIZE         8
 #define Y_AXIS_BUFFER_SIZE          8
 #define X_AXIS_BUFFER_SIZE          8
+#define ANGLES_TO_AVERAGE           10
 
 #define WaterPeriodLowBound         250 // ~1kHz
 #define WaterPeriodHighBound        385 // ~650Hz
@@ -60,6 +61,7 @@ extern struct tm CurrentTime;
 
 extern queue xQueue;
 extern queue yQueue;
+extern floatqueue angleQueue;
 
 /**
  Event Flags

@@ -26,6 +26,7 @@ struct tm CurrentTime;
 
 queue xQueue;
 queue yQueue;
+floatqueue angleQueue;
 
 /**
  Event Flags
@@ -104,6 +105,7 @@ void InitQueues(void)
 {
     InitQueue(&xQueue, X_AXIS_BUFFER_SIZE);
     InitQueue(&yQueue, Y_AXIS_BUFFER_SIZE);
+    InitFloatQueue(&angleQueue, ANGLES_TO_AVERAGE);
 }
 
 void UpdateWaterStatus(void)

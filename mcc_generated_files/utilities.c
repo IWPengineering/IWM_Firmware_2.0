@@ -537,14 +537,67 @@ void sendMidnightMessage(void)
     turnOffSim();
 }
 
+static float curAngle;
+static float prevAngle;
+
 void processAccelQueue(void)
 {
+    // We get here when both x and y queues are not empty
     
+    if(IsFloatQueueFull(&angleQueue))
+    {
+        PullFloatQueue(&angleQueue); // Empty one slot FIFO
+    }
+    
+    PushFloatQueue(&angleQueue, 
+            getHandleAngle(
+                PullQueue(&xQueue), PullQueue(&yQueue)));
+    
+    curAngle = AverageFloatQueueElements(&angleQueue);
+    
+    switch(GetPumpingState(curAngle, prevAngle))
+    {
+        case PRIMING:
+            
+            break;
+        case EXTRACTING_VOLUME:
+            
+            break;
+        case LEAKING:
+            
+            break;
+        case NO_ACTION:
+            
+            break;
+    }
+    
+    prevAngle = curAngle;
 }
 
 pumping_state GetPumpingState(float curAngle, float prevAngle)
 {
-    
+    if((curAngle - prevAngle) > HANDLE_MOVEMENT_THRESHOLD )
+    {
+        if(IsThereWater())
+        {
+            return EXTRACTING_VOLUME;
+        }
+        else
+        {
+            return PRIMING;
+        }
+    }
+    else
+    {
+        if(IsThereWater())
+        {
+            return LEAKING;
+        }
+        else
+        {
+            return NO_ACTION;
+        }
+    }
 }
 
 float curVolume = 0;
