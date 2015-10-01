@@ -34,6 +34,11 @@ int main(void) {
             handleAccelBufferEvent();
         }
         
+        if(!IsQueueEmpty(&xQueue) && !IsQueueEmpty(&yQueue))
+        {
+            processAccelQueue();
+        }
+        
         if(depthBufferIsFull)
         {
             

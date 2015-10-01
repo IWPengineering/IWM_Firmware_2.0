@@ -112,6 +112,7 @@ void assembleMidnightMessage(void);
 bool didMessageSend(void);
 void sendMidnightMessage(void);
 
+void processAccelQueue(void);
 void handleAccelBufferEvent(void);
 float upstrokeToMeters(float upstroke);
 float upstrokeToLiters(float upstroke);

@@ -537,6 +537,11 @@ void sendMidnightMessage(void)
     turnOffSim();
 }
 
+void processAccelQueue(void)
+{
+    
+}
+
 float curVolume = 0;
 bool lastEventWasPriming = false;
 bool lastEventWasLeaking = false;
