@@ -30,8 +30,6 @@ floatqueue angleQueue;
 
 bool depthBufferIsFull = false;
 bool batteryBufferIsFull = false;
-bool yAxisBufferIsFull = false;
-bool xAxisBufferIsFull = false;
 bool isMidnightPassed = false;
 bool isNetlightOn = false;
 bool isWaterPresent = false;

@@ -65,8 +65,6 @@ extern floatqueue angleQueue;
 
 extern bool depthBufferIsFull;
 extern bool batteryBufferIsFull;
-extern bool yAxisBufferIsFull;
-extern bool xAxisBufferIsFull;
 extern bool isMidnightPassed;
 
 extern bool isNetlightOn;
