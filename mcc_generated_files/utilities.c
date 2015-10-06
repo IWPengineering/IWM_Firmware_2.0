@@ -151,10 +151,10 @@ void KickWatchdog(void)
 
 float getHandleAngle(uint16_t xAxis, uint16_t yAxis)
 {
-    signed int xValue = xAxis - AdjustmentFactor;
-    signed int yValue = yAxis - AdjustmentFactor;
+    signed int xValue = xAxis - c_AdjustmentFactor;
+    signed int yValue = yAxis - c_AdjustmentFactor;
     
-    float angle = atan2(yValue, xValue) * RadToDegrees;
+    float angle = atan2(yValue, xValue) * c_RadToDegrees;
     
     if (angle > 20)
     {
@@ -168,7 +168,7 @@ float getHandleAngle(uint16_t xAxis, uint16_t yAxis)
     return angle;
 }
 
-void updateMessageVolume(void)
+void UpdateMessageVolume(void)
 {
     // 49 is the starting location for volume 1
     int i, loc = 49;
@@ -176,13 +176,13 @@ void updateMessageVolume(void)
     for(i = 0; i < 12; i++)
     {
         // Do the i-th element of the volume array
-        floatToAscii(volumeArray[i], 1, TextMessageString+loc, 5);
+        FloatToAscii(volumeArray[i], 1, TextMessageString+loc, 5);
         // increment our location in the volume array to the next value
         loc += 6;
     }
 }
 
-void updateMessageBattery(void)
+void UpdateMessageBattery(void)
 {
     float avgBatVoltage = 0;
     if(batteryAccumAmt != 0)
@@ -195,42 +195,42 @@ void updateMessageBattery(void)
     
     // Update the text message
     //  38 is the first position of battery voltage
-    floatToAscii(avgBatVoltage, 3, TextMessageString+38, 5);
+    FloatToAscii(avgBatVoltage, 3, TextMessageString+38, 5);
 }
 
-void updateMessagePrime(void)
+void UpdateMessagePrime(void)
 {
     // Update the text message
     //  28 is the first digit of the prime in text message
-    floatToAscii(longestPrime, 2, TextMessageString+28, 5);
+    FloatToAscii(longestPrime, 2, TextMessageString+28, 5);
 }
 
-void updateMessageLeakage(void)
+void UpdateMessageLeakage(void)
 {
     // Update the text message
     //  18 is the first position of the leakage in text message
     //  3600 multiplier converts from L/sec to L/Hr
-    floatToAscii(fastestLeakRate * 3600, 1, TextMessageString+18, 5);
+    FloatToAscii(fastestLeakRate * 3600, 1, TextMessageString+18, 5);
 }
 
-void floatToAscii(float value, uint8_t decimalPrecision,
+void FloatToAscii(float value, uint8_t decimalPrecision,
         char *dataPtr, uint8_t dataLen)
 {
     // multiply value by 10^precision, then load into 32 bit int
     uint32_t endValue;
     
     // This is int with correct decimal precision
-    endValue = (uint32_t)(value * tenToPower(decimalPrecision));
-    int nDigits = numDigits(endValue);
+    endValue = (uint32_t)(value * TenToPower(decimalPrecision));
+    int nDigits = NumDigits(endValue);
     
     char *pD = dataPtr;
     
-    while(isBinTooSmall(value, decimalPrecision, dataLen))
+    while(IsBinTooSmall(value, decimalPrecision, dataLen))
     {
         decimalPrecision--;
     }
     
-    while(isNumberTooBig(endValue, dataLen))
+    while(IsNumberTooBig(endValue, dataLen))
     {
         // If number is too big, put a zero in front
         *pD = '0';
@@ -247,7 +247,7 @@ void floatToAscii(float value, uint8_t decimalPrecision,
             *pD = '.'; // This is the decimal point
         else
         {
-            uint32_t diviser = tenToPower(nDigits - 1);
+            uint32_t diviser = TenToPower(nDigits - 1);
             int value = endValue / diviser;
             // We'll need this for the next iteration
             endValue %= diviser;
@@ -272,7 +272,7 @@ void floatToAscii(float value, uint8_t decimalPrecision,
  Return: int
     Returns number of digits in num
  */
-int numDigits(uint32_t num)
+int NumDigits(uint32_t num)
 {
     if (num < 0) return 1;
     if (num < 10) return 1;
@@ -290,7 +290,7 @@ int numDigits(uint32_t num)
 }
 
 // returns 10^exponent
-uint32_t tenToPower(int exponent)
+uint32_t TenToPower(int exponent)
 {
     int i;
     uint32_t val = 1;
@@ -306,7 +306,7 @@ uint32_t tenToPower(int exponent)
  Checks if value is too big for dataLen
  This function is used in floatToAscii
  */
-bool isNumberTooBig(uint32_t value, uint8_t dataLen)
+bool IsNumberTooBig(uint32_t value, uint8_t dataLen)
 {
     // if value < 10^(dataLen-2): we're checking if value won't fit
     //  within the bounds of dataLen.
@@ -317,7 +317,7 @@ bool isNumberTooBig(uint32_t value, uint8_t dataLen)
     //  a zero, and thus return 012.23 in our dataLen of 6.
     // dataLen would be -1 logically, but -2 keeps the decimal point
     // which is carried through floatToAscii in dataLen.
-    if(value < tenToPower(dataLen-2))
+    if(value < TenToPower(dataLen-2))
     {
         return true;
     }
@@ -331,7 +331,7 @@ bool isNumberTooBig(uint32_t value, uint8_t dataLen)
  Checks if value has too much precision to fit in len
  This function is used in float to Ascii
  */
-bool isBinTooSmall(float value, uint8_t prec, uint8_t len)
+bool IsBinTooSmall(float value, uint8_t prec, uint8_t len)
 {
     // If value is greater than 10^(dataLen - prec+1 (+1 due to decimal point))
     // , then we know
@@ -340,7 +340,7 @@ bool isBinTooSmall(float value, uint8_t prec, uint8_t len)
     //  we need to reduce the precision to fit the desired float into the bin.
     // Its important because we don't always know the order of magnitude of
     //  the float that is passed to floatToAscii.
-    if(value > tenToPower(len - (prec + 1)))
+    if(value > TenToPower(len - (prec + 1)))
     {
         return true;
     }
@@ -410,7 +410,7 @@ bool IsThereWater(void)
     }
 }
 
-uint8_t sendUART1(char *dataPtr, uint16_t dataCnt)
+uint8_t SendUART1(char *dataPtr, uint16_t dataCnt)
 {
     // Make a pointer to work with, at the current data location
     char *pD = dataPtr;
@@ -437,7 +437,7 @@ uint8_t sendUART1(char *dataPtr, uint16_t dataCnt)
     return 0;
 }
 
-uint8_t receiveUART1(char *ptr, uint16_t ptrLen)
+uint8_t ReceiveUART1(char *ptr, uint16_t ptrLen)
 {
     if (UART1_ReceiveBufferIsEmpty())
     {
@@ -464,7 +464,7 @@ uint8_t receiveUART1(char *ptr, uint16_t ptrLen)
     }
 }
 
-void turnOnSim(void)
+void TurnOnSim(void)
 {
     simVioPin_SetHigh();
     if (!IsSimOn())
@@ -481,7 +481,7 @@ void turnOnSim(void)
     simPwrKey_SetHigh();
 }
 
-void turnOffSim(void)
+void TurnOffSim(void)
 {
     if(IsSimOn())
     {
@@ -495,22 +495,22 @@ void turnOffSim(void)
     simPwrKey_SetHigh();
 }
 
-void assembleMidnightMessage(void)
+void AssembleMidnightMessage(void)
 {
-    updateMessageVolume();
-    updateMessageBattery();
-    updateMessagePrime();
-    updateMessageLeakage();
+    UpdateMessageVolume();
+    UpdateMessageBattery();
+    UpdateMessagePrime();
+    UpdateMessageLeakage();
 }
 
-bool didMessageSend(void)
+bool DidMessageSend(void)
 {
     char buf[8]; // Build an array to hold a response
     
     // If there is something in the array
     if(UART1_ReceiveBufferSizeGet() > 1)
     {
-        uint8_t charsReceived = receiveUART1(buf, sizeof(buf));
+        uint8_t charsReceived = ReceiveUART1(buf, sizeof(buf));
 
         if (charsReceived == 0)
         {
@@ -539,10 +539,10 @@ bool didMessageSend(void)
 
 }
 
-void sendMidnightMessage(void)
+void SendMidnightMessage(void)
 {
     // We need to send our midnight message
-    turnOnSim();
+    TurnOnSim();
     int timeOutMS = 0;
     while(!IsSimOnNetwork())
     {
@@ -556,18 +556,18 @@ void sendMidnightMessage(void)
     }
 
     // Update values in text message
-    assembleMidnightMessage();
+    AssembleMidnightMessage();
 
     // Enter text mode
-    sendUART1("AT+CMGF=1/r/n", sizeof("AT+CMGF=1/r/n"));
+    SendUART1("AT+CMGF=1/r/n", sizeof("AT+CMGF=1/r/n"));
     DelayMS(100); // Delay to give SIM time to switch
-    sendUART1("AT+CMGS=\"", sizeof("AT+CMGS=\"")); // Start sending a text
-    sendUART1(phoneNumber, sizeof(phoneNumber)); // Send phone number
-    sendUART1("\"\r\n", sizeof("\"\r\n")); // end of phone number
+    SendUART1("AT+CMGS=\"", sizeof("AT+CMGS=\"")); // Start sending a text
+    SendUART1(phoneNumber, sizeof(phoneNumber)); // Send phone number
+    SendUART1("\"\r\n", sizeof("\"\r\n")); // end of phone number
     DelayMS(100);
-    sendUART1(TextMessageString, sizeof(TextMessageString)); // Add message
+    SendUART1(TextMessageString, sizeof(TextMessageString)); // Add message
     // TODO: We probably have to send an extra control char here
-    sendUART1(" \r \n", sizeof(" \r \n"));
+    SendUART1(" \r \n", sizeof(" \r \n"));
 
     // TODO: Teach it to listen for the SIM's response on RX, and 
     //  respond appropriately.
@@ -577,17 +577,17 @@ void sendMidnightMessage(void)
     {
         DelayS(1);
         timeout++;
-        suc = didMessageSend();
+        suc = DidMessageSend();
         
         if(suc)
         {
-            turnOffSim();
+            TurnOffSim();
         }   
     }
     
     // Regardless of if it sends, we have to turn off
     //  the SIM to conserve power.
-    turnOffSim();
+    TurnOffSim();
     
     ResetAccumulators();
 }
@@ -608,7 +608,7 @@ static uint16_t leakTime = 0;
 bool lastEventWasPriming = false;
 bool lastEventWasLeaking = false;
 
-void processAccelQueue(void)
+void ProcessAccelQueue(void)
 {
     // We get here when both x and y queues are not empty
     
@@ -636,9 +636,9 @@ void processAccelQueue(void)
         
     if(!lastEventWasLeaking && leakTime > 0)
     {
-        if(leakMilliSecondsToRate(leakTime) > fastestLeakRate)
+        if(LeakMilliSecondsToRate(leakTime) > fastestLeakRate)
         {
-            fastestLeakRate = leakMilliSecondsToRate(leakTime);
+            fastestLeakRate = LeakMilliSecondsToRate(leakTime);
         }
         
         leakTime = 0;
@@ -702,7 +702,7 @@ void AccumulateVolume(float angleDelta)
     curHour >>= 1; // One bit shift to divide by two
     // This makes it so we can avoid a switch case
     
-    volumeArray[curHour] += upstrokeToLiters(angleDelta);
+    volumeArray[curHour] += UpstrokeToLiters(angleDelta);
     // Subtract leaking. 10mS per sample = .01 sec/sample. Leak rate in L/sec
     // This has to be in an if statement because if the handle isn't moving we don't
     // subtract
@@ -711,9 +711,9 @@ void AccumulateVolume(float angleDelta)
         // Assuming 10mS
         float leakAmount = (fastestLeakRate / 100);
         // If it is leaking faster than pumping, there is no volume
-        if(leakAmount > upstrokeToLiters(angleDelta))
+        if(leakAmount > UpstrokeToLiters(angleDelta))
         {
-            leakAmount = upstrokeToLiters(angleDelta);
+            leakAmount = UpstrokeToLiters(angleDelta);
         }
         volumeArray[curHour] -= (fastestLeakRate / 100);
     } 
@@ -721,21 +721,21 @@ void AccumulateVolume(float angleDelta)
 
 float upstrokeToMeters(float upstroke)
 {
-    return (upstroke * UpstrokeToMeters);
+    return (upstroke * c_UpstrokeToMeters);
 }
 
-float upstrokeToLiters(float upstroke)
+float UpstrokeToLiters(float upstroke)
 {
-    return (upstroke * MKIILiterPerDegree);
+    return (upstroke * c_MKIILiterPerDegree);
 }
 
-float leakMilliSecondsToRate(uint16_t milsec)
+float LeakMilliSecondsToRate(uint16_t milsec)
 {
     // Returns liters per second (L/s)
-    return (MaxLitersToLeak / (milsec * 1000));
+    return (c_MaxLitersToLeak / (milsec * 1000));
 }
 
-void handleBatteryBufferEvent(void)
+void HandleBatteryBufferEvent(void)
 {
     // Accumulates battery voltage for an end of day
     //  average

@@ -19,19 +19,21 @@ int main(void) {
     TMR4_Start();
     TMR5_Start();
     
-    while (1) {
+    while (1) 
+    {
+        
         // Add your application code
         
         KickWatchdog(); // Reset the watchdog timer
         
         if(isMidnightPassed)
         {
-            sendMidnightMessage();
+            SendMidnightMessage();
         }
         
         if(!IsQueueEmpty(&xQueue) && !IsQueueEmpty(&yQueue))
         {
-            processAccelQueue();
+            ProcessAccelQueue();
         }
         
         if(depthBufferIsFull)
@@ -41,7 +43,7 @@ int main(void) {
         
         if(batteryBufferIsFull)
         {
-            handleBatteryBufferEvent();
+            HandleBatteryBufferEvent();
         }
     }
 

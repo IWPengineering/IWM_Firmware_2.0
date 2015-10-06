@@ -51,9 +51,9 @@ typedef enum {
 extern char TextMessageString[MESSAGE_LENGTH];
 extern char phoneNumber[12];
 extern bool isBatteryLow;
-extern const float MKIILiterPerDegree;
-extern const float UpstrokeToMeters;
-extern const float MaxLitersToLeak;
+extern const float c_MKIILiterPerDegree;
+extern const float c_UpstrokeToMeters;
+extern const float c_MaxLitersToLeak;
 
 // Accumulates battery voltage for an end of day average
 extern uint16_t batteryAccumulator;
@@ -76,40 +76,40 @@ void KickWatchdog(void);
 
 float getHandleAngle(uint16_t xAxis, uint16_t yAxis);
 
-void updateMessageVolume(void);
-void updateMessageBattery(void);
-void updateMessagePrime(void);
-void updateMessageLeakage(void);
+void UpdateMessageVolume(void);
+void UpdateMessageBattery(void);
+void UpdateMessagePrime(void);
+void UpdateMessageLeakage(void);
 // len of data must INCLUDE decimal point
 //  Cannot handle higher than 6 decimal precision due to implementation
-void floatToAscii(float value, uint8_t decimalPrecision, 
+void FloatToAscii(float value, uint8_t decimalPrecision, 
         char *dataPtr, uint8_t dataLen);
-int numDigits(uint32_t num);
-uint32_t tenToPower(int exponent);
-bool isNumberTooBig(uint32_t value, uint8_t dataLen);
-bool isBinTooSmall(float value, uint8_t prec, uint8_t len);
+int NumDigits(uint32_t num);
+uint32_t TenToPower(int exponent);
+bool IsNumberTooBig(uint32_t value, uint8_t dataLen);
+bool IsBinTooSmall(float value, uint8_t prec, uint8_t len);
 bool IsSimOn(void);
 bool IsSimOnNetwork(void);
 bool IsThereWater(void);
 
-uint8_t sendUART1(char *dataPtr, uint16_t dataCnt);
-uint8_t receiveUART1(char *ptr, uint16_t ptrLen);
-void turnOnSim(void);
-void turnOffSim(void);
+uint8_t SendUART1(char *dataPtr, uint16_t dataCnt);
+uint8_t ReceiveUART1(char *ptr, uint16_t ptrLen);
+void TurnOnSim(void);
+void TurnOffSim(void);
 
-void assembleMidnightMessage(void);
-bool didMessageSend(void);
-void sendMidnightMessage(void);
+void AssembleMidnightMessage(void);
+bool DidMessageSend(void);
+void SendMidnightMessage(void);
 void ResetAccumulators(void);
 
-void processAccelQueue(void);
+void ProcessAccelQueue(void);
 pumping_state GetPumpingState(float curAngle, float prevAngle);
 void AccumulateVolume(float angleDelta);
 float upstrokeToMeters(float upstroke);
-float upstrokeToLiters(float upstroke);
-float leakMilliSecondsToRate(uint16_t milsec);
+float UpstrokeToLiters(float upstroke);
+float LeakMilliSecondsToRate(uint16_t milsec);
 
-void handleBatteryBufferEvent(void);
+void HandleBatteryBufferEvent(void);
 
 /*
  Private Functions

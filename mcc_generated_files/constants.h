@@ -59,12 +59,12 @@
 /*
  Constants
  */
-extern const float RadToDegrees;
-extern const int AdjustmentFactor;
+extern const float c_RadToDegrees;
+extern const int c_AdjustmentFactor;
 
-extern const float MKIILiterPerDegree;
-extern const float UpstrokeToMeters;
-extern const float MaxLitersToLeak;
+extern const float c_MKIILiterPerDegree;
+extern const float c_UpstrokeToMeters;
+extern const float c_MaxLitersToLeak;
 
 
 #ifdef	__cplusplus
