@@ -34,17 +34,7 @@
 #include <xc.h> // include processor files - each processor file is guarded.
 #include "mcc.h"
 #include "queue.h"
-
-#define DEPTH_BUFFER_SIZE           8
-#define BATTERY_BUFFER_SIZE         8
-#define Y_AXIS_BUFFER_SIZE          8
-#define X_AXIS_BUFFER_SIZE          8
-#define ANGLES_TO_AVERAGE           10
-
-#define WaterPeriodLowBound         100 // ~2.5kHz
-#define WaterPeriodHighBound        385 // ~650Hz
-#define NetlightPeriodLowBound      19500 // ~2.5 seconds
-#define NetlightPeriodHighBound     27350 // ~3.5 seconds
+#include "constants.h"
 
 extern uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 extern uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];

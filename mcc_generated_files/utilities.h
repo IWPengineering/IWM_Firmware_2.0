@@ -36,16 +36,7 @@
 #include <string.h>
 #include "mcc.h"
 #include "interrupt_handlers.h"
-
-/*
- Definitions
- */
-#define BATTERY_LOW_THRESHOLD           400 // Check this value
-#define MESSAGE_LENGTH                  160
-#define NETWORK_SEARCH_TIMEOUT          300000 // Time in MS that we will keep
-                                               //  looking for network
-#define HANDLE_MOVEMENT_THRESHOLD       5
-#define SIM_TIMEOUT_SECONDS             30
+#include "constants.h"
 
 typedef enum {
             PRIMING,
@@ -74,13 +65,6 @@ extern float volumeArray[12];
 extern float fastestLeakRate;
 // Longest prime time recorded for the day
 extern float longestPrime;
-
-/*
- Private Variables
- */
-
-const static float RadToDegrees;
-const static int AdjustmentFactor;
 
 /*
  Public Functions

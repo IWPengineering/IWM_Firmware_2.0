@@ -10,6 +10,7 @@
 #include "interrupt_handlers.h"
 #include "rtcc_handler.h"
 #include "queue.h"
+#include "constants.h"
 
 uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
@@ -113,8 +114,8 @@ void UpdateWaterStatus(void)
     // Always compare to 0
     uint16_t periodTicks = TMR2_Counter16BitGet();
     
-    if (periodTicks >= WaterPeriodLowBound && 
-            periodTicks <= WaterPeriodHighBound)
+    if (periodTicks >= WATER_PERIOD_LOW_BOUND && 
+            periodTicks <= WATER_PERIOD_HIGH_BOUND)
     {
         isWaterPresent = true;
     }
@@ -136,8 +137,8 @@ void UpdateNetStatus(void)
     
     uint16_t periodTicks = TMR3_Counter16BitGet();
     
-    if (periodTicks >= NetlightPeriodLowBound &&
-            periodTicks <= NetlightPeriodHighBound)
+    if (periodTicks >= NETLIGHT_PERIOD_LOW_BOUND &&
+            periodTicks <= NETLIGHT_PERIOD_HIGH_BOUND)
     {
         isNetlightOn = true;
     }

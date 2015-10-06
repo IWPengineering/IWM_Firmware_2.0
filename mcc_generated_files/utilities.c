@@ -11,6 +11,7 @@
 #include "string.h"
 #include "mcc.h"
 #include "interrupt_handlers.h"
+#include "constants.h"
 #include "utilities.h"
 
 #define FCY         2000000UL // Instruction cycle frequency
@@ -116,20 +117,12 @@ char phoneNumber[12] = "+17178211882";
 
 bool isBatteryLow = false;
 
-const float MKIILiterPerDegree = .002949606; // .169 L/Rad converted to L/Deg
-// .169 L/Rad Specified in 1.0 Firmware "IWPUtilities.c"
-const float UpstrokeToMeters = 0.01287;
-const float MaxLitersToLeak = 0.01781283;
-
 uint16_t batteryAccumulator = 0;
 uint16_t batteryAccumAmt = 0;
 
 float volumeArray[12] = { 0 };
 float fastestLeakRate = 0;
 float longestPrime = 0;
-
-const static float RadToDegrees = 57.2957914; // 180 / pi()
-const static int AdjustmentFactor = 2047; // 1/2 of 12 bit ADC
 
 void DelayUS(int us)
 {
@@ -554,7 +547,9 @@ void sendMidnightMessage(void)
     while(!IsSimOnNetwork())
     {
         if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
+        {
             break; // We can't find network. IDK how to recover from this
+        }
         // The sim is not online yet
         DelayMS(1); // Wait to check, and resets WDT
         timeOutMS++;
@@ -578,7 +573,7 @@ void sendMidnightMessage(void)
     //  respond appropriately.
     bool suc = false;
     int timeout = 0;
-    while(!suc || (timeout < SIM_TIMEOUT_SECONDS))
+    while(!suc || (timeout < TEXT_SEND_TIMEOUT_SECONDS))
     {
         DelayS(1);
         timeout++;
