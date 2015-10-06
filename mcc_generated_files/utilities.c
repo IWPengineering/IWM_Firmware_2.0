@@ -400,6 +400,11 @@ bool IsThereWater(void)
                 TurnOffWPSIOC();
                 return true;
             }
+            else
+            {
+                TurnOffWPSIOC();
+                return false;
+            }
         }
         else
         {
