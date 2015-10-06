@@ -41,7 +41,7 @@
 #define X_AXIS_BUFFER_SIZE          8
 #define ANGLES_TO_AVERAGE           10
 
-#define WaterPeriodLowBound         250 // ~1kHz
+#define WaterPeriodLowBound         100 // ~2.5kHz
 #define WaterPeriodHighBound        385 // ~650Hz
 #define NetlightPeriodLowBound      19500 // ~2.5 seconds
 #define NetlightPeriodHighBound     27350 // ~3.5 seconds
