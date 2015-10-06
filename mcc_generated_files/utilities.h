@@ -74,7 +74,7 @@ void DelayMS(int ms);
 void DelayS(int sec);
 void KickWatchdog(void);
 
-float getHandleAngle(uint16_t xAxis, uint16_t yAxis);
+float GetHandleAngle(uint16_t xAxis, uint16_t yAxis);
 
 void UpdateMessageVolume(void);
 void UpdateMessageBattery(void);
@@ -105,7 +105,7 @@ void ResetAccumulators(void);
 void ProcessAccelQueue(void);
 pumping_state GetPumpingState(float curAngle, float prevAngle);
 void AccumulateVolume(float angleDelta);
-float upstrokeToMeters(float upstroke);
+float UpstrokeToMeters(float upstroke);
 float UpstrokeToLiters(float upstroke);
 float LeakMilliSecondsToRate(uint16_t milsec);
 

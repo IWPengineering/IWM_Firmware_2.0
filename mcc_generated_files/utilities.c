@@ -149,7 +149,7 @@ void KickWatchdog(void)
     ClrWdt();
 }
 
-float getHandleAngle(uint16_t xAxis, uint16_t yAxis)
+float GetHandleAngle(uint16_t xAxis, uint16_t yAxis)
 {
     signed int xValue = xAxis - c_AdjustmentFactor;
     signed int yValue = yAxis - c_AdjustmentFactor;
@@ -618,7 +618,7 @@ void ProcessAccelQueue(void)
     }
     
     PushFloatQueue(&angleQueue, 
-            getHandleAngle(
+            GetHandleAngle(
                 PullQueue(&xQueue), PullQueue(&yQueue)));
     
     curAngle = AverageFloatQueueElements(&angleQueue);
@@ -646,7 +646,7 @@ void ProcessAccelQueue(void)
     switch(GetPumpingState(curAngle, prevAngle))
     {
         case PRIMING:
-            primingUpstroke += upstrokeToMeters(curAngle - prevAngle);
+            primingUpstroke += UpstrokeToMeters(curAngle - prevAngle);
             lastEventWasPriming = true;
             lastEventWasLeaking = false;
             break;
@@ -719,7 +719,7 @@ void AccumulateVolume(float angleDelta)
     } 
 }
 
-float upstrokeToMeters(float upstroke)
+float UpstrokeToMeters(float upstroke)
 {
     return (upstroke * c_UpstrokeToMeters);
 }
