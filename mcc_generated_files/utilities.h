@@ -107,7 +107,7 @@ pumping_state GetPumpingState(float curAngle, float prevAngle);
 void AccumulateVolume(float angleDelta);
 float UpstrokeToMeters(float upstroke);
 float UpstrokeToLiters(float upstroke);
-float LeakMilliSecondsToRate(uint16_t milsec);
+float LeakMSToRate(uint16_t milsec);
 
 void HandleBatteryBufferEvent(void);
 

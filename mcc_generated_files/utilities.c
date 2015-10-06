@@ -636,9 +636,9 @@ void ProcessAccelQueue(void)
         
     if(!lastEventWasLeaking && leakTime > 0)
     {
-        if(LeakMilliSecondsToRate(leakTime) > fastestLeakRate)
+        if(LeakMSToRate(leakTime) > fastestLeakRate)
         {
-            fastestLeakRate = LeakMilliSecondsToRate(leakTime);
+            fastestLeakRate = LeakMSToRate(leakTime);
         }
         
         leakTime = 0;
@@ -721,15 +721,17 @@ void AccumulateVolume(float angleDelta)
 
 float UpstrokeToMeters(float upstroke)
 {
+    // Returns Meters from degrees of upstroke
     return (upstroke * c_UpstrokeToMeters);
 }
 
 float UpstrokeToLiters(float upstroke)
 {
+    // Returns liters from degrees of upstroke
     return (upstroke * c_MKIILiterPerDegree);
 }
 
-float LeakMilliSecondsToRate(uint16_t milsec)
+float LeakMSToRate(uint16_t milsec)
 {
     // Returns liters per second (L/s)
     return (c_MaxLitersToLeak / (milsec * 1000));
