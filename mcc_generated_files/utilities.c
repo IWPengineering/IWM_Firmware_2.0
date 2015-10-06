@@ -369,7 +369,47 @@ bool IsSimOnNetwork(void)
 
 bool IsThereWater(void)
 {
-    return isWaterPresent;
+    if(IsWPSIOCOn())
+    {
+        return isWaterPresent;
+    }
+    // If we do not have the interrupt on, we need to detect if there is
+    //  water.
+    else
+    {
+        // Set there is no water to clear false positive condition
+        isWaterPresent = false;
+        // turn on the interrupt
+        TurnOnWPSIOC();
+        // if water is on, the signal comes at 2kHz, so 1ms should catch
+        //  two pulses
+        DelayMS(1);
+        // There being water isn't sufficient, because the ~100Hz signal
+        //  could have possibly ticked during the 1ms that we were on.
+        // So we have to check again
+        if(IsThereWater())
+        {
+            // Clear the possible false positive
+            isWaterPresent = false;
+            // Again, if water is there it will tick in 1ms. If it is not,
+            //  then it can't have ticked in both this and prev test
+            DelayMS(1);
+            if(IsThereWater())
+            {
+                // If we found water, turn off IOC and return true
+                TurnOffWPSIOC();
+                return true;
+            }
+        }
+        else
+        {
+            // If the first or second conditions were false, then we
+            //  will end up here eventually. Clean up by turning off
+            //  the WPS IOC and returning there was no water.
+            TurnOffWPSIOC();
+            return false;
+        }
+    }
 }
 
 uint8_t sendUART1(char *dataPtr, uint16_t dataCnt)

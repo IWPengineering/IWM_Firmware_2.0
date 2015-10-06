@@ -95,6 +95,11 @@ void TurnOnWPSIOC(void)
     CNEN2bits.CN27IE = true;
 }
 
+bool IsWPSIOCOn(void)
+{
+    return (bool)CNEN2bits.CN27IE;
+}
+
 void InitQueues(void)
 {
     InitQueue(&xQueue, X_AXIS_BUFFER_SIZE);

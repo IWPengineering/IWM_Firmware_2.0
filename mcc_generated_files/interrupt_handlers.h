@@ -75,6 +75,7 @@ void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void);
 void IOCHandler(void);
 void TurnOffWPSIOC(void);
 void TurnOnWPSIOC(void);
+bool IsWPSIOCOn(void);
 
 void InitQueues(void);
 
