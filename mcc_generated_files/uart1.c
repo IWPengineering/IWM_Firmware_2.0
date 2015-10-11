@@ -126,7 +126,7 @@ static uint8_t uart1_rxByteQ[UART1_CONFIG_RX_BYTEQ_LENGTH];
  */
 
 #define UART1_TX_FIFO_LENGTH 1
-#define UART1_RX_FIFO_LENGTH 1 
+#define UART1_RX_FIFO_LENGTH 1
 
 /**
   Section: Driver Interface
@@ -145,7 +145,7 @@ void UART1_Initialize(void) {
     // Baud Rate = 38400; BRG 12; 
     U1BRG = 0x000C;
 
-    IEC0bits.U1RXIE = 1;
+    IEC0bits.U1RXIE = 1;  
 
     U1STAbits.UTXEN = 1;
 

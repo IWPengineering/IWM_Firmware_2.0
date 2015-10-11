@@ -421,7 +421,7 @@ uint8_t SendUART1(char *dataPtr, uint16_t dataCnt)
     // Make a pointer to work with, at the current data location
     char *pD = dataPtr;
     // Number of bytes that have been sent already
-    unsigned int bytesSent = 0;
+    uint16_t bytesSent = 0;
     // Status of UART state machine
     
     while (bytesSent < dataCnt)
