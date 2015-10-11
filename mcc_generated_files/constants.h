@@ -65,6 +65,7 @@ extern const int c_AdjustmentFactor;
 extern const float c_MKIILiterPerDegree;
 extern const float c_UpstrokeToMeters;
 extern const float c_MaxLitersToLeak;
+extern const float c_BattADCToFloat;
 
 
 #ifdef	__cplusplus

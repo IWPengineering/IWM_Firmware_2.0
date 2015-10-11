@@ -56,7 +56,7 @@ extern const float c_UpstrokeToMeters;
 extern const float c_MaxLitersToLeak;
 
 // Accumulates battery voltage for an end of day average
-extern uint16_t batteryAccumulator;
+extern uint32_t batteryAccumulator;
 extern uint16_t batteryAccumAmt;
 
 // Volume accumulator array
@@ -78,6 +78,7 @@ float GetHandleAngle(uint16_t xAxis, uint16_t yAxis);
 
 void UpdateMessageVolume(void);
 void UpdateMessageBattery(void);
+float TurnBattADCToFloat(uint32_t avgBatVoltage);
 void UpdateMessagePrime(void);
 void UpdateMessageLeakage(void);
 // len of data must INCLUDE decimal point

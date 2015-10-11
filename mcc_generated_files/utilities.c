@@ -117,7 +117,7 @@ char phoneNumber[12] = "+17178211882";
 
 bool isBatteryLow = false;
 
-uint16_t batteryAccumulator = 0;
+uint32_t batteryAccumulator = 0;
 uint16_t batteryAccumAmt = 0;
 
 float volumeArray[12] = { 0 };
@@ -193,16 +193,23 @@ void UpdateMessageBattery(void)
                 batteryAccumAmt;
     }
     
+    float avgBat = TurnBattADCToFloat(avgBatVoltage);
+    
     // Update the text message
     //  38 is the first position of battery voltage
-    FloatToAscii(avgBatVoltage, 3, TextMessageString+38, 5);
+    FloatToAscii(avgBat, 3, TextMessageString+38, 5);
+}
+
+float TurnBattADCToFloat(uint32_t avgBatVoltage)
+{
+    return avgBatVoltage * c_BattADCToFloat;
 }
 
 void UpdateMessagePrime(void)
 {
     // Update the text message
     //  28 is the first digit of the prime in text message
-    FloatToAscii(longestPrime, 2, TextMessageString+28, 5);
+    FloatToAscii(longestPrime, 1, TextMessageString+28, 5); // Assumes priming is always less than 1000
 }
 
 void UpdateMessageLeakage(void)
@@ -315,9 +322,8 @@ bool IsNumberTooBig(uint32_t value, uint8_t dataLen)
     //  padding 0's on the front, we would return 122.34 from floatToAscii.
     // This function helps floatToAscii by telling it that we need to pad
     //  a zero, and thus return 012.23 in our dataLen of 6.
-    // dataLen would be -1 logically, but -2 keeps the decimal point
-    // which is carried through floatToAscii in dataLen.
-    if(value < TenToPower(dataLen-2))
+    // dataLen would be -1 logically
+    if(value < TenToPower(dataLen-1)) // Changed to -1 to follow logic 10/10/15 KK
     {
         return true;
     }
@@ -624,7 +630,7 @@ void ProcessAccelQueue(void)
     curAngle = AverageFloatQueueElements(&angleQueue);
     
     // Finish calculations from previous entries
-    if(!lastEventWasPriming)
+    if(!lastEventWasPriming && primingUpstroke > 0)
     {
         if(longestPrime < primingUpstroke)
         {
@@ -715,7 +721,7 @@ void AccumulateVolume(float angleDelta)
         {
             leakAmount = UpstrokeToLiters(angleDelta);
         }
-        volumeArray[curHour] -= (fastestLeakRate / 100);
+        volumeArray[curHour] -= leakAmount;
     } 
 }
 
@@ -752,7 +758,7 @@ void HandleBatteryBufferEvent(void)
         {
             isBatteryLow = false;
         }
-        batteryAccumulator += batteryBuffer[i];
+        batteryAccumulator += (uint32_t)batteryBuffer[i];
         batteryAccumAmt++;
     }
 }
