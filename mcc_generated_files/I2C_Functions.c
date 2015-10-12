@@ -64,9 +64,34 @@ time_s I2C_GetTime(void)
     return t;
 }
 
+void ToggleSCL(void)
+{
+    PORTBbits.RB8 = 1;
+    DelayUS(10);
+    PORTBbits.RB8 = 0;
+    DelayUS(10);
+    PORTBbits.RB8 = 1;
+}
+
 void SoftwareReset(void)
 {
+    // Procedure:
+    /*
+     1. Check SDA
+        a. If SDA = 1, generate STOP Condition --> Return
+        b. If SDA = 0, Generate Clock Pulse on SCL (1-0-1) --> Go To 1
+     */
     
+    TRISBbits.TRISB9 = 0; // Set SDA to an input
+    TRISBbits.TRISB8 = 1; // Set SCL to an output
+    
+    while(PORTBbits.RB9 == 0)
+    {
+        ToggleSCL();
+    }
+    
+    TRISBbits.TRISB9 = 1; // Set SDA to an output
+    TRISBbits.TRISB8 = 0; // Set SCL to an input
 }
 
 I2C_STATUS IdleI2C(void)
