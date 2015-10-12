@@ -32,9 +32,24 @@
 #define	I2C_FUNCTIONS_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-#include "utilities.h"
+#include <stdint.h>
+#include <stdbool.h>
+#include <math.h>
+#include "constants.h"
 
-typedef struct {
+//typedef struct time_s {
+//    uint8_t second;
+//    uint8_t minute;
+//    uint8_t hour;
+//    uint8_t wkDay;
+//    uint8_t mnDay;
+//    uint8_t month;
+//    uint8_t year;
+//} time_s;
+
+typedef struct time_s time_s;
+
+struct time_s {
     uint8_t second;
     uint8_t minute;
     uint8_t hour;
@@ -42,7 +57,7 @@ typedef struct {
     uint8_t mnDay;
     uint8_t month;
     uint8_t year;
-} time_s;
+};
 
 typedef enum {
             I2C_SOFTWARE_RESET = 0x02,

@@ -32,10 +32,11 @@
 #define	INTERRUPT_HANDLERS_H
 
 #include <xc.h> // include processor files - each processor file is guarded.
-#include "mcc.h"
-#include "queue.h"
 #include "constants.h"
 #include "I2C_Functions.h"
+#include "queue.h"
+#include "adc1.h"
+#include "mcc.h"
 
 extern uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 extern uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
@@ -46,9 +47,9 @@ extern uint8_t batteryBufferDepth;
 extern time_s PreviousTime;
 extern time_s CurrentTime;
 
-extern queue xQueue;
-extern queue yQueue;
-extern floatqueue angleQueue;
+extern uint16_queue xQueue;
+extern uint16_queue yQueue;
+extern float_queue angleQueue;
 
 /**
  Event Flags

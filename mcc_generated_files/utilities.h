@@ -34,8 +34,13 @@
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <math.h>
 #include <string.h>
-#include "mcc.h"
+#include <stdbool.h>
 #include "constants.h"
+#include "interrupt_handlers.h"
+#include "I2C_Functions.h"
+#include "UART_Functions.h"
+#include "queue.h"
+
 
 typedef enum {
             PRIMING,
@@ -92,8 +97,8 @@ bool IsSimOn(void);
 bool IsSimOnNetwork(void);
 bool IsThereWater(void);
 
-uint8_t SendUART1(char *dataPtr, uint16_t dataCnt);
-uint8_t ReceiveUART1(char *ptr, uint16_t ptrLen);
+//uint8_t SendUART1(char *dataPtr, uint16_t dataCnt);
+//uint8_t ReceiveUART1(char *ptr, uint16_t ptrLen);
 void TurnOnSim(void);
 void TurnOffSim(void);
 
@@ -110,8 +115,7 @@ float UpstrokeToLiters(float upstroke);
 float LeakMSToRate(uint16_t milsec);
 
 void HandleBatteryBufferEvent(void);
-uint8_t DecToBcd(uint8_t val);
-uint8_t BcdToDec(uint8_t val);
+
 /*
  Private Functions
  */

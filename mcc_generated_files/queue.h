@@ -32,40 +32,59 @@
 #define	QUEUE_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
-#include "mcc.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-typedef struct {
+typedef struct uint16_queue {
     uint16_t *contents;
     int front;
     int back;
     int maxSize;
     int cnt;
-} queue;
+} uint16_queue;
 
-typedef struct {
+typedef struct uint8_queue {
+    uint8_t *contents;
+    int front;
+    int back;
+    int maxSize;
+    int cnt;
+} uint8_queue;
+
+typedef struct float_queue {
     float *contents;
     int front;
     int back;
     int maxSize;
     int cnt;
-} floatqueue;
+} float_queue;
 
-bool InitQueue(queue *queueP, uint8_t queueSize);
-bool DestroyQueue(queue *queueP);
-bool IsQueueEmpty(queue *queueP);
-bool IsQueueFull(queue *queueP);
-bool ClearQueue(queue *queueP);
-bool PushQueue(queue *queueP, uint16_t element);
-uint16_t PullQueue(queue *queueP);
+bool uint16_InitQueue(uint16_queue *queueP, uint8_t queueSize);
+bool uint16_DestroyQueue(uint16_queue *queueP);
+bool uint16_IsQueueEmpty(uint16_queue *queueP);
+bool uint16_IsQueueFull(uint16_queue *queueP);
+bool uint16_ClearQueue(uint16_queue *queueP);
+bool uint16_PushQueue(uint16_queue *queueP, uint16_t element);
+uint16_t uint16_PullQueue(uint16_queue *queueP);
 
-bool InitFloatQueue(floatqueue *queueP, uint8_t queueSize);
-bool DestroyFloatQueue(floatqueue *queueP);
-bool IsFloatQueueEmpty(floatqueue *queueP);
-bool IsFloatQueueFull(floatqueue *queueP);
-bool ClearFloatQueue(floatqueue *queueP);
-bool PushFloatQueue(floatqueue *queueP, float element);
-float PullFloatQueue(floatqueue *queueP);
-float AverageFloatQueueElements(floatqueue *queueP);
+bool uint8_InitQueue(uint8_queue *queueP, uint8_t queueSize);
+bool uint8_DestroyQueue(uint8_queue *queueP);
+bool uint8_IsQueueEmpty(uint8_queue *queueP);
+bool uint8_IsQueueFull(uint8_queue *queueP);
+bool uint8_ClearQueue(uint8_queue *queueP);
+bool uint8_PushQueue(uint8_queue *queueP, uint8_t element);
+uint8_t uint8_PullQueue(uint8_queue *queueP);
+
+bool float_InitQueue(float_queue *queueP, uint8_t queueSize);
+bool float_DestroyQueue(float_queue *queueP);
+bool float_IsQueueEmpty(float_queue *queueP);
+bool float_IsQueueFull(float_queue *queueP);
+bool float_ClearQueue(float_queue *queueP);
+bool float_PushQueue(float_queue *queueP, float element);
+float float_PullQueue(float_queue *queueP);
+float AverageFloatQueueElements(float_queue *queueP);
 
 
 

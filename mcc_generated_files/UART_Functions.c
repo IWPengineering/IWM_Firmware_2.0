@@ -8,16 +8,15 @@
 
 #include "xc.h"
 #include "UART_Functions.h"
-#include "queue.h"
 
-queue TX_Queue;
-queue RX_Queue;
+uint8_queue TX_Queue;
+uint8_queue RX_Queue;
 
 void UART_Init(void)
 {
     // Assemble the queues
-    InitQueue(TX_Queue, TX_QUEUE_SIZE);
-    InitQueue(RX_Queue, RX_QUEUE_SIZE);
+    uint8_InitQueue(&TX_Queue, TX_QUEUE_SIZE);
+    uint8_InitQueue(&RX_Queue, RX_QUEUE_SIZE);
     
     // Set init blocks
     
@@ -45,16 +44,88 @@ void UART_Init(void)
     IEC0bits.U1RXIE = 1;
     IEC0bits.U1TXIE = 1; 
     
-    // Enable transmit
-    U1STAbits.UTXEN = 1;
 }
 
 void __attribute__((interrupt, no_auto_psv)) _U1TXInterrupt(void)
 {
+    // Clear the interrupt flag
+    IFS0bits.U1TXIF = false;
     
+    if(!uint8_IsQueueEmpty(&TX_Queue) && !U1STAbits.UTXBF)
+    {
+        // If there is at least one element in the queue, and the TX 
+        //  buffer isn't full
+        U1TXREG = uint8_PullQueue(&TX_Queue);
+    }
+    else if(uint8_IsQueueEmpty(&TX_Queue) && U1STAbits.TRMT)
+    {
+        // If queue is empty and everything is transmitted, disable UTXEN
+        U1STAbits.UTXEN = 0;
+    }
 }
 
 void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt(void)
 {
+    // Clear the interrupt flag
+    IFS0bits.U1RXIF = false;
     
+    if(!uint8_IsQueueFull(&RX_Queue) && U1STAbits.URXDA)
+    {
+        // If there is room in the queue and data on the bus
+        uint8_PushQueue(&RX_Queue, U1RXREG);
+    }
+}
+
+UART_STATUS UART_Write(char byte)
+{
+    if(uint8_IsQueueFull(&TX_Queue))
+    {
+        return TX_QUEUE_FULL;
+    }
+    else
+    {
+        uint8_PushQueue(&TX_Queue, (uint8_t)byte);
+        // Enabling TX will throw the TX Interrupt
+        U1STAbits.UTXEN = 1; // Set enabled to start transmit
+        
+        return TX_STARTED;
+    }
+}
+
+UART_STATUS UART_Write_Buffer(char *dataPtr, uint8_t dataLen)
+{
+    char *pD = dataPtr;
+    
+    int i;
+    for(i = 0; i < dataLen; i++)
+    {
+        while(uint8_IsQueueFull(&TX_Queue)); // Wait for the queue to have a space
+        UART_Write((char)*pD);
+        pD++;  
+    }
+    
+    return TX_STARTED;
+}
+
+// Returns amount of valid data in the provided buffer
+uint8_t UART_Read(char *dataPtr, uint8_t dataLen)
+{
+    char *pD = dataPtr;
+    
+    int i;
+    for(i = 0; i < dataLen; i++)
+    {
+        // If there are no entries, return how far we were
+        if(uint8_IsQueueEmpty(&RX_Queue))
+        {
+            return i;
+        }
+        
+        // Get an entry, put it in the pointer
+        *pD = (char)uint8_PullQueue(&RX_Queue);
+        // Then increment our pointer
+        pD++;
+    }
+    
+    return dataLen;
 }

@@ -8,10 +8,6 @@
 
 #include "xc.h"
 #include "interrupt_handlers.h"
-#include "rtcc_handler.h"
-#include "queue.h"
-#include "constants.h"
-#include "I2C_Functions.h"
 
 uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
@@ -26,9 +22,9 @@ time_s PreviousTime;
 time_s CurrentTime;
 
 
-queue xQueue;
-queue yQueue;
-floatqueue angleQueue;
+uint16_queue xQueue;
+uint16_queue yQueue;
+float_queue angleQueue;
 
 /**
  Event Flags
@@ -108,9 +104,9 @@ bool IsWPSIOCOn(void)
 
 void InitQueues(void)
 {
-    InitQueue(&xQueue, X_AXIS_BUFFER_SIZE);
-    InitQueue(&yQueue, Y_AXIS_BUFFER_SIZE);
-    InitFloatQueue(&angleQueue, ANGLES_TO_AVERAGE);
+    uint16_InitQueue(&xQueue, X_AXIS_BUFFER_SIZE);
+    uint16_InitQueue(&yQueue, Y_AXIS_BUFFER_SIZE);
+    float_InitQueue(&angleQueue, ANGLES_TO_AVERAGE);
 }
 
 void UpdateWaterStatus(void)
@@ -191,7 +187,7 @@ void Timer1Handler(void)
     // Stop ADC when measurement is complete
     ADC1_Stop();
     // Push result to xQueue
-    PushQueue(&xQueue, ADC1_ConversionResultGet());
+    uint16_PushQueue(&xQueue, ADC1_ConversionResultGet());
     // Select our ADC Channel as Y
     ADC1_ChannelSelect(yChan);
     // Start taking a measurement
@@ -202,7 +198,7 @@ void Timer1Handler(void)
     // Stop ADC when measurement is complete
     ADC1_Stop();
     // Push result to yQueue
-    PushQueue(&yQueue, ADC1_ConversionResultGet());
+    uint16_PushQueue(&yQueue, ADC1_ConversionResultGet());
     
     // Switch the reference back to the band gap
     ADC1_ReferenceSelect(ADC1_REFERENCE_2VBG); 

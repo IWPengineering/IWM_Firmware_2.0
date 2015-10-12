@@ -9,6 +9,10 @@
 #include "xc.h"
 #include "I2C_Functions.h"
 #include "utilities.h"
+#include "conversion.h"
+
+#define FCY         2000000UL // Instruction cycle frequency
+#include <libpic30.h>
 
 #define I2C_TIMEOUT_VALUE           1300
 
@@ -67,9 +71,9 @@ time_s I2C_GetTime(void)
 void ToggleSCL(void)
 {
     PORTBbits.RB8 = 1;
-    DelayUS(10);
+    __delay_us(10);
     PORTBbits.RB8 = 0;
-    DelayUS(10);
+    __delay_us(10);
     PORTBbits.RB8 = 1;
 }
 

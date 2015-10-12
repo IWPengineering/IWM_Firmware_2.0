@@ -104,7 +104,8 @@ void SYSTEM_Initialize(void) {
     TMR3_Initialize();
     TMR5_Initialize();
     TMR4_Initialize();
-    UART1_Initialize();
+    
+    
 }
 
 void OSCILLATOR_Initialize(void) {

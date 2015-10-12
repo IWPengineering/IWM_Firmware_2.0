@@ -8,9 +8,6 @@
 
 #include "xc.h"
 #include "rtcc_handler.h"
-#include "mcc.h"
-#include "interrupt_handlers.h"
-#include "utilities.h"
 
 #define RTCC_RETRY_MAX      100
 #define RTCC_WRITE_ADDRESS  0xDE
