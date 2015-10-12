@@ -32,6 +32,7 @@
 #define	I2C_FUNCTIONS_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
+#include "utilities.h"
 
 typedef struct {
     uint8_t second;
@@ -41,17 +42,17 @@ typedef struct {
     uint8_t mnDay;
     uint8_t month;
     uint8_t year;
-} time_t;
+} time_s;
 
 typedef enum {
-            I2C_SOFTWARE_RESET,
-            I2C_COLLISION_DETECT,
-            I2C_SUCCESS,
-            I2C_NO_TRY
+            I2C_SOFTWARE_RESET = 0x02,
+            I2C_COLLISION_DETECT = 0x04,
+            I2C_SUCCESS = 0x01,
+            I2C_NO_TRY = 0x00
 } I2C_STATUS;
 
 void I2C_Init(void);
-time_t I2C_GetTime(void);
+time_s I2C_GetTime(void);
 void SoftwareReset(void);
 I2C_STATUS IdleI2C(void);
 I2C_STATUS StartI2C(void);
@@ -62,7 +63,7 @@ I2C_STATUS AckI2C(void);
 I2C_STATUS WriteI2C(char data);
 I2C_STATUS ReadI2C(char *dataPtr);
 I2C_STATUS TurnOffRTCCOscillator(void);
-I2C_STATUS SetRTCCTime(time_t *curTime);
+I2C_STATUS SetRTCCTime(time_s *curTime);
 // TODO Insert appropriate #include <>
 
 // TODO Insert C++ class definitions if appropriate

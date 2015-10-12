@@ -111,7 +111,7 @@ float UpstrokeToLiters(float upstroke);
 float LeakMSToRate(uint16_t milsec);
 
 void HandleBatteryBufferEvent(void);
-int DecToBcd(int val);
+uint8_t DecToBcd(uint8_t val);
 /*
  Private Functions
  */
