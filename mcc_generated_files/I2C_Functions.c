@@ -44,6 +44,22 @@ time_s I2C_GetTime(void)
         t = I2C_GetTime();
     }
     
+    t.second &= 0x7F; // Remove Osc
+    t.minute &= 0x7F; // Remove unused
+    t.hour &= 0x3F; // Remove 12/24 bit
+    t.wkDay &= 0x07; // Remove oscRun, pwrFail, VBATEN
+    t.mnDay &= 0x3F; // Remove unused
+    t.month &= 0x1F; // Remove Lpyr
+    
+    // Convert all values to decimal
+    t.second = BcdToDec(t.second);
+    t.minute = BcdToDec(t.minute);
+    t.hour = BcdToDec(t.hour);
+    t.wkDay = BcdToDec(t.wkDay);
+    t.mnDay = BcdToDec(t.mnDay);
+    t.month = BcdToDec(t.month);
+    t.year = BcdToDec(t.year);
+    
     return t;
 }
 

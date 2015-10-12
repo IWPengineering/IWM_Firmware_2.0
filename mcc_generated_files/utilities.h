@@ -112,6 +112,7 @@ float LeakMSToRate(uint16_t milsec);
 
 void HandleBatteryBufferEvent(void);
 uint8_t DecToBcd(uint8_t val);
+uint8_t BcdToDec(uint8_t val);
 /*
  Private Functions
  */
