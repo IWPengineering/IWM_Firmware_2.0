@@ -2,6 +2,7 @@
 #include "mcc_generated_files/interrupt_handlers.h"
 #include "mcc_generated_files/rtcc_handler.h"
 #include "mcc_generated_files/utilities.h"
+#include "mcc_generated_files/I2C_Functions.h"
 
 /*
                          Main application
@@ -13,8 +14,7 @@ int main(void) {
     InitQueues(); // Start ADC queues
     InitIOCInterrupt(); // Initialize IOC Interrupts
 
-    // Added to check if we can get through ADC read here - not in ISR
-    TMR1_CallBack();
+    I2C_Init(); // Call custom I2C Init function to start the bus
     
     TMR1_Start();
     TMR2_Start();

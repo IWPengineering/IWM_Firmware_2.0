@@ -97,7 +97,7 @@ void SYSTEM_Initialize(void) {
     PIN_MANAGER_Initialize();
     INTERRUPT_Initialize();
     ADC1_Initialize();
-    I2C1_Initialize();
+    //I2C1_Initialize(); // Will be called by my custom function
     RTCC_Initialize();
     TMR1_Initialize();
     TMR2_Initialize();
