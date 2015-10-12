@@ -762,3 +762,8 @@ void HandleBatteryBufferEvent(void)
         batteryAccumAmt++;
     }
 }
+
+uint8_t DecToBcd(uint8_t val)
+{
+	return ((val / 10 * 16) + (val % 10));
+}
