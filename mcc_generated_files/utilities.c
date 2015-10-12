@@ -704,7 +704,7 @@ pumping_state GetPumpingState(float curAngle, float prevAngle)
 void AccumulateVolume(float angleDelta)
 {
     // Get the current hour
-    int curHour = CurrentTime.tm_hour;
+    int curHour = CurrentTime.hour;
     curHour >>= 1; // One bit shift to divide by two
     // This makes it so we can avoid a switch case
     

@@ -35,6 +35,7 @@
 #include "mcc.h"
 #include "queue.h"
 #include "constants.h"
+#include "I2C_Functions.h"
 
 extern uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 extern uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
@@ -42,8 +43,8 @@ extern uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
 extern uint8_t depthBufferDepth;
 extern uint8_t batteryBufferDepth;
 
-extern struct tm PreviousTime;
-extern struct tm CurrentTime;
+extern time_s PreviousTime;
+extern time_s CurrentTime;
 
 extern queue xQueue;
 extern queue yQueue;

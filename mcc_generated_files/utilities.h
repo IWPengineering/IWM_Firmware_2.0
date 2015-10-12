@@ -35,7 +35,7 @@
 #include <math.h>
 #include <string.h>
 #include "mcc.h"
-#include "interrupt_handlers.h"
+//#include "interrupt_handlers.h"
 #include "constants.h"
 
 typedef enum {
