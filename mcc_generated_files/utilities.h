@@ -28,14 +28,13 @@
 
 // This is a guard condition so that contents of this file are not included
 // more than once.  
-#ifndef XC_HEADER_TEMPLATE_H
-#define	XC_HEADER_TEMPLATE_H
+#ifndef UTILITIES_H
+#define	UTILITIES_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <math.h>
 #include <string.h>
 #include "mcc.h"
-//#include "interrupt_handlers.h"
 #include "constants.h"
 
 typedef enum {
