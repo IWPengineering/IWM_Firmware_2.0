@@ -11,6 +11,7 @@
 #include "rtcc_handler.h"
 #include "queue.h"
 #include "constants.h"
+#include "I2C_Functions.h"
 
 uint16_t depthBuffer[DEPTH_BUFFER_SIZE];
 uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
@@ -18,8 +19,12 @@ uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
 uint8_t depthBufferDepth = 0;
 uint8_t batteryBufferDepth = 0;
 
-struct tm PreviousTime;
-struct tm CurrentTime;
+//struct tm PreviousTime;
+//struct tm CurrentTime;
+
+time_s PreviousTime;
+time_s CurrentTime;
+
 
 queue xQueue;
 queue yQueue;
@@ -227,10 +232,10 @@ void Timer5Handler(void)
     // we need to read the RTCC over I2C
     
     PreviousTime = CurrentTime;
-    CurrentTime = GetTime();
+    CurrentTime = I2C_GetTime();
     
     // If the day isn't the same
-    if (PreviousTime.tm_mday != CurrentTime.tm_mday)
+    if (PreviousTime.mnDay != CurrentTime.mnDay)
     {
         // Then trigger a midnight event
         isMidnightPassed = true;
