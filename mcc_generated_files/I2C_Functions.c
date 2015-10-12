@@ -20,7 +20,31 @@ void I2C_Init(void)
 
 time_s I2C_GetTime(void)
 {
+    time_s t;
     
+    I2C_STATUS stat = I2C_NO_TRY;
+    
+    stat |= StartI2C();
+    stat |= WriteI2C(0xDE); // Addr + Write
+    stat |= WriteI2C(0x00); // Addr for seconds
+    stat |= RestartI2C();
+    stat |= IdleI2C();
+    stat |= WriteI2C(0xDF); // Addr + Read
+    stat |= ReadI2C(&t.second);
+    stat |= ReadI2C(&t.minute);
+    stat |= ReadI2C(&t.hour);
+    stat |= ReadI2C(&t.wkDay);
+    stat |= ReadI2C(&t.mnDay);
+    stat |= ReadI2C(&t.month);
+    stat |= ReadI2C(&t.year);
+    stat |= StopI2C();
+    
+    if(stat != I2C_SUCCESS)
+    {
+        t = I2C_GetTime();
+    }
+    
+    return t;
 }
 
 void SoftwareReset(void)
@@ -182,9 +206,9 @@ I2C_STATUS WriteI2C(char data)
     return I2C_SUCCESS;
 }
 
-I2C_STATUS ReadI2C(char *dataPtr)
+I2C_STATUS ReadI2C(uint8_t *dataPtr)
 {
-    char *pD = dataPtr; // Give this function the ptr
+    uint8_t *pD = dataPtr; // Give this function the ptr
     
     I2C1CONbits.ACKDT = 1; // Prep a NACK
     I2C1CONbits.RCEN = 1; // Give clk control to slave
@@ -216,7 +240,7 @@ I2C_STATUS ReadI2C(char *dataPtr)
         i++;
     }
     
-    *pD = I2C1RCV;
+    *pD = (uint8_t)I2C1RCV;
     
     return I2C_SUCCESS;
 }
@@ -292,7 +316,7 @@ I2C_STATUS SetRTCCTime(time_s *curTime)
     //  operator will cause the result to not be 0x01, but instead 0x03,
     //  etc. This can be used to identify specific glitches, but here I
     //  am using it as a catch all.
-    if(write_stat != 0x01)
+    if(write_stat != I2C_SUCCESS)
     {
         SetRTCCTime(curTime);
     }
