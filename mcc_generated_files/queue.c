@@ -90,16 +90,30 @@ uint16_t uint16_PullQueue(uint16_queue *queueP)
     }
 }
 
+//char *next_alloc;
+//bool *malloc(int size)
+//{
+//    char *this_alloc;
+//    this_alloc = next_alloc;
+//    if((END_OF_ALLOC_SPACE - this_alloc) < size)
+//    {
+//        return NULL;
+//    }
+//    next_alloc += size;
+//    return this_alloc;
+//}
+
 bool uint8_InitQueue(uint8_queue *queueP, uint8_t queueSize)
 {
-    uint8_t *newContents;
-    
-    newContents = (uint8_t *)malloc(sizeof(uint8_t) * queueSize);
-    
-    if (newContents == NULL)
-    {
-        return false;
-    }
+//    uint8_t *newContents;
+//    
+//    newContents = (uint8_t *)malloc(sizeof(uint8_t) * queueSize);
+//    
+//    if (newContents == NULL)
+//    {
+//        return false;
+//    }
+    uint8_t newContents[queueSize];
     
     queueP->contents = newContents;
     queueP->maxSize = queueSize;

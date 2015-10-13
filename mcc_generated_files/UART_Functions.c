@@ -23,11 +23,11 @@ void UART_Init(void)
     /*
      * UART enabled, Continue operation in idle, IrDA disabled,
      * UxRTS in Flow Control, UxCTS and UxRTS unused by UART,
-     * Wake on start bit during sleep enabled, loopback disabled
+     * Wake on start bit during sleep disabled, loopback disabled
      * autobaud disabled, reverse polarity disabled, high baud enabled,
      * parity and data selection = 8 bit, no parity, one stop bit
      */
-    U1MODE  = 0x8088;
+    U1MODE  = 0x8008;
     
     /*
      * UART TX interrupt when there is a char open in TX Buffer, IrDA idle = 1
@@ -99,9 +99,16 @@ UART_STATUS UART_Write_Buffer(char *dataPtr, uint8_t dataLen)
     int i;
     for(i = 0; i < dataLen; i++)
     {
-        while(uint8_IsQueueFull(&TX_Queue)); // Wait for the queue to have a space
-        UART_Write((char)*pD);
-        pD++;  
+        UART_STATUS stat = UART_Write((char)*pD);
+        if(stat == TX_QUEUE_FULL)
+        {
+            i--; // Run the loop again
+        }
+        else
+        {
+            pD++;  
+        }
+        
     }
     
     return TX_STARTED;
