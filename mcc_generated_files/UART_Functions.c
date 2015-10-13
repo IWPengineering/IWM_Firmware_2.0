@@ -42,7 +42,7 @@ void UART_Init(void)
     
     // Enable interrupts for TX and RX
     IEC0bits.U1RXIE = 1;
-    IEC0bits.U1TXIE = 1; 
+    //IEC0bits.U1TXIE = 1; 
     
 }
 
