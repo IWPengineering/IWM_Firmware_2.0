@@ -86,9 +86,12 @@ UART_STATUS UART_Write(char byte)
     {
         uint8_PushQueue(&TX_Queue, (uint8_t)byte);
         // Enabling TX will throw the TX Interrupt
-        U1STAbits.UTXEN = 1; // Set enabled to start transmit
+        if(U1STAbits.UTXEN == false)
+        {
+            U1STAbits.UTXEN = true; // Set enabled to start transmit
+        }
         
-        if(IEC0bits.U1TXIE = false)
+        if(IEC0bits.U1TXIE == false)
         {
             IEC0bits.U1TXIE = true;
         }
