@@ -48,20 +48,22 @@ void UART_Init(void)
 
 void __attribute__((interrupt, no_auto_psv)) _U1TXInterrupt(void)
 {
-    // Clear the interrupt flag
-    IFS0bits.U1TXIF = false;
-    
     if(!uint8_IsQueueEmpty(&TX_Queue) && !U1STAbits.UTXBF)
     {
         // If there is at least one element in the queue, and the TX 
         //  buffer isn't full
         U1TXREG = uint8_PullQueue(&TX_Queue);
+        //U1STAbits.UTXEN = 1;
     }
     else if(uint8_IsQueueEmpty(&TX_Queue) && U1STAbits.TRMT)
     {
         // If queue is empty and everything is transmitted, disable UTXEN
-        //U1STAbits.UTXEN = 0;
+        U1STAbits.UTXEN = 0;
+        IEC0bits.U1TXIE = 0;
+        return;
     }
+    // Clear the interrupt flag
+    IFS0bits.U1TXIF = false;
 }
 
 void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt(void)
@@ -78,25 +80,35 @@ void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt(void)
 
 UART_STATUS UART_Write(char byte)
 {
-    if(uint8_IsQueueFull(&TX_Queue))
+//    U1STAbits.UTXEN = 1;
+//    if(uint8_IsQueueFull(&TX_Queue))
+//    {
+//        return TX_QUEUE_FULL;
+//    }
+//    else
+//    {
+//        uint8_PushQueue(&TX_Queue, (uint8_t)byte);
+//        // Enabling TX will throw the TX Interrupt
+//        
+//        
+//        if(IEC0bits.U1TXIE == false)
+//        {
+//            IEC0bits.U1TXIE = true;
+//        }
+//        
+//        return TX_STARTED;
+//    }
+    
+//     Non-Interrupt implementation
+    U1STAbits.UTXEN = 1;
+    if(!U1STAbits.UTXBF)
     {
-        return TX_QUEUE_FULL;
+        U1TXREG = byte;
+        return TX_STARTED;
     }
     else
     {
-        uint8_PushQueue(&TX_Queue, (uint8_t)byte);
-        // Enabling TX will throw the TX Interrupt
-        if(U1STAbits.UTXEN == false)
-        {
-            U1STAbits.UTXEN = true; // Set enabled to start transmit
-        }
-        
-        if(IEC0bits.U1TXIE == false)
-        {
-            IEC0bits.U1TXIE = true;
-        }
-        
-        return TX_STARTED;
+        return TX_QUEUE_FULL;
     }
 }
 
