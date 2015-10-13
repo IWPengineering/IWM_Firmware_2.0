@@ -105,13 +105,14 @@ UART_STATUS UART_Write_Buffer(char *dataPtr, uint8_t dataLen)
     for(i = 0; i < dataLen; i++)
     {
         UART_STATUS stat = UART_Write((char)*pD);
-        if(stat == TX_QUEUE_FULL)
+        if(stat == TX_STARTED)
         {
-            i--; // Run the loop again
+            // If we started TX, then we are free to move to the next char
+            pD++;              
         }
         else
         {
-            pD++;  
+            i--; // Run the loop again
         }
         
     }
