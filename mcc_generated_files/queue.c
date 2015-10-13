@@ -11,14 +11,15 @@
 
 bool uint16_InitQueue(uint16_queue *queueP, uint8_t queueSize)
 {
-    uint16_t *newContents;
-    
-    newContents = (uint16_t *)malloc(sizeof(uint16_t) * queueSize);
-    
-    if (newContents == NULL)
-    {
-        return false;
-    }
+//    uint16_t *newContents;
+//    
+//    newContents = (uint16_t *)malloc(sizeof(uint16_t) * queueSize);
+//    
+//    if (newContents == NULL)
+//    {
+//        return false;
+//    }
+    uint16_t newContents[queueSize];
     
     queueP->contents = newContents;
     queueP->maxSize = queueSize;
@@ -31,15 +32,15 @@ bool uint16_InitQueue(uint16_queue *queueP, uint8_t queueSize)
 
 bool uint16_DestroyQueue(uint16_queue *queueP)
 {
-    free(queueP->contents);
+//    free(queueP->contents);
+//    
+//    queueP->contents = NULL;
+//    queueP->maxSize = 0;
+//    queueP->cnt = 0;
+//    queueP->front = -1;
+//    queueP->back = -1;
     
-    queueP->contents = NULL;
-    queueP->maxSize = 0;
-    queueP->cnt = 0;
-    queueP->front = -1;
-    queueP->back = -1;
-    
-    return true;
+    return false;
 }
 
 bool uint16_IsQueueEmpty(uint16_queue *queueP)
@@ -90,19 +91,6 @@ uint16_t uint16_PullQueue(uint16_queue *queueP)
     }
 }
 
-//char *next_alloc;
-//bool *malloc(int size)
-//{
-//    char *this_alloc;
-//    this_alloc = next_alloc;
-//    if((END_OF_ALLOC_SPACE - this_alloc) < size)
-//    {
-//        return NULL;
-//    }
-//    next_alloc += size;
-//    return this_alloc;
-//}
-
 bool uint8_InitQueue(uint8_queue *queueP, uint8_t queueSize)
 {
 //    uint8_t *newContents;
@@ -126,15 +114,15 @@ bool uint8_InitQueue(uint8_queue *queueP, uint8_t queueSize)
 
 bool uint8_DestroyQueue(uint8_queue *queueP)
 {
-    free(queueP->contents);
+//    free(queueP->contents);
+//    
+//    queueP->contents = NULL;
+//    queueP->maxSize = 0;
+//    queueP->cnt = 0;
+//    queueP->front = -1;
+//    queueP->back = -1;
     
-    queueP->contents = NULL;
-    queueP->maxSize = 0;
-    queueP->cnt = 0;
-    queueP->front = -1;
-    queueP->back = -1;
-    
-    return true;
+    return false;
 }
 
 bool uint8_IsQueueEmpty(uint8_queue *queueP)
@@ -187,14 +175,15 @@ uint8_t uint8_PullQueue(uint8_queue *queueP)
 
 bool float_InitQueue(float_queue *queueP, uint8_t queueSize)
 {
-    float *newContents;
-    
-    newContents = (float *)malloc(sizeof(float) * queueSize);
-    
-    if (newContents == NULL)
-    {
-        return false;
-    }
+//    float *newContents;
+//    
+//    newContents = (float *)malloc(sizeof(float) * queueSize);
+//    
+//    if (newContents == NULL)
+//    {
+//        return false;
+//    }
+    float newContents[queueSize];
     
     queueP->contents = newContents;
     queueP->maxSize = queueSize;
@@ -206,15 +195,15 @@ bool float_InitQueue(float_queue *queueP, uint8_t queueSize)
 }
 bool float_DestroyQueue(float_queue *queueP)
 {
-    free(queueP->contents);
+//    free(queueP->contents);
+//    
+//    queueP->contents = NULL;
+//    queueP->maxSize = 0;
+//    queueP->cnt = 0;
+//    queueP->front = -1;
+//    queueP->back = -1;
     
-    queueP->contents = NULL;
-    queueP->maxSize = 0;
-    queueP->cnt = 0;
-    queueP->front = -1;
-    queueP->back = -1;
-    
-    return true;
+    return false;
 }
 bool float_IsQueueEmpty(float_queue *queueP)
 {
