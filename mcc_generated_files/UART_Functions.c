@@ -88,6 +88,11 @@ UART_STATUS UART_Write(char byte)
         // Enabling TX will throw the TX Interrupt
         U1STAbits.UTXEN = 1; // Set enabled to start transmit
         
+        if(IEC0bits.U1TXIE = false)
+        {
+            IEC0bits.U1TXIE = true;
+        }
+        
         return TX_STARTED;
     }
 }
