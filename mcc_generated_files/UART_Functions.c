@@ -60,7 +60,7 @@ void __attribute__((interrupt, no_auto_psv)) _U1TXInterrupt(void)
     else if(uint8_IsQueueEmpty(&TX_Queue) && U1STAbits.TRMT)
     {
         // If queue is empty and everything is transmitted, disable UTXEN
-        U1STAbits.UTXEN = 0;
+        //U1STAbits.UTXEN = 0;
     }
 }
 
@@ -103,7 +103,6 @@ UART_STATUS UART_Write(char byte)
 UART_STATUS UART_Write_Buffer(char *dataPtr, uint8_t dataLen)
 {
     char *pD = dataPtr;
-    
     int i;
     for(i = 0; i < dataLen; i++)
     {

@@ -54,7 +54,7 @@ int main(void) {
         
         DelayMS(1000);
         //SendUART1("Hello! I'm on! :)", sizeof("Hello! I'm on! :)") - 1);
-        UART_Write_Buffer(TextMessageString, sizeof(TextMessageString));
+        UART_Write_Buffer(&TextMessageString[0], sizeof(TextMessageString));
     }
 
     return -1;
