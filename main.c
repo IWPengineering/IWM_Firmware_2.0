@@ -63,10 +63,9 @@ int main(void) {
             HandleBatteryBufferEvent();
         }
         
-        DelayMS(1000);
-        //SendUART1("Hello! I'm on! :)", sizeof("Hello! I'm on! :)") - 1);
-        UART_Write_Buffer(&TextMessageString[0], sizeof(TextMessageString));
-        UART_Write_Buffer("\r\n", sizeof("\r\n"));
+//        DelayMS(1000);
+//        UART_Write_Buffer(&TextMessageString[0], sizeof(TextMessageString));
+//        UART_Write_Buffer("\r\n", sizeof("\r\n"));
     }
 
     return -1;
