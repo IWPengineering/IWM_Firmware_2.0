@@ -6,7 +6,15 @@
 #include "mcc_generated_files/tmr1.h"
 #include "mcc_generated_files/tmr4.h"
 #include "mcc_generated_files/tmr5.h"
-
+time_t StartTime = { // All values in BCD
+    0x30, // seconds
+    0x25, // minutes
+    0x21, // hours
+    0x04, // wkDay
+    0x14, // mnDay
+    0x10, // month
+    0x15  // year
+};
 /*
                          Main application
  */
@@ -18,6 +26,8 @@ int main(void) {
     InitIOCInterrupt(); // Initialize IOC Interrupts
 
     I2C_Init(); // Call custom I2C Init function to start the bus
+    
+    SetRTCCTime(StartTime); // Set the current time on the MCP7940
     
     UART_Init();
     
