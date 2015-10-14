@@ -54,6 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "interrupt_handlers.h"
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 

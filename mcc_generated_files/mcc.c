@@ -78,7 +78,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config BOREN = BOR3    // Brown-out Reset Enable bits->Brown-out Reset enabled in hardware, SBOREN bit disabled
 #pragma config LVRCFG = OFF    // ->Low Voltage regulator is not available
 #pragma config MCLRE = ON    // MCLR Pin Enable bit->RA5 input pin disabled,MCLR pin enabled
-#pragma config BORV = V18    // Brown-out Reset Voltage bits->Brown-out Reset set to lowest voltage (1.8V)
+//#pragma config BORV = V18    // Brown-out Reset Voltage bits->Brown-out Reset set to lowest voltage (1.8V)
 #pragma config PWRTEN = ON    // Power-up Timer Enable bit->PWRT enabled
 
 // FICD
@@ -97,14 +97,15 @@ void SYSTEM_Initialize(void) {
     PIN_MANAGER_Initialize();
     INTERRUPT_Initialize();
     ADC1_Initialize();
-    I2C1_Initialize();
-    RTCC_Initialize();
+    //I2C1_Initialize(); // Will be called by my custom function
+    //RTCC_Initialize();
     TMR1_Initialize();
     TMR2_Initialize();
     TMR3_Initialize();
     TMR5_Initialize();
     TMR4_Initialize();
-    UART1_Initialize();
+    
+    
 }
 
 void OSCILLATOR_Initialize(void) {

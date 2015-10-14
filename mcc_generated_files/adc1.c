@@ -52,7 +52,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <xc.h>
 #include "adc1.h"
 //#include "interrupt_handlers.h"
-#include "interrupt_handlers.h"
+//#include "interrupt_handlers.h"
 
 /**
   Section: Data Type Definitions
@@ -84,7 +84,8 @@ static ADC_OBJECT adc1_obj;
 void ADC1_Initialize(void) {
     // ADSIDL disabled; ASAM disabled; FORM Absolute decimal result, unsigned, right-justified; MODE12 enabled; ADON enabled; DONE disabled; SAMP disabled; SSRC Clearing sample bit ends sampling and starts conversion; 
 
-    AD1CON1 = 0x8400;
+    AD1CON1 = 0x8470; // ADSIDL disabled, ASAM disabled, FORM absolute decimal, unsigned, riht just. 12 bit enable, ADON enable, DONE dis, samp dis, SSRC = 7 (Internal counter ends sampling and starts conv);
+    //AD1CON1 = 0x8400;
 
     // OFFCAL disabled; ALTS disabled; PVCFG 2 * Internal VBG; BUFM disabled; BUFREGEN disabled; SMPI 1; CSCNA disabled; NVCFG AVSS; 
 

@@ -54,6 +54,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "interrupt_handlers.h"
+#include "constants.h"
+#include "I2C_Functions.h"
+#include "queue.h"
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 

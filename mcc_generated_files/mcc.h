@@ -59,7 +59,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "tmr3.h"
 #include "tmr5.h"
 #include "tmr4.h"
-#include "uart1.h"
+//#include "uart1.h"
+//#include "constants.h"
+//#include "I2C_Functions.h"
+//#include "interrupt_handlers.h"
+//#include "queue.h"
+//#include "UART_Functions.h" 
+//#include "utilities.h"
 
 #define _XTAL_FREQ  4000000
 

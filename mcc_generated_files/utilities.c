@@ -1,6 +1,6 @@
 /*
  * File:   utilities.c
- * Author: KSK0419
+ * Author: Ken Kok
  *
  * Created on September 25, 2015, 9:51 AM
  */
@@ -9,9 +9,6 @@
 #include "xc.h"
 #include "math.h"
 #include "string.h"
-#include "mcc.h"
-#include "interrupt_handlers.h"
-#include "constants.h"
 #include "utilities.h"
 
 #define FCY         2000000UL // Instruction cycle frequency
@@ -113,7 +110,7 @@ char TextMessageString[MESSAGE_LENGTH] = {
     '>', ')', ')'
 };
 
-char phoneNumber[12] = "+17178211882";
+char phoneNumber[] = "+17178211882";
 
 bool isBatteryLow = false;
 
@@ -416,59 +413,59 @@ bool IsThereWater(void)
     }
 }
 
-uint8_t SendUART1(char *dataPtr, uint16_t dataCnt)
-{
-    // Make a pointer to work with, at the current data location
-    char *pD = dataPtr;
-    // Number of bytes that have been sent already
-    unsigned int bytesSent = 0;
-    // Status of UART state machine
-    
-    while (bytesSent < dataCnt)
-    {
-        if (!(UART1_TransferStatusGet() == UART1_TRANSFER_STATUS_TX_FULL))
-        {
-            // If the buffer is not full
-            UART1_Write(*(pD));
-            // We added a byte
-            bytesSent++;
-            // So we need to move our pointer
-            pD++;
-        }
-        
-        // We can do something else here if we want to
-        // Like cleaning up our daily variables, etc.
-    }
-    
-    return 0;
-}
-
-uint8_t ReceiveUART1(char *ptr, uint16_t ptrLen)
-{
-    if (UART1_ReceiveBufferIsEmpty())
-    {
-        // The buffer is empty, so we aren't going to fill the ptr array
-        return 0;
-    }
-    else
-    {
-        char *pD = ptr;
-        UART1_TRANSFER_STATUS status;
-        int numBytes = 0;
-        while (numBytes < ptrLen)
-        {
-            status = UART1_TransferStatusGet();
-            if (status & UART1_TRANSFER_STATUS_RX_DATA_PRESENT)
-            {
-                *pD = (char)UART1_Read();
-                numBytes++;
-                pD++;
-            }
-        }
-        
-        return numBytes;
-    }
-}
+//uint8_t SendUART1(char *dataPtr, uint16_t dataCnt)
+//{
+//    // Make a pointer to work with, at the current data location
+//    char *pD = dataPtr;
+//    // Number of bytes that have been sent already
+//    uint16_t bytesSent = 0;
+//    // Status of UART state machine
+//    
+//    while (bytesSent < dataCnt)
+//    {
+//        if (!(UART1_TransferStatusGet() == UART1_TRANSFER_STATUS_TX_FULL))
+//        {
+//            // If the buffer is not full
+//            UART1_Write(*(pD));
+//            // We added a byte
+//            bytesSent++;
+//            // So we need to move our pointer
+//            pD++;
+//        }
+//        
+//        // We can do something else here if we want to
+//        // Like cleaning up our daily variables, etc.
+//    }
+//    
+//    return 0;
+//}
+//
+//uint8_t ReceiveUART1(char *ptr, uint16_t ptrLen)
+//{
+//    if (UART1_ReceiveBufferIsEmpty())
+//    {
+//        // The buffer is empty, so we aren't going to fill the ptr array
+//        return 0;
+//    }
+//    else
+//    {
+//        char *pD = ptr;
+//        UART1_TRANSFER_STATUS status;
+//        int numBytes = 0;
+//        while (numBytes < ptrLen)
+//        {
+//            status = UART1_TransferStatusGet();
+//            if (status & UART1_TRANSFER_STATUS_RX_DATA_PRESENT)
+//            {
+//                *pD = (char)UART1_Read();
+//                numBytes++;
+//                pD++;
+//            }
+//        }
+//        
+//        return numBytes;
+//    }
+//}
 
 void TurnOnSim(void)
 {
@@ -511,30 +508,45 @@ void AssembleMidnightMessage(void)
 
 bool DidMessageSend(void)
 {
-    char buf[8]; // Build an array to hold a response
+//    char buf[8]; // Build an array to hold a response
+//    
+//    // If there is something in the array
+//    if(UART1_ReceiveBufferSizeGet() > 1)
+//    {
+//        uint8_t charsReceived = ReceiveUART1(buf, sizeof(buf));
+//
+//        if (charsReceived == 0)
+//        {
+//            // We didn't receive anything
+//            return false;
+//        }
+//        else
+//        {
+//            char *s;
+//            s = strstr(buf, "OK");
+//            if (s != NULL)
+//            {
+//                return true;
+//            }
+//            else
+//            {
+//                return false;
+//            }
+//        }
+//    }
     
-    // If there is something in the array
-    if(UART1_ReceiveBufferSizeGet() > 1)
+    char recArray[10];
+    if(UART_Read(recArray, sizeof(recArray)) >= 1)
     {
-        uint8_t charsReceived = ReceiveUART1(buf, sizeof(buf));
-
-        if (charsReceived == 0)
+        char *s;
+        s = strstr(recArray, "OK");
+        if(s != NULL)
         {
-            // We didn't receive anything
-            return false;
+            return true;
         }
         else
         {
-            char *s;
-            s = strstr(buf, "OK");
-            if (s != NULL)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
     // There is nothing in the receive buffer
@@ -565,15 +577,15 @@ void SendMidnightMessage(void)
     AssembleMidnightMessage();
 
     // Enter text mode
-    SendUART1("AT+CMGF=1/r/n", sizeof("AT+CMGF=1/r/n"));
-    DelayMS(100); // Delay to give SIM time to switch
-    SendUART1("AT+CMGS=\"", sizeof("AT+CMGS=\"")); // Start sending a text
-    SendUART1(phoneNumber, sizeof(phoneNumber)); // Send phone number
-    SendUART1("\"\r\n", sizeof("\"\r\n")); // end of phone number
+    UART_Write_Buffer("AT+CMGF=1/r/n", sizeof("AT+CMGF=1/r/n"));
+    DelayMS(10); // Delay to give SIM time to switch
+    UART_Write_Buffer("AT+CMGS=\"", sizeof("AT+CMGS=\"")); // Start sending a text
+    UART_Write_Buffer(phoneNumber, sizeof(phoneNumber)); // Send phone number
+    UART_Write_Buffer("\"\r\n", sizeof("\"\r\n")); // end of phone number
     DelayMS(100);
-    SendUART1(TextMessageString, sizeof(TextMessageString)); // Add message
+    UART_Write_Buffer(TextMessageString, sizeof(TextMessageString)); // Add message
     // TODO: We probably have to send an extra control char here
-    SendUART1(" \r \n", sizeof(" \r \n"));
+    UART_Write_Buffer(" \r \n", sizeof(" \r \n"));
 
     // TODO: Teach it to listen for the SIM's response on RX, and 
     //  respond appropriately.
@@ -618,16 +630,16 @@ void ProcessAccelQueue(void)
 {
     // We get here when both x and y queues are not empty
     
-    if(IsFloatQueueFull(&angleQueue))
+    if(float_IsQueueFull(&angleQueue))
     {
-        PullFloatQueue(&angleQueue); // Empty one slot FIFO
+        float_PullQueue(&angleQueue); // Empty one slot FIFO
     }
     
-    PushFloatQueue(&angleQueue, 
+    float_PushQueue(&angleQueue, 
             GetHandleAngle(
-                PullQueue(&xQueue), PullQueue(&yQueue)));
+                uint16_PullQueue(&xQueue), uint16_PullQueue(&yQueue)));
     
-    curAngle = AverageFloatQueueElements(&angleQueue);
+    curAngle = float_AverageQueueElements(&angleQueue);
     
     // Finish calculations from previous entries
     if(!lastEventWasPriming && primingUpstroke > 0)
@@ -704,7 +716,7 @@ pumping_state GetPumpingState(float curAngle, float prevAngle)
 void AccumulateVolume(float angleDelta)
 {
     // Get the current hour
-    int curHour = CurrentTime.tm_hour;
+    int curHour = CurrentTime.hour;
     curHour >>= 1; // One bit shift to divide by two
     // This makes it so we can avoid a switch case
     

@@ -1,25 +1,17 @@
 /*
  * File:   queue.c
- * Author: KSK0419
+ * Author: Ken Kok
  *
  * Created on October 1, 2015, 11:41 AM
  */
 
 
 #include "xc.h"
-#include "mcc.h"
 #include "queue.h"
 
-bool InitQueue(queue *queueP, uint8_t queueSize)
+bool uint16_InitQueue(uint16_queue *queueP, uint8_t queueSize)
 {
-    uint16_t *newContents;
-    
-    newContents = (uint16_t *)malloc(sizeof(uint16_t) * queueSize);
-    
-    if (newContents == NULL)
-    {
-        return false;
-    }
+    uint16_t newContents[queueSize];
     
     queueP->contents = newContents;
     queueP->maxSize = queueSize;
@@ -30,30 +22,17 @@ bool InitQueue(queue *queueP, uint8_t queueSize)
     return true;
 }
 
-bool DestroyQueue(queue *queueP)
-{
-    free(queueP->contents);
-    
-    queueP->contents = NULL;
-    queueP->maxSize = 0;
-    queueP->cnt = 0;
-    queueP->front = -1;
-    queueP->back = -1;
-    
-    return true;
-}
-
-bool IsQueueEmpty(queue *queueP)
+bool uint16_IsQueueEmpty(uint16_queue *queueP)
 {
     return (bool) (queueP->cnt == 0);
 }
 
-bool IsQueueFull(queue *queueP)
+bool uint16_IsQueueFull(uint16_queue *queueP)
 {
     return (bool) (queueP->cnt == queueP->maxSize);
 }
 
-bool ClearQueue(queue *queueP)
+bool uint16_ClearQueue(uint16_queue *queueP)
 {
     queueP->front = -1;
     queueP->back = -1;
@@ -62,9 +41,9 @@ bool ClearQueue(queue *queueP)
     return true;
 }
 
-bool PushQueue(queue *queueP, uint16_t element)
+bool uint16_PushQueue(uint16_queue *queueP, uint16_t element)
 {
-    if (IsQueueFull(queueP))
+    if (uint16_IsQueueFull(queueP))
     {
         return false; // We can't push to the queue, its full
     }
@@ -77,9 +56,9 @@ bool PushQueue(queue *queueP, uint16_t element)
     }
 }
 
-uint16_t PullQueue(queue *queueP)
+uint16_t uint16_PullQueue(uint16_queue *queueP)
 {
-    if (IsQueueEmpty(queueP))
+    if (uint16_IsQueueEmpty(queueP))
     {
         return NULL;
     }
@@ -91,16 +70,9 @@ uint16_t PullQueue(queue *queueP)
     }
 }
 
-bool InitFloatQueue(floatqueue *queueP, uint8_t queueSize)
+bool uint8_InitQueue(uint8_queue *queueP, uint8_t queueSize)
 {
-    float *newContents;
-    
-    newContents = (float *)malloc(sizeof(float) * queueSize);
-    
-    if (newContents == NULL)
-    {
-        return false;
-    }
+    uint8_t newContents[queueSize];
     
     queueP->contents = newContents;
     queueP->maxSize = queueSize;
@@ -110,27 +82,18 @@ bool InitFloatQueue(floatqueue *queueP, uint8_t queueSize)
     
     return true;
 }
-bool DestroyFloatQueue(floatqueue *queueP)
-{
-    free(queueP->contents);
-    
-    queueP->contents = NULL;
-    queueP->maxSize = 0;
-    queueP->cnt = 0;
-    queueP->front = -1;
-    queueP->back = -1;
-    
-    return true;
-}
-bool IsFloatQueueEmpty(floatqueue *queueP)
+
+bool uint8_IsQueueEmpty(uint8_queue *queueP)
 {
     return (bool) (queueP->cnt == 0);
 }
-bool IsFloatQueueFull(floatqueue *queueP)
+
+bool uint8_IsQueueFull(uint8_queue *queueP)
 {
     return (bool) (queueP->cnt == queueP->maxSize);
 }
-bool ClearFloatQueue(floatqueue *queueP)
+
+bool uint8_ClearQueue(uint8_queue *queueP)
 {
     queueP->front = -1;
     queueP->back = -1;
@@ -138,9 +101,10 @@ bool ClearFloatQueue(floatqueue *queueP)
     
     return true;
 }
-bool PushFloatQueue(floatqueue *queueP, float element)
+
+bool uint8_PushQueue(uint8_queue *queueP, uint8_t element)
 {
-    if (IsFloatQueueFull(queueP))
+    if (uint8_IsQueueFull(queueP))
     {
         return false; // We can't push to the queue, its full
     }
@@ -152,9 +116,10 @@ bool PushFloatQueue(floatqueue *queueP, float element)
         return true;
     }
 }
-float PullFloatQueue(floatqueue *queueP)
+
+uint8_t uint8_PullQueue(uint8_queue *queueP)
 {
-    if (IsFloatQueueEmpty(queueP))
+    if (uint8_IsQueueEmpty(queueP))
     {
         return NULL;
     }
@@ -165,9 +130,66 @@ float PullFloatQueue(floatqueue *queueP)
         return queueP->contents[queueP->front % queueP->maxSize];
     }
 }
-float AverageFloatQueueElements(floatqueue *queueP)
+
+bool float_InitQueue(float_queue *queueP, uint8_t queueSize)
 {
-    if (IsFloatQueueEmpty(queueP))
+    float newContents[queueSize];
+    
+    queueP->contents = newContents;
+    queueP->maxSize = queueSize;
+    queueP->cnt = 0;
+    queueP->front = -1;
+    queueP->back = -1;
+    
+    return true;
+}
+
+bool float_IsQueueEmpty(float_queue *queueP)
+{
+    return (bool) (queueP->cnt == 0);
+}
+bool float_IsQueueFull(float_queue *queueP)
+{
+    return (bool) (queueP->cnt == queueP->maxSize);
+}
+bool float_ClearQueue(float_queue *queueP)
+{
+    queueP->front = -1;
+    queueP->back = -1;
+    queueP->cnt = 0;
+    
+    return true;
+}
+bool float_PushQueue(float_queue *queueP, float element)
+{
+    if (float_IsQueueFull(queueP))
+    {
+        return false; // We can't push to the queue, its full
+    }
+    else
+    {
+        queueP->back++;
+        queueP->contents[queueP->back % queueP->maxSize] = element;
+        queueP->cnt++;
+        return true;
+    }
+}
+float float_PullQueue(float_queue *queueP)
+{
+    if (float_IsQueueEmpty(queueP))
+    {
+        return NULL;
+    }
+    else
+    {
+        queueP->front++;
+        queueP->cnt--;
+        return queueP->contents[queueP->front % queueP->maxSize];
+    }
+}
+float float_AverageQueueElements(float_queue *queueP)
+{
+    if (float_IsQueueEmpty(queueP))
     {
         return NULL;
     }
@@ -180,9 +202,9 @@ float AverageFloatQueueElements(floatqueue *queueP)
         //  then push the same value back on to the stack
         for(i = 0; i < cnt; i++)
         {
-            float added = PullFloatQueue(queueP);
+            float added = float_PullQueue(queueP);
             acc += added;
-            PushFloatQueue(queueP, added);
+            float_PushQueue(queueP, added);
         }
         // Now get an average
         acc /= cnt;
