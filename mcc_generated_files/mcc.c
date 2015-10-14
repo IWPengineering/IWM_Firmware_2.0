@@ -98,7 +98,7 @@ void SYSTEM_Initialize(void) {
     INTERRUPT_Initialize();
     ADC1_Initialize();
     //I2C1_Initialize(); // Will be called by my custom function
-    RTCC_Initialize();
+    //RTCC_Initialize();
     TMR1_Initialize();
     TMR2_Initialize();
     TMR3_Initialize();
