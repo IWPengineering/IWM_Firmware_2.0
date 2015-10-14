@@ -1,6 +1,6 @@
 /*
  * File:   constants.c
- * Author: KSK0419
+ * Author: Ken Kok
  *
  * Created on October 6, 2015, 12:37 PM
  */

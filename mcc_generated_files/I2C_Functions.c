@@ -1,6 +1,6 @@
 /*
  * File:   I2C_Functions.c
- * Author: kkok9
+ * Author: Ken Kok
  *
  * Created on October 11, 2015, 7:43 PM
  */

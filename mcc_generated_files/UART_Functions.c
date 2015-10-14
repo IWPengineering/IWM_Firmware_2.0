@@ -1,6 +1,6 @@
 /*
  * File:   UART_Functions.c
- * Author: KSK0419
+ * Author: Ken Kok
  *
  * Created on October 12, 2015, 10:39 AM
  */

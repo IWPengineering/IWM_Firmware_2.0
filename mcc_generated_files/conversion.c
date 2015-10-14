@@ -1,6 +1,6 @@
 /*
  * File:   conversion.c
- * Author: KSK0419
+ * Author: Ken Kok
  *
  * Created on October 12, 2015, 1:43 PM
  */

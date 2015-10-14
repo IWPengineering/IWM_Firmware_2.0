@@ -1,6 +1,6 @@
 /*
  * File:   utilities.c
- * Author: KSK0419
+ * Author: Ken Kok
  *
  * Created on September 25, 2015, 9:51 AM
  */
@@ -110,7 +110,7 @@ char TextMessageString[MESSAGE_LENGTH] = {
     '>', ')', ')'
 };
 
-char phoneNumber[12] = "+17178211882";
+char phoneNumber[] = "+17178211882";
 
 bool isBatteryLow = false;
 
@@ -639,7 +639,7 @@ void ProcessAccelQueue(void)
             GetHandleAngle(
                 uint16_PullQueue(&xQueue), uint16_PullQueue(&yQueue)));
     
-    curAngle = AverageFloatQueueElements(&angleQueue);
+    curAngle = float_AverageQueueElements(&angleQueue);
     
     // Finish calculations from previous entries
     if(!lastEventWasPriming && primingUpstroke > 0)

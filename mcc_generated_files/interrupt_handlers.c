@@ -1,6 +1,6 @@
 /*
  * File:   interrupt_handlers.c
- * Author: KSK0419
+ * Author: Ken Kok
  *
  * Created on September 24, 2015, 12:23 PM
  */
@@ -15,12 +15,8 @@ uint16_t batteryBuffer[BATTERY_BUFFER_SIZE];
 uint8_t depthBufferDepth = 0;
 uint8_t batteryBufferDepth = 0;
 
-//struct tm PreviousTime;
-//struct tm CurrentTime;
-
 time_s PreviousTime;
 time_s CurrentTime;
-
 
 uint16_queue xQueue;
 uint16_queue yQueue;
