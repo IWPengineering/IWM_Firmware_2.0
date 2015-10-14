@@ -27,28 +27,28 @@ time_s I2C_GetTime(void)
 {
     time_s t;
     
-    I2C_STATUS stat = I2C_NO_TRY;
+    I2C_STATUS stat;
     
-    stat |= StartI2C();
-    stat |= WriteI2C(0xDE); // Addr + Write
-    stat |= WriteI2C(0x00); // Addr for seconds
-    stat |= RestartI2C();
-    stat |= IdleI2C();
-    stat |= WriteI2C(0xDF); // Addr + Read
-    stat |= ReadI2C(&t.second);
-    stat |= ReadI2C(&t.minute);
-    stat |= ReadI2C(&t.hour);
-    stat |= ReadI2C(&t.wkDay);
-    stat |= ReadI2C(&t.mnDay);
-    stat |= ReadI2C(&t.month);
-    stat |= ReadI2C(&t.year);
-    stat |= StopI2C();
-    
-    if(stat != I2C_SUCCESS)
+    while(stat != I2C_SUCCESS)
     {
-        t = I2C_GetTime();
+        stat = I2C_NO_TRY; // Reset stat
+        // Then or = stat, if any of them are not success, we'll try again
+        stat |= StartI2C();
+        stat |= WriteI2C(0xDE); // Addr + Write
+        stat |= WriteI2C(0x00); // Addr for seconds
+        stat |= RestartI2C();
+        stat |= IdleI2C();
+        stat |= WriteI2C(0xDF); // Addr + Read
+        stat |= ReadI2C(&t.second);
+        stat |= ReadI2C(&t.minute);
+        stat |= ReadI2C(&t.hour);
+        stat |= ReadI2C(&t.wkDay);
+        stat |= ReadI2C(&t.mnDay);
+        stat |= ReadI2C(&t.month);
+        stat |= ReadI2C(&t.year);
+        stat |= StopI2C();
     }
-    
+     
     t.second  &= 0x7F; // Remove Osc
     t.minute  &= 0x7F; // Remove unused
     t.hour    &= 0x3F; // Remove 12/24 bit
@@ -256,7 +256,6 @@ I2C_STATUS ReadI2C(uint8_t *dataPtr)
 {
     uint8_t *pD = dataPtr; // Give this function the ptr
     
-    I2C1CONbits.ACKDT = 1; // Prep a NACK
     I2C1CONbits.RCEN = 1; // Give clk control to slave
     
     int i = 0;
@@ -271,24 +270,12 @@ I2C_STATUS ReadI2C(uint8_t *dataPtr)
         
         i++;
     }
-    
-    I2C1CONbits.ACKEN = 1; // Prep to Ack/Nack received data
-    
-    i = 0;
-    while(I2C1CONbits.ACKEN)
-    {
-        if(i == I2C_TIMEOUT_VALUE)
-        {
-            SoftwareReset();
-            return I2C_SOFTWARE_RESET;
-        }
-        
-        i++;
-    }
+    I2C_STATUS stat = I2C_NO_TRY;
+    stat |= NackI2C();
     
     *pD = (uint8_t)I2C1RCV;
     
-    return I2C_SUCCESS;
+    return stat;
 }
 
 I2C_STATUS TurnOffRTCCOscillator(void)

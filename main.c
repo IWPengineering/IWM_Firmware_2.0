@@ -28,6 +28,8 @@ int main(void) {
     I2C_Init(); // Call custom I2C Init function to start the bus
 
     SetRTCCTime(&StartTime); // Set the current time on the MCP7940
+    CurrentTime = StartTime; // Set this so our first run through doesn't trigger
+                             //  a message send
     
     UART_Init();
     
