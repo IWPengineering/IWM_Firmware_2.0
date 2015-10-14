@@ -284,15 +284,15 @@ I2C_STATUS TurnOffRTCCOscillator(void)
 {
     I2C_STATUS stat = I2C_NO_TRY;
     
-    stat |= StartI2C();
-    stat |= WriteI2C(0xDE); // Device Addr + Write
-    stat |= WriteI2C(0x00); // Sec addr
-    stat |= WriteI2C(0x00); // Turn off osc, set sec to 0
-    stat |= StopI2C();
-    
-    if(stat != I2C_SUCCESS)
+    while(stat != I2C_SUCCESS)
     {
-        TurnOffRTCCOscillator();
+        stat = I2C_NO_TRY; // Reset status
+        
+        stat |= StartI2C();
+        stat |= WriteI2C(0xDE); // Device Addr + Write
+        stat |= WriteI2C(0x00); // Sec addr
+        stat |= WriteI2C(0x00); // Turn off osc, set sec to 0
+        stat |= StopI2C();
     }
     
     return I2C_SUCCESS;
@@ -328,32 +328,33 @@ I2C_STATUS SetRTCCTime(time_s *curTime)
     }
     
     I2C_STATUS write_stat = I2C_NO_TRY;
-    write_stat |= StartI2C();
-    write_stat |= WriteI2C(0xDE); // Address + Write
-    write_stat |= WriteI2C(0x01); // Address for minutes
-    write_stat |= WriteI2C(min);
-    write_stat |= WriteI2C(hr);
-    write_stat |= WriteI2C(wkDay);
-    write_stat |= WriteI2C(date);
-    write_stat |= WriteI2C(month);
-    write_stat |= WriteI2C(year);
-    write_stat |= StopI2C();
     
-    // Write the second last and start the oscillator
-    write_stat |= StartI2C();
-    write_stat |= WriteI2C(0xDE); // Address + Write
-    write_stat |= WriteI2C(0x00); // Address for seconds
-    write_stat |= WriteI2C(sec);
-    write_stat |= StopI2C();
-    
-    // I2C_STATUS is set up so that 0x01 = success, 0x02 = Soft reset,
-    //  0x04 = Collision detect, etc. So if there is any error, the |=
-    //  operator will cause the result to not be 0x01, but instead 0x03,
-    //  etc. This can be used to identify specific glitches, but here I
-    //  am using it as a catch all.
-    if(write_stat != I2C_SUCCESS)
+    while(write_stat != I2C_SUCCESS)
     {
-        SetRTCCTime(curTime);
+        write_stat = I2C_NO_TRY; // Reset
+        
+        // I2C_STATUS is set up so that 0x01 = success, 0x02 = Soft reset,
+        //  0x04 = Collision detect, etc. So if there is any error, the |=
+        //  operator will cause the result to not be 0x01, but instead 0x03,
+        //  etc. This can be used to identify specific glitches, but here I
+        //  am using it as a catch all.
+        write_stat |= StartI2C();
+        write_stat |= WriteI2C(0xDE); // Address + Write
+        write_stat |= WriteI2C(0x01); // Address for minutes
+        write_stat |= WriteI2C(min);
+        write_stat |= WriteI2C(hr);
+        write_stat |= WriteI2C(wkDay);
+        write_stat |= WriteI2C(date);
+        write_stat |= WriteI2C(month);
+        write_stat |= WriteI2C(year);
+        write_stat |= StopI2C();
+
+        // Write the second last and start the oscillator
+        write_stat |= StartI2C();
+        write_stat |= WriteI2C(0xDE); // Address + Write
+        write_stat |= WriteI2C(0x00); // Address for seconds
+        write_stat |= WriteI2C(sec);
+        write_stat |= StopI2C();
     }
     
     return I2C_SUCCESS;
