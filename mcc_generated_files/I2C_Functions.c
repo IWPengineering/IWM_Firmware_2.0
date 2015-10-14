@@ -270,8 +270,10 @@ I2C_STATUS ReadI2C(uint8_t *dataPtr)
         
         i++;
     }
+    
+    // After a successful read, we have to Nack the bus
     I2C_STATUS stat = I2C_NO_TRY;
-    stat |= NackI2C();
+    stat = NackI2C();
     
     *pD = (uint8_t)I2C1RCV;
     
