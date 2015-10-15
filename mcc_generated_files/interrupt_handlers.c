@@ -38,8 +38,8 @@ static bool prevSimStatusValue = false;
 
 void InitIOCInterrupt(void)
 {
-    // Set Change Notification priority to 7 (lowest))
-    IPC4bits.CNIP = 0b111;
+    // Set Change Notification priority to 6 (lowest))
+    IPC4bits.CNIP = 4;
     
     // Enable change notification interrupt
     IEC1bits.CNIE = true;
@@ -164,7 +164,7 @@ void Timer1Handler(void)
     // To get accelerometer x and y values
     
     // It should be called every 10 ms
-    
+
 
     // Get our ADC channels
     ADC1_CHANNEL xChan = ADC1_XAXIS_ACCELEROMETER;

@@ -178,7 +178,7 @@ float float_PullQueue(float_queue *queueP)
 {
     if (float_IsQueueEmpty(queueP))
     {
-        return NULL;
+        return 0;
     }
     else
     {
@@ -189,22 +189,23 @@ float float_PullQueue(float_queue *queueP)
 }
 float float_AverageQueueElements(float_queue *queueP)
 {
-    if (float_IsQueueEmpty(queueP))
+    float_queue *fq = queueP;
+    if (float_IsQueueEmpty(fq))
     {
-        return NULL;
+        return 0;
     }
     else
     {
         int i;
-        int cnt = queueP->cnt;
-        float acc;
+        int cnt = fq->cnt;
+        float acc = 0;
         // Go through the queue, pull each value to accumulate,
         //  then push the same value back on to the stack
         for(i = 0; i < cnt; i++)
         {
-            float added = float_PullQueue(queueP);
+            float added = float_PullQueue(fq);
             acc += added;
-            float_PushQueue(queueP, added);
+            float_PushQueue(fq, added);
         }
         // Now get an average
         acc /= cnt;

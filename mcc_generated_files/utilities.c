@@ -251,15 +251,16 @@ void FloatToAscii(float value, uint8_t decimalPrecision,
             *pD = '.'; // This is the decimal point
         else
         {
-            uint32_t diviser = TenToPower(nDigits - 1);
+            uint32_t diviser = TenToPower(nDigits - (i + 1));
+            //uint32_t diviser = TenToPower(nDigits - 1);
             int value = endValue / diviser;
             // We'll need this for the next iteration
             endValue %= diviser;
             
             // Get the value of the digit
             *pD = (char)(value + 48);
-            // Decrement numDigits when we calc a value
-            nDigits--;
+//            // Decrement numDigits when we calc a value
+//            nDigits--;
         }
         
         // We always have to increment the pointer
@@ -640,7 +641,10 @@ void ProcessAccelQueue(void)
                 uint16_PullQueue(&xQueue), uint16_PullQueue(&yQueue)));
     
     curAngle = float_AverageQueueElements(&angleQueue);
-    
+    char a[5];
+    FloatToAscii(curAngle, 1, a, 5);
+    UART_Write_Buffer(a, 5);
+    UART_Write_Buffer("Hello!", sizeof("Hello!"));
     // Finish calculations from previous entries
     if(!lastEventWasPriming && primingUpstroke > 0)
     {

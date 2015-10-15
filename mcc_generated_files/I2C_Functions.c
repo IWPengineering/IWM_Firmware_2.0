@@ -96,6 +96,9 @@ void SoftwareReset(void)
     
     TRISBbits.TRISB9 = 1; // Set SDA to an output
     TRISBbits.TRISB8 = 0; // Set SCL to an input
+    
+    // We got here because SDA is 1 now - we need a stop condition to reset
+    StopI2C();
 }
 
 I2C_STATUS IdleI2C(void)

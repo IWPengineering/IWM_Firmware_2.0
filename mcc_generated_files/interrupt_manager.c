@@ -55,30 +55,30 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void INTERRUPT_Initialize(void) {
     //    MICI: MI2C1 - I2C1 Master Events
     //    Priority: 2
-    IPC4bits.MI2C1IP = 2;
+    IPC4bits.MI2C1IP = 4;
     //    RTCI: RTCC - Real-Time Clock and Calendar
     //    Priority: 1
-    IPC15bits.RTCIP = 1;
+    IPC15bits.RTCIP = 4;
     //    ADI: ADC1 - A/D Converter 1
     //    Priority: 3
-    IPC3bits.AD1IP = 3;
+    IPC3bits.AD1IP = 4;
     //    TI: T1 - Timer1
     //    Priority: 2
-    IPC0bits.T1IP = 2;
+    IPC0bits.T1IP = 4;
     //    TI: T4 - Timer4
     //    Priority: 7
-    IPC6bits.T4IP = 7;
+    IPC6bits.T4IP = 4;
     //    URXI: U1RX - UART1 Receiver
     //    Priority: 7
-    IPC2bits.U1RXIP = 7;
+    IPC2bits.U1RXIP = 4;
     //    UERI: U1E - UART1 Error
     //    Priority: 5
-    IPC16bits.U1ERIP = 5;
+    IPC16bits.U1ERIP = 4;
     //    UTXI: U1TX - UART1 Transmitter
     //    Priority: 4
     IPC3bits.U1TXIP = 4;
     //    TI: T5 - Timer5
     //    Priority: 1
-    IPC7bits.T5IP = 1;
+    IPC7bits.T5IP = 4;
 
 }
