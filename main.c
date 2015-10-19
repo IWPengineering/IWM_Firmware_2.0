@@ -40,7 +40,7 @@ int main(void) {
     
     while (1) 
     {
-        
+
         KickWatchdog(); // Reset the watchdog timer
         
         if(isMidnightPassed)
@@ -69,6 +69,11 @@ int main(void) {
     }
 
     return -1;
+}
+
+void __attribute__((interrupt, no_auto_psv)) _AddressError(void)
+{
+    while(1);
 }
 /**
  End of File
