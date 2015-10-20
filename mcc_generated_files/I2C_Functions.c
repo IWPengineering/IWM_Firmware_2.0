@@ -18,9 +18,10 @@
 
 void I2C_Init(void)
 {
-    I2C1CON  = 0x8200;
-    I2C1STAT = 0x0000;
+    I2C1CON  = 0x0200;
     I2C1BRG  = 0x0013;
+    
+    I2C1CONbits.I2CEN = 1;
 }
 
 time_s I2C_GetTime(void)
@@ -85,6 +86,8 @@ void SoftwareReset(void)
         a. If SDA = 1, generate STOP Condition --> Return
         b. If SDA = 0, Generate Clock Pulse on SCL (1-0-1) --> Go To 1
      */
+    I2C1CONbits.I2CEN = 0; // Disable the I2C module
+    I2C_Init();
     
     TRISBbits.TRISB9 = 0; // Set SDA to an input
     TRISBbits.TRISB8 = 1; // Set SCL to an output
@@ -326,7 +329,7 @@ I2C_STATUS SetRTCCTime(time_s *curTime)
     hr &= 0xBF; // Turn in to 24 hour time
     wkDay |= 0x08; // Set bat backup to enabled
     
-    if(year % 4 == 0)
+    if(curTime->year % 4 == 0)
     {
         month &= 0xDF; // It is apparently not a leap year
     }
