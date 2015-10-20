@@ -71,9 +71,9 @@ time_s I2C_GetTime(void)
 void ToggleSCL(void)
 {
     PORTBbits.RB8 = 1;
-    __delay_us(10);
+    DelayUS(10);
     PORTBbits.RB8 = 0;
-    __delay_us(10);
+    DelayUS(10);
     PORTBbits.RB8 = 1;
 }
 
@@ -89,15 +89,28 @@ void SoftwareReset(void)
     TRISBbits.TRISB9 = 0; // Set SDA to an input
     TRISBbits.TRISB8 = 1; // Set SCL to an output
     
-    while(PORTBbits.RB9 == 0)
+    int i = 0;
+    while(PORTBbits.RB9 == 0 && i <= 9)
     {
         ToggleSCL();
+        
+        // Gives another way to break out of this loop,
+        //  without locking up the whole program
+        //  This should only have to happen 9 times
+        if(i >= 20)
+        {
+            break;
+        }
+        
+        i++;
     }
     
     TRISBbits.TRISB9 = 1; // Set SDA to an output
     TRISBbits.TRISB8 = 0; // Set SCL to an input
     
-    // We got here because SDA is 1 now - we need a stop condition to reset
+    // We got here because SDA is 1 now - we need a 
+    //  restart - stop condition to reset
+    RestartI2C();
     StopI2C();
 }
 
@@ -219,7 +232,7 @@ I2C_STATUS AckI2C(void)
     return I2C_SUCCESS;
 }
 
-I2C_STATUS WriteI2C(char data)
+I2C_STATUS WriteI2C(unsigned char data)
 {
     int i = 0;
     while(I2C1STATbits.TRSTAT) // Wait for bus to idle
@@ -232,6 +245,7 @@ I2C_STATUS WriteI2C(char data)
         
         i++;
     }
+    
     I2C1TRN = data; // Load buffer w/ data
     
     i = 0;
@@ -246,13 +260,11 @@ I2C_STATUS WriteI2C(char data)
         i++;
     }
     
+    // Always idle the bus after a send command
     I2C_STATUS stat = IdleI2C();
-    while(stat != I2C_SUCCESS)
-    {
-        stat = IdleI2C();
-    }
     
-    return I2C_SUCCESS;
+    // Return whatever success status we just got back
+    return stat;
 }
 
 I2C_STATUS ReadI2C(uint8_t *dataPtr)
