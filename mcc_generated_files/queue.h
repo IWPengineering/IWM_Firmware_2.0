@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 typedef struct uint16_queue {
-    uint16_t contents[32];
+    uint16_t contents[16];
     int front;
     int back;
     int maxSize;
@@ -18,7 +18,7 @@ typedef struct uint16_queue {
 } uint16_queue;
 
 typedef struct uint8_queue {
-    uint8_t contents[32];
+    uint8_t contents[16];
     int front;
     int back;
     int maxSize;
@@ -26,7 +26,7 @@ typedef struct uint8_queue {
 } uint8_queue;
 
 typedef struct float_queue {
-    float contents[32];
+    float contents[16];
     int front;
     int back;
     int maxSize;
