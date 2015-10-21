@@ -40,13 +40,13 @@ time_s I2C_GetTime(void)
         stat |= RestartI2C();
         stat |= IdleI2C();
         stat |= WriteI2C(0xDF); // Addr + Read
-        stat |= ReadI2C(&t.second);
-        stat |= ReadI2C(&t.minute);
-        stat |= ReadI2C(&t.hour);
-        stat |= ReadI2C(&t.wkDay);
-        stat |= ReadI2C(&t.mnDay);
-        stat |= ReadI2C(&t.month);
-        stat |= ReadI2C(&t.year);
+        stat |= ReadI2C(&t.second, false);
+        stat |= ReadI2C(&t.minute, false);
+        stat |= ReadI2C(&t.hour, false);
+        stat |= ReadI2C(&t.wkDay, false);
+        stat |= ReadI2C(&t.mnDay, false);
+        stat |= ReadI2C(&t.month, false);
+        stat |= ReadI2C(&t.year, true);
         stat |= StopI2C();
     }
      
@@ -270,7 +270,7 @@ I2C_STATUS WriteI2C(unsigned char data)
     return stat;
 }
 
-I2C_STATUS ReadI2C(uint8_t *dataPtr)
+I2C_STATUS ReadI2C(uint8_t *dataPtr, bool isEoT)
 {
     uint8_t *pD = dataPtr; // Give this function the ptr
     
@@ -291,7 +291,15 @@ I2C_STATUS ReadI2C(uint8_t *dataPtr)
     
     // After a successful read, we have to Nack the bus
     I2C_STATUS stat = I2C_NO_TRY;
-    stat = NackI2C();
+    
+    if(isEoT)
+    {
+        stat = NackI2C();
+    }
+    else
+    {
+        stat = AckI2C();
+    }
     
     *pD = (uint8_t)I2C1RCV;
     
@@ -327,9 +335,9 @@ I2C_STATUS SetRTCCTime(time_s *curTime)
     uint8_t year = DecToBcd(curTime->year);
     sec |= 0x80; // Add turn on Osc bit
     hr &= 0xBF; // Turn in to 24 hour time
-    wkDay |= 0x08; // Set bat backup to enabled
+    wkDay |= 0x00; // Set bat backup to enabled
     
-    if(curTime->year % 4 == 0)
+    if(curTime->year % 4 != 0)
     {
         month &= 0xDF; // It is apparently not a leap year
     }

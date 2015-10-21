@@ -38,7 +38,7 @@ I2C_STATUS RestartI2C(void);
 I2C_STATUS NackI2C(void);
 I2C_STATUS AckI2C(void);
 I2C_STATUS WriteI2C(unsigned char data);
-I2C_STATUS ReadI2C(uint8_t *dataPtr);
+I2C_STATUS ReadI2C(uint8_t *dataPtr, bool isEoT);
 I2C_STATUS TurnOffRTCCOscillator(void);
 I2C_STATUS SetRTCCTime(time_s *curTime);
 

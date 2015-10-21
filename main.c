@@ -6,13 +6,13 @@
 #include "mcc_generated_files/tmr4.h"
 #include "mcc_generated_files/tmr5.h"
 time_s StartTime = { // All values in BCD
-    0x30, // seconds
-    0x25, // minutes
-    0x21, // hours
-    0x04, // wkDay
-    0x14, // mnDay
-    0x10, // month
-    0x15  // year
+    30, // seconds
+    25, // minutes
+    21, // hours
+    04, // wkDay
+    14, // mnDay
+    10, // month
+    15  // year
 };
 /*
                          Main application
@@ -37,6 +37,8 @@ int main(void) {
     TMR3_Start();
     TMR4_Start();
     TMR5_Start();
+    
+    TurnOffSim();
     
     while (1) 
     {
@@ -73,7 +75,7 @@ int main(void) {
 
 void __attribute__((interrupt, no_auto_psv)) _AddressError(void)
 {
-    while(1);
+    //while(1);
 }
 /**
  End of File
