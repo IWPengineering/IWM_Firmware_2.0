@@ -19,7 +19,7 @@
 void I2C_Init(void)
 {
     I2C1CON  = 0x0200;
-    I2C1BRG  = 0x0013;
+    I2C1BRG  = 0x0012;
     
     I2C1CONbits.I2CEN = 1;
 }
@@ -289,21 +289,24 @@ I2C_STATUS ReadI2C(uint8_t *dataPtr, bool isEoT)
         i++;
     }
     
-    // After a successful read, we have to Nack the bus
-    I2C_STATUS stat = I2C_NO_TRY;
+    I2C1CONbits.ACKDT = 1;
+    I2C1CONbits.ACKEN = 1;
     
-    if(isEoT)
+    i = 0;
+    while(I2C1CONbits.ACKEN)
     {
-        stat = NackI2C();
-    }
-    else
-    {
-        stat = AckI2C();
+        if(i == I2C_TIMEOUT_VALUE)
+        {
+            SoftwareReset();
+            return I2C_SOFTWARE_RESET;
+        }
+        
+        i++;
     }
     
     *pD = (uint8_t)I2C1RCV;
     
-    return stat;
+    return I2C_SUCCESS;
 }
 
 I2C_STATUS TurnOffRTCCOscillator(void)
@@ -335,7 +338,7 @@ I2C_STATUS SetRTCCTime(time_s *curTime)
     uint8_t year = DecToBcd(curTime->year);
     sec |= 0x80; // Add turn on Osc bit
     hr &= 0xBF; // Turn in to 24 hour time
-    wkDay |= 0x00; // Set bat backup to enabled
+    wkDay |= 0x07; // Set bat backup to enabled
     
     if(curTime->year % 4 != 0)
     {
