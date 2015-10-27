@@ -7,8 +7,8 @@
 #include "mcc_generated_files/tmr5.h"
 time_s StartTime = { // All values in BCD
     30, // seconds
-    25, // minutes
-    21, // hours
+    58, // minutes
+    23, // hours
     04, // wkDay
     14, // mnDay
     10, // month
@@ -37,7 +37,8 @@ int main(void) {
     TMR3_Start();
     TMR4_Start();
     TMR5_Start();
-    
+
+    SendMidnightMessage(); // Delete after done testing! 10-27-2015
     TurnOffSim();
     
     while (1) 

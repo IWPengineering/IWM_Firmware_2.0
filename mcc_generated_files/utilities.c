@@ -110,7 +110,7 @@ char TextMessageString[MESSAGE_LENGTH] = {
     '>', ')', ')'
 };
 
-char phoneNumber[] = "+17178211882";
+char phoneNumber[] = "+13018737202"; //"+17178211882";
 
 bool isBatteryLow = false;
 
@@ -585,8 +585,9 @@ void SendMidnightMessage(void)
     UART_Write_Buffer("\"\r\n", sizeof("\"\r\n")); // end of phone number
     DelayMS(100);
     UART_Write_Buffer(TextMessageString, sizeof(TextMessageString)); // Add message
+    DelayMS(10);
     // TODO: We probably have to send an extra control char here
-    UART_Write_Buffer(" \r \n", sizeof(" \r \n"));
+    UART_Write_Buffer("\x1A", sizeof("\x1A"));
 
     // TODO: Teach it to listen for the SIM's response on RX, and 
     //  respond appropriately.
