@@ -77,6 +77,7 @@ void TurnOffSim(void);
 void AssembleMidnightMessage(void);
 bool DidMessageSend(void);
 void SendMidnightMessage(void);
+void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen);
 void ResetAccumulators(void);
 
 void ProcessAccelQueue(void);

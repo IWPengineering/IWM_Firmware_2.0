@@ -612,6 +612,51 @@ void SendMidnightMessage(void)
     ResetAccumulators();
 }
 
+void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
+{
+    TurnOnSim();
+    
+    int timeOutMS = 0;
+    while(!IsSimOnNetwork())
+    {
+        if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
+        {
+            break;
+        }
+        
+        DelayMS(1);
+        timeOutMS++;
+    }
+    
+    UART_Write_Buffer("AT+CMGF=1\r\n", sizeof("AT+CMFG=1\r\n"));
+    DelayMS(10);
+    UART_Write_Buffer("AT+CMGS=\"", sizeof("AT+CMGS=\""));
+    UART_Write_Buffer(numPtr, numLen);
+    UART_Write_Buffer("\"\r\n", sizeof("\"\r\n"));
+    DelayMS(100);
+    UART_Write_Buffer(msgPtr, msgLen);
+    DelayMS(10);
+    UART_Write_Buffer("\x1A", sizeof("\x1A"));
+    
+    bool suc = false;
+    int timeout = 0;
+    while(!suc || (timeout < TEXT_SEND_TIMEOUT_SECONDS))
+    {
+        DelayS(1);
+        timeout++;
+        suc = DidMessageSend();
+        
+        if(suc)
+        {
+            TurnOffSim();
+        }   
+    }
+    
+    // Regardless of if it sends, we have to turn off
+    //  the SIM to conserve power.
+    TurnOffSim();
+}
+
 void ResetAccumulators(void)
 {
     memset(volumeArray, 0, sizeof(volumeArray));
