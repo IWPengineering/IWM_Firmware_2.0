@@ -628,16 +628,26 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
         timeOutMS++;
     }
     
+    // Enter text mode
     UART_Write_Buffer("AT+CMGF=1\r\n", sizeof("AT+CMFG=1\r\n"));
+    // Give SIM time to switch
     DelayMS(10);
+    // Tell it we're about to send a phone number
     UART_Write_Buffer("AT+CMGS=\"", sizeof("AT+CMGS=\""));
+    // Send the phone number
     UART_Write_Buffer(numPtr, numLen);
+    // Tell it the phone number is done
     UART_Write_Buffer("\"\r\n", sizeof("\"\r\n"));
+    // Wait for it to be ready to send a text
     DelayMS(100);
+    // Tell it what we want our text to say
     UART_Write_Buffer(msgPtr, msgLen);
+    // Wait for it to finish receiving
     DelayMS(10);
+    // Control character ending to text
     UART_Write_Buffer("\x1A", sizeof("\x1A"));
     
+    // Wait for either our text to send, or our timeout to be reached
     bool suc = false;
     int timeout = 0;
     while(!suc || (timeout < TEXT_SEND_TIMEOUT_SECONDS))

@@ -37,9 +37,10 @@ int main(void) {
     TMR3_Start();
     TMR4_Start();
     TMR5_Start();
+    
+    SendTextMessage("I'm alive!", sizeof("I'm alive!"), 
+            phoneNumber, sizeof(phoneNumber));
 
-    SendMidnightMessage(); // Delete after done testing! 10-27-2015
-    TurnOffSim();
     
     while (1) 
     {
