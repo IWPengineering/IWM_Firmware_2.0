@@ -577,37 +577,9 @@ void SendMidnightMessage(void)
     // Update values in text message
     AssembleMidnightMessage();
 
-    // Enter text mode
-    UART_Write_Buffer("AT+CMGF=1/r/n", sizeof("AT+CMGF=1/r/n"));
-    DelayMS(10); // Delay to give SIM time to switch
-    UART_Write_Buffer("AT+CMGS=\"", sizeof("AT+CMGS=\"")); // Start sending a text
-    UART_Write_Buffer(phoneNumber, sizeof(phoneNumber)); // Send phone number
-    UART_Write_Buffer("\"\r\n", sizeof("\"\r\n")); // end of phone number
-    DelayMS(100);
-    UART_Write_Buffer(TextMessageString, sizeof(TextMessageString)); // Add message
-    DelayMS(10);
-    // TODO: We probably have to send an extra control char here
-    UART_Write_Buffer("\x1A", sizeof("\x1A"));
-
-    // TODO: Teach it to listen for the SIM's response on RX, and 
-    //  respond appropriately.
-    bool suc = false;
-    int timeout = 0;
-    while(!suc || (timeout < TEXT_SEND_TIMEOUT_SECONDS))
-    {
-        DelayS(1);
-        timeout++;
-        suc = DidMessageSend();
-        
-        if(suc)
-        {
-            TurnOffSim();
-        }   
-    }
+    SendTextMessage(TextMessageString, sizeof(TextMessageString),
+                        phoneNumber, sizeof(phoneNumber));
     
-    // Regardless of if it sends, we have to turn off
-    //  the SIM to conserve power.
-    TurnOffSim();
     
     ResetAccumulators();
 }
