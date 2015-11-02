@@ -560,20 +560,6 @@ bool DidMessageSend(void)
 
 void SendMidnightMessage(void)
 {
-    // We need to send our midnight message
-    TurnOnSim();
-    int timeOutMS = 0;
-    while(!IsSimOnNetwork())
-    {
-        if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
-        {
-            break; // We can't find network. IDK how to recover from this
-        }
-        // The sim is not online yet
-        DelayMS(1); // Wait to check, and resets WDT
-        timeOutMS++;
-    }
-
     // Update values in text message
     AssembleMidnightMessage();
 

@@ -66,10 +66,6 @@ int main(void) {
         {
             HandleBatteryBufferEvent();
         }
-        
-//        DelayMS(1000);
-//        UART_Write_Buffer(&TextMessageString[0], sizeof(TextMessageString));
-//        UART_Write_Buffer("\r\n", sizeof("\r\n"));
     }
 
     return -1;
@@ -77,7 +73,12 @@ int main(void) {
 
 void __attribute__((interrupt, no_auto_psv)) _AddressError(void)
 {
-    //while(1);
+    while(1);
+}
+
+void __attribute__((interrupt, no_auto_psv)) _DefaultInterrupt(void)
+{
+    while(1);
 }
 /**
  End of File
