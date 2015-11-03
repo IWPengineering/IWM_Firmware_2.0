@@ -50,6 +50,7 @@ int main(void) {
         if(isMidnightPassed)
         {
             SendMidnightMessage();
+            isMidnightPassed = false;
         }
         
         if(!uint16_IsQueueEmpty(&xQueue) && !uint16_IsQueueEmpty(&yQueue))
@@ -59,12 +60,13 @@ int main(void) {
         
         if(depthBufferIsFull)
         {
-            
+            depthBufferIsFull = false;
         }
         
         if(batteryBufferIsFull)
         {
             HandleBatteryBufferEvent();
+            batteryBufferIsFull = false;
         }
     }
 
