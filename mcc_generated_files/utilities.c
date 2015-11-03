@@ -560,37 +560,52 @@ bool DidMessageSend(void)
 
 void SendMidnightMessage(void)
 {
-    // We need to send our midnight message
+    // Update values in text message
+    AssembleMidnightMessage();
+
+    SendTextMessage(TextMessageString, sizeof(TextMessageString),
+                        phoneNumber, sizeof(phoneNumber));
+    
+    
+    ResetAccumulators();
+}
+
+void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
+{
     TurnOnSim();
+    
     int timeOutMS = 0;
     while(!IsSimOnNetwork())
     {
         if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
         {
-            break; // We can't find network. IDK how to recover from this
+            break;
         }
-        // The sim is not online yet
-        DelayMS(1); // Wait to check, and resets WDT
+        
+        DelayMS(1);
         timeOutMS++;
     }
-
-    // Update values in text message
-    AssembleMidnightMessage();
-
+    
     // Enter text mode
-    UART_Write_Buffer("AT+CMGF=1/r/n", sizeof("AT+CMGF=1/r/n"));
-    DelayMS(10); // Delay to give SIM time to switch
-    UART_Write_Buffer("AT+CMGS=\"", sizeof("AT+CMGS=\"")); // Start sending a text
-    UART_Write_Buffer(phoneNumber, sizeof(phoneNumber)); // Send phone number
-    UART_Write_Buffer("\"\r\n", sizeof("\"\r\n")); // end of phone number
-    DelayMS(100);
-    UART_Write_Buffer(TextMessageString, sizeof(TextMessageString)); // Add message
+    UART_Write_Buffer("AT+CMGF=1\r\n", sizeof("AT+CMFG=1\r\n"));
+    // Give SIM time to switch
     DelayMS(10);
-    // TODO: We probably have to send an extra control char here
+    // Tell it we're about to send a phone number
+    UART_Write_Buffer("AT+CMGS=\"", sizeof("AT+CMGS=\""));
+    // Send the phone number
+    UART_Write_Buffer(numPtr, numLen);
+    // Tell it the phone number is done
+    UART_Write_Buffer("\"\r\n", sizeof("\"\r\n"));
+    // Wait for it to be ready to send a text
+    DelayMS(100);
+    // Tell it what we want our text to say
+    UART_Write_Buffer(msgPtr, msgLen);
+    // Wait for it to finish receiving
+    DelayMS(10);
+    // Control character ending to text
     UART_Write_Buffer("\x1A", sizeof("\x1A"));
-
-    // TODO: Teach it to listen for the SIM's response on RX, and 
-    //  respond appropriately.
+    
+    // Wait for either our text to send, or our timeout to be reached
     bool suc = false;
     int timeout = 0;
     while(!suc || (timeout < TEXT_SEND_TIMEOUT_SECONDS))
@@ -608,8 +623,6 @@ void SendMidnightMessage(void)
     // Regardless of if it sends, we have to turn off
     //  the SIM to conserve power.
     TurnOffSim();
-    
-    ResetAccumulators();
 }
 
 void ResetAccumulators(void)

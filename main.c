@@ -37,9 +37,10 @@ int main(void) {
     TMR3_Start();
     TMR4_Start();
     TMR5_Start();
+    
+    SendTextMessage("I'm alive!", sizeof("I'm alive!"), 
+            phoneNumber, sizeof(phoneNumber));
 
-    SendMidnightMessage(); // Delete after done testing! 10-27-2015
-    TurnOffSim();
     
     while (1) 
     {
@@ -49,6 +50,7 @@ int main(void) {
         if(isMidnightPassed)
         {
             SendMidnightMessage();
+            isMidnightPassed = false;
         }
         
         if(!uint16_IsQueueEmpty(&xQueue) && !uint16_IsQueueEmpty(&yQueue))
@@ -58,17 +60,14 @@ int main(void) {
         
         if(depthBufferIsFull)
         {
-            
+            depthBufferIsFull = false;
         }
         
         if(batteryBufferIsFull)
         {
             HandleBatteryBufferEvent();
+            batteryBufferIsFull = false;
         }
-        
-//        DelayMS(1000);
-//        UART_Write_Buffer(&TextMessageString[0], sizeof(TextMessageString));
-//        UART_Write_Buffer("\r\n", sizeof("\r\n"));
     }
 
     return -1;
@@ -76,7 +75,12 @@ int main(void) {
 
 void __attribute__((interrupt, no_auto_psv)) _AddressError(void)
 {
-    //while(1);
+    while(1);
+}
+
+void __attribute__((interrupt, no_auto_psv)) _DefaultInterrupt(void)
+{
+    while(1);
 }
 /**
  End of File
