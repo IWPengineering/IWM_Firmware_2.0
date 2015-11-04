@@ -173,7 +173,7 @@ void UpdateMessageVolume(void)
     for(i = 0; i < 12; i++)
     {
         // Do the i-th element of the volume array
-        FloatToAscii(volumeArray[i], 1, &TextMessageString[loc], 5);
+        FloatToAscii(volumeArray[i], 1, &(TextMessageString[loc]), 5);
         // increment our location in the volume array to the next value
         loc += 6;
     }
@@ -194,7 +194,7 @@ void UpdateMessageBattery(void)
     
     // Update the text message
     //  38 is the first position of battery voltage
-    FloatToAscii(avgBat, 3, &TextMessageString[38], 5);
+    FloatToAscii(avgBat, 3, &(TextMessageString[38]), 5);
 }
 
 float TurnBattADCToFloat(uint32_t avgBatVoltage)
@@ -206,7 +206,7 @@ void UpdateMessagePrime(void)
 {
     // Update the text message
     //  28 is the first digit of the prime in text message
-    FloatToAscii(longestPrime, 1, &TextMessageString[28], 5); // Assumes priming is always less than 1000
+    FloatToAscii(longestPrime, 1, &(TextMessageString[28]), 5); // Assumes priming is always less than 1000
 }
 
 void UpdateMessageLeakage(void)
@@ -214,7 +214,7 @@ void UpdateMessageLeakage(void)
     // Update the text message
     //  18 is the first position of the leakage in text message
     //  3600 multiplier converts from L/sec to L/Hr
-    FloatToAscii(fastestLeakRate * 3600, 1, &TextMessageString[18], 5);
+    FloatToAscii((fastestLeakRate * 3600), 1, &(TextMessageString[18]), 5);
 }
 
 void FloatToAscii(float value, uint8_t decimalPrecision,
@@ -253,12 +253,12 @@ void FloatToAscii(float value, uint8_t decimalPrecision,
         {
             uint32_t diviser = TenToPower(nDigits - (i + 1));
             //uint32_t diviser = TenToPower(nDigits - 1);
-            int value = endValue / diviser;
+            int singleDigitVal = endValue / diviser;
             // We'll need this for the next iteration
             endValue %= diviser;
             
             // Get the value of the digit
-            *pD = (char)(value + 48);
+            *pD = (char)(singleDigitVal + 48);
 //            // Decrement numDigits when we calc a value
 //            nDigits--;
         }
