@@ -87,7 +87,7 @@ static TMR_OBJ tmr1_obj;
 
 void TMR1_Initialize(void) {
     //TSIDL disabled; TGATE disabled; TCS External; TSYNC disabled; TCKPS 1:1; TECS LPRC; TON enabled; 
-    T1CON = 0x8202;
+    T1CON = 0x0202;
     //TMR1 0; 
     TMR1 = 0x0000;
     //Period Value = 10.000 ms; PR1 310; 

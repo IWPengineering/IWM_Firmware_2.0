@@ -289,7 +289,7 @@ I2C_STATUS ReadI2C(uint8_t *dataPtr, bool isEoT)
         i++;
     }
     
-    I2C1CONbits.ACKDT = 1;
+    I2C1CONbits.ACKDT = 0;
     I2C1CONbits.ACKEN = 1;
     
     i = 0;

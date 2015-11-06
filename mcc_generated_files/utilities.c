@@ -608,7 +608,7 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
     // Wait for either our text to send, or our timeout to be reached
     bool suc = false;
     int timeout = 0;
-    while(!suc || (timeout < TEXT_SEND_TIMEOUT_SECONDS))
+    while((!suc) && (timeout < TEXT_SEND_TIMEOUT_SECONDS))
     {
         DelayS(1);
         timeout++;
