@@ -47,13 +47,13 @@ int main(void) {
 
         KickWatchdog(); // Reset the watchdog timer
         
-        if(isMidnightPassed)
+        if(false)//if(isMidnightPassed)
         {
             SendMidnightMessage();
             isMidnightPassed = false;
         }
         
-        if(!uint16_IsQueueEmpty(&xQueue) && !uint16_IsQueueEmpty(&yQueue))
+        if((!uint16_IsQueueEmpty(&xQueue)) && (!uint16_IsQueueEmpty(&yQueue)))
         {
             ProcessAccelQueue();
         }
@@ -73,9 +73,15 @@ int main(void) {
     return -1;
 }
 
+void (*getErrLoc(void))(void); // Get Address Error Location
+void (*errLoc)(void);          // Function Pointer
+
 void __attribute__((interrupt, no_auto_psv)) _AddressError(void)
 {
-    while(1);
+    errLoc = getErrLoc();
+    
+    INTCON1bits.ADDRERR = 0;
+    //errLoc();
 }
 
 void __attribute__((interrupt, no_auto_psv)) _DefaultInterrupt(void)
