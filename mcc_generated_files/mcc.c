@@ -57,7 +57,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // FOSCSEL
 #pragma config LPRCSEL = LP    // LPRC Oscillator Power and Accuracy->Low Power, Low Accuracy Mode
 #pragma config IESO = ON    // Internal External Switch Over bit->Internal External Switchover mode enabled (Two-speed Start-up enabled)
-#pragma config FNOSC = FRCDIV    // Oscillator Select->8MHz FRC oscillator With Postscaler (FRCDIV)
+#pragma config FNOSC = FRC    // Oscillator Select->8MHz FRC oscillator With Postscaler (FRCDIV)
 #pragma config SOSCSRC = ANA    // SOSC Source Type->Analog Mode for use with crystal
 
 // FOSC
@@ -78,7 +78,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config BOREN = BOR3    // Brown-out Reset Enable bits->Brown-out Reset enabled in hardware, SBOREN bit disabled
 #pragma config LVRCFG = OFF    // ->Low Voltage regulator is not available
 #pragma config MCLRE = ON    // MCLR Pin Enable bit->RA5 input pin disabled,MCLR pin enabled
-//#pragma config BORV = V18    // Brown-out Reset Voltage bits->Brown-out Reset set to lowest voltage (1.8V)
+#pragma config BORV = 0b11    // Brown-out Reset Voltage bits->Brown-out Reset set to lowest voltage (1.8V)
 #pragma config PWRTEN = ON    // Power-up Timer Enable bit->PWRT enabled
 
 // FICD
