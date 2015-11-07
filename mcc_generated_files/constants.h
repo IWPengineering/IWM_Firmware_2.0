@@ -11,11 +11,11 @@
 
 #define BATTERY_LOW_THRESHOLD           2880 // Should be 3.5VDC [(3.5 * 4.11523) / 2.048] * 2^12
 #define MESSAGE_LENGTH                  160
-#define NETWORK_SEARCH_TIMEOUT          1000 //300000 // Time in MS to search for
+#define NETWORK_SEARCH_TIMEOUT          300000 // Time in MS to search for
                                                //  the network
 #define HANDLE_MOVEMENT_THRESHOLD       5 // Degrees that handle must move
                                           //  to be considered moving
-#define TEXT_SEND_TIMEOUT_SECONDS       1//30 // seconds to wait for a text to send
+#define TEXT_SEND_TIMEOUT_SECONDS       30 // seconds to wait for a text to send
 
 #define DEPTH_BUFFER_SIZE               8 // Depth sensor buffer
 #define BATTERY_BUFFER_SIZE             8 // Battery buffer

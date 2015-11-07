@@ -18,10 +18,11 @@ time_s StartTime = { // All values in BCD
                          Main application
  */
 int main(void) {
+    InitQueues(); // Start ADC queues
     // initialize the device
     SYSTEM_Initialize();
 
-    InitQueues(); // Start ADC queues
+    
     InitIOCInterrupt(); // Initialize IOC Interrupts
 
     I2C_Init(); // Call custom I2C Init function to start the bus
@@ -82,6 +83,21 @@ void __attribute__((interrupt, no_auto_psv)) _AddressError(void)
     
     INTCON1bits.ADDRERR = 0;
     //errLoc();
+}
+
+void __attribute__((interrupt, no_auto_psv)) _StackError(void)
+{
+    while(1);
+}
+
+void __attribute__((interrupt, no_auto_psv)) _MathError(void)
+{
+    while(1);
+}
+
+void __attribute__((interrupt, no_auto_psv)) _OscillatorFail(void)
+{
+    while(1);
 }
 
 void __attribute__((interrupt, no_auto_psv)) _DefaultInterrupt(void)

@@ -50,7 +50,11 @@ bool uint16_PushQueue(uint16_queue *queueP, uint16_t element)
     else
     {
         queueP->back++;
-        queueP->contents[queueP->back % queueP->maxSize] = element;
+        if(queueP->back == queueP->maxSize)
+        {
+            queueP->back = 0;
+        }
+        queueP->contents[(queueP->back % queueP->maxSize)] = element;
         queueP->cnt++;
         return true;
     }
@@ -65,8 +69,12 @@ uint16_t uint16_PullQueue(uint16_queue *queueP)
     else
     {
         queueP->front++;
+        if(queueP->front == queueP->maxSize)
+        {
+            queueP->front = 0;
+        }
         queueP->cnt--;
-        return queueP->contents[queueP->front % queueP->maxSize];
+        return queueP->contents[(queueP->front % queueP->maxSize)];
     }
 }
 
@@ -111,7 +119,11 @@ bool uint8_PushQueue(uint8_queue *queueP, uint8_t element)
     else
     {
         queueP->back++;
-        queueP->contents[queueP->back % queueP->maxSize] = element;
+        if(queueP->back == queueP->maxSize)
+        {
+            queueP->back = 0;
+        }
+        queueP->contents[(queueP->back % queueP->maxSize)] = element;
         queueP->cnt++;
         return true;
     }
@@ -126,8 +138,12 @@ uint8_t uint8_PullQueue(uint8_queue *queueP)
     else
     {
         queueP->front++;
+        if(queueP->front == queueP->maxSize)
+        {
+            queueP->front = 0;
+        }
         queueP->cnt--;
-        return queueP->contents[queueP->front % queueP->maxSize];
+        return queueP->contents[(queueP->front % queueP->maxSize)];
     }
 }
 
@@ -169,7 +185,11 @@ bool float_PushQueue(float_queue *queueP, float element)
     else
     {
         queueP->back++;
-        queueP->contents[queueP->back % queueP->maxSize] = element;
+        if(queueP->back == queueP->maxSize)
+        {
+            queueP->back = 0;
+        }
+        queueP->contents[(queueP->back % queueP->maxSize)] = element;
         queueP->cnt++;
         return true;
     }
@@ -183,8 +203,12 @@ float float_PullQueue(float_queue *queueP)
     else
     {
         queueP->front++;
+        if(queueP->front == queueP->maxSize)
+        {
+            queueP->front = 0;
+        }
         queueP->cnt--;
-        return queueP->contents[queueP->front % queueP->maxSize];
+        return queueP->contents[(queueP->front % queueP->maxSize)];
     }
 }
 float float_AverageQueueElements(float_queue *queueP)
