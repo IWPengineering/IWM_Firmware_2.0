@@ -56,7 +56,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // FOSCSEL
 #pragma config LPRCSEL = LP    // LPRC Oscillator Power and Accuracy->Low Power, Low Accuracy Mode
-#pragma config IESO = ON    // Internal External Switch Over bit->Internal External Switchover mode enabled (Two-speed Start-up enabled)
+#pragma config IESO = OFF    // Internal External Switch Over bit->Internal External Switchover mode enabled (Two-speed Start-up disabled)
 #pragma config FNOSC = FRC    // Oscillator Select->8MHz FRC oscillator With Postscaler (FRCDIV)
 #pragma config SOSCSRC = ANA    // SOSC Source Type->Analog Mode for use with crystal
 
