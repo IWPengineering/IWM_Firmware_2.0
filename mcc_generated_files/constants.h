@@ -23,8 +23,9 @@
 #define X_AXIS_BUFFER_SIZE              8 // X axis ADC Buffer
 #define ANGLES_TO_AVERAGE               10 // Defines number of angles in 
                                            //  the float queue
-#define WATER_PERIOD_LOW_BOUND          100 // ~2.5kHz
+#define WATER_PERIOD_LOW_BOUND          10  // ignore: this has been changed ~2.5kHz
 #define WATER_PERIOD_HIGH_BOUND         385 // ~650Hz
+
 #define NETLIGHT_PERIOD_LOW_BOUND       19500 // ~2.5 seconds
 #define NETLIGHT_PERIOD_HIGH_BOUND      27350 // ~3.5 seconds
 /*
