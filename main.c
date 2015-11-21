@@ -53,7 +53,7 @@ int main(void) {
             SendMidnightMessage();
             isMidnightPassed = false;
         }
-        
+        //This is a comment
         if((!uint16_IsQueueEmpty(&xQueue)) && (!uint16_IsQueueEmpty(&yQueue)))
         {
             ProcessAccelQueue();
