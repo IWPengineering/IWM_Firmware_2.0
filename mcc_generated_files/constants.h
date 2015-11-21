@@ -26,7 +26,7 @@
 #define WATER_PERIOD_LOW_BOUND          100 // ~2.5kHz
 #define WATER_PERIOD_HIGH_BOUND         385 // ~650Hz
 #define NETLIGHT_PERIOD_LOW_BOUND       19500 // ~2.5 seconds
-#define NETLIGHT_PERIOD_HIGH_BOUND      27350 // ~3.5 seconds
+#define NETLIGHT_PERIOD_HIGH_BOUND      29700 // ~3.8 seconds
 /*
  Constants
  */
