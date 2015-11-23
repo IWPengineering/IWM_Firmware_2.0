@@ -36,6 +36,10 @@ static bool prevWPSValue = false;
 static bool prevSimNetlightValue = false;
 static bool prevSimStatusValue = false;
 
+/**
+ * Description: Initializes the CN interrupts for SIM_STATUS, SIM_NETLIGHT,
+ *                  and WPS inputs - to keep track of frequencies.
+ */
 void InitIOCInterrupt(void)
 {
     // Set Change Notification priority to 6 (lowest))
@@ -49,6 +53,13 @@ void InitIOCInterrupt(void)
     CNEN1bits.CN12IE = true; // SimNetlight Change
     CNEN2bits.CN27IE = true; // WPS Change
 }
+
+/**
+ * Description: Interrupt handler for all change notification interrupts.
+ *                  This handler calls another handler to figure out which
+ *                  pin triggered the CN interrupt. Additionally, it clears
+ *                  the interrupts flag.
+ */
 void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void)
 {
     // Clear the interrupt flag
@@ -56,6 +67,12 @@ void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void)
     // Handle the interrupt
     IOCHandler();
 }
+
+/**
+ * Description: CN Handler. Figures out which of the pins triggered the CN ISR.
+ *                  Currently, this handler only catches positive edges for WPS
+ *                  and for the netlight, but catches both for status.
+ */
 void IOCHandler(void)
 {
     if (wpsMeasure_GetValue() != prevWPSValue)
@@ -83,21 +100,40 @@ void IOCHandler(void)
     }
 }
 
+/**
+ * Description: Function to turn off CN interrupts for the WPS. This is implemented
+ *                  because the WPS sensor has a relatively high frequency, and thus
+ *                  can cause problems in other processing functions if it is left
+ *                  on continuously.
+ */
 void TurnOffWPSIOC(void)
 {
     CNEN2bits.CN27IE = false;
 }
 
+/**
+ * Description: Function to turn on CN interrupts for the WPS. This is implemented
+ *                  to turn the WPS interrupts on when we need to know if there is
+ *                  water once again.
+ */
 void TurnOnWPSIOC(void)
 {
     CNEN2bits.CN27IE = true;
 }
 
+/**
+ * Description: Checks if the WPS CN interrupt is currently active.
+ * @return boolean indicating whether the WPS IOC is currently active.
+ */
 bool IsWPSIOCOn(void)
 {
     return (bool)CNEN2bits.CN27IE;
 }
 
+/**
+ * Description: Initializes the 3 queues used to track handle movements and water.
+ *                  - xQueue, yQueue, and angleQueue.
+ */
 void InitQueues(void)
 {
     uint16_InitQueue(&xQueue, X_AXIS_BUFFER_SIZE);
@@ -105,6 +141,12 @@ void InitQueues(void)
     float_InitQueue(&angleQueue, ANGLES_TO_AVERAGE);
 }
 
+/**
+ * Description: Called as part of IOC ISR if the WPS sensor is triggered.
+ *                  Uses timer 2 to figure out how long since this function
+ *                  was last called, and uses that value to decide if the wps
+ *                  is currently reading an on or off value.
+ */
 void UpdateWaterStatus(void)
 {
     TMR2_Stop();
@@ -128,6 +170,12 @@ void UpdateWaterStatus(void)
     TMR2_Start();
 }
 
+/**
+ * Description: Called in the netlight ISR. Uses timer 3 to calculate how long
+ *                  it has been since this function was called, and uses that
+ *                  period to figure out if the netlight is currently telling
+ *                  us that we have network or do not.
+ */
 void UpdateNetStatus(void)
 {
     TMR3_Stop();
@@ -149,6 +197,11 @@ void UpdateNetStatus(void)
     TMR3_Start();
 }
 
+/**
+ * Timer1Handler Desc: Timer1 period of 10ms. When this interrupt occurs,
+ *                      we read an X and Y accelerometer sample, and put them
+ *                      in their respective buffers.
+ */
 /*
  NOTE: This code is blocking.
  I don't like that, but I was unable to find a reliable way
@@ -200,6 +253,11 @@ void Timer1Handler(void)
     ADC1_ReferenceSelect(ADC1_REFERENCE_2VBG); 
 }
 
+/**
+ * Description: This function is called on the period overflow of timer4, which
+ *                  should occur once every 1800 s (30 minutes). This function
+ *                  starts a battery ADC read, but it is completed in the ADC ISR.
+ */
 void Timer4Handler(void)
 {
     // This function starts an ADC transaction
@@ -217,6 +275,12 @@ void Timer4Handler(void)
     ADC1_Start();
 }
 
+/**
+ * Description: This function is called on the period overflow of timer5, which
+ *                  should occur once every 1s. This function gets the current time
+ *                  from the RTCC over I2C, and checks if we are in a new day.
+ *                  If we are, then midnight has passed.
+ */
 void Timer5Handler(void)
 {
     // This function handlers a timer interrupt
@@ -234,6 +298,12 @@ void Timer5Handler(void)
     }
 }
 
+/**
+ * Description: This is the interrupt handler for ADC0.
+ *                  If we are here, it means that we read the depth buffer.
+ *                  We store the ADC value in a buffer, and report if the
+ *                  buffer is full.
+ */
 void ADC0Handler(void)
 {
     if (depthBufferDepth == DEPTH_BUFFER_SIZE)
@@ -254,6 +324,11 @@ void ADC0Handler(void)
     }
 }
 
+/**
+ * Description: This is the interrupt handler for ADC12, which occurs when the
+ *                  battery voltage is read. We store this value in the appropriate
+ *                  buffer, and set a flag if the buffer is full.
+ */
 void ADC12Handler(void)
 {
     if (batteryBufferDepth == BATTERY_BUFFER_SIZE)
