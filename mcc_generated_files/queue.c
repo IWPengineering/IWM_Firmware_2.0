@@ -18,9 +18,6 @@
  */
 bool uint16_InitQueue(uint16_queue *queueP, uint8_t queueSize)
 {
-    //uint16_t newContents[queueSize];
-    
-    //queueP->contents = newContents;
     queueP->maxSize = queueSize;
     queueP->cnt = 0;
     queueP->front = -1;
@@ -120,9 +117,6 @@ uint16_t uint16_PullQueue(uint16_queue *queueP)
  */
 bool uint8_InitQueue(uint8_queue *queueP, uint8_t queueSize)
 {
-    //uint8_t newContents[queueSize];
-    
-    //queueP->contents = newContents;
     queueP->maxSize = queueSize;
     queueP->cnt = 0;
     queueP->front = -1;
@@ -222,9 +216,6 @@ uint8_t uint8_PullQueue(uint8_queue *queueP)
  */
 bool float_InitQueue(float_queue *queueP, uint8_t queueSize)
 {
-    //float newContents[queueSize];
-    
-    //queueP->contents = newContents;
     queueP->maxSize = queueSize;
     queueP->cnt = 0;
     queueP->front = -1;
