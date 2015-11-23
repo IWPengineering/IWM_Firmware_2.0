@@ -9,6 +9,13 @@
 #include "xc.h"
 #include "queue.h"
 
+/**
+ * Description: Inits a unsigned 16bit int queue
+ * @param queueP: Pointer to where you want the queue to go
+ * @param queueSize: maxLengh of queue desired.
+ *                   max = UINT16_QUEUE_SIZE
+ * @return boolean indicating whether the queue was init'ed successfully.
+ */
 bool uint16_InitQueue(uint16_queue *queueP, uint8_t queueSize)
 {
     //uint16_t newContents[queueSize];
@@ -22,16 +29,31 @@ bool uint16_InitQueue(uint16_queue *queueP, uint8_t queueSize)
     return true;
 }
 
+/**
+ * Description: Checks if the specified queue is empty
+ * @param queueP: Specified queue to check
+ * @return boolean indicating whether the queue is empty or not.
+ */
 bool uint16_IsQueueEmpty(uint16_queue *queueP)
 {
-    return (bool) (queueP->cnt == 0);
+    return (queueP->cnt == 0);
 }
 
+/**
+ * Description: Checks if the specified queue is full.
+ * @param queueP: Specified queue to check
+ * @return boolean indicating whether the queue is full or not.
+ */
 bool uint16_IsQueueFull(uint16_queue *queueP)
 {
-    return (bool) (queueP->cnt == queueP->maxSize);
+    return (queueP->cnt == queueP->maxSize);
 }
 
+/**
+ * Description: Resets the specified queue - clearing all values
+ * @param queueP: Specified queue to reset
+ * @return boolean indicating whether the queue was emptied or not.
+ */
 bool uint16_ClearQueue(uint16_queue *queueP)
 {
     queueP->front = -1;
@@ -41,6 +63,12 @@ bool uint16_ClearQueue(uint16_queue *queueP)
     return true;
 }
 
+/**
+ * Description: Push one element to the specified FIFO queue.
+ * @param queueP: Specified queue to push to
+ * @param element: Element to push into the queue
+ * @return boolean indicating whether the push was successful
+ */
 bool uint16_PushQueue(uint16_queue *queueP, uint16_t element)
 {
     if (uint16_IsQueueFull(queueP))
@@ -60,6 +88,11 @@ bool uint16_PushQueue(uint16_queue *queueP, uint16_t element)
     }
 }
 
+/**
+ * Description: Pull one element from the specified FIFO queue.
+ * @param queueP: Specified queue to pull from
+ * @return uint16_t value that was pulled from the queue.
+ */
 uint16_t uint16_PullQueue(uint16_queue *queueP)
 {
     if (uint16_IsQueueEmpty(queueP))
@@ -78,6 +111,13 @@ uint16_t uint16_PullQueue(uint16_queue *queueP)
     }
 }
 
+/**
+ * Description: Inits a unsigned 8bit int queue
+ * @param queueP: Pointer to where you want the queue to go
+ * @param queueSize: maxLengh of queue desired.
+ *                   max = UINT8_QUEUE_SIZE
+ * @return boolean indicating whether the queue was init'ed successfully.
+ */
 bool uint8_InitQueue(uint8_queue *queueP, uint8_t queueSize)
 {
     //uint8_t newContents[queueSize];
@@ -91,16 +131,31 @@ bool uint8_InitQueue(uint8_queue *queueP, uint8_t queueSize)
     return true;
 }
 
+/**
+ * Description: Checks if the specified queue is empty
+ * @param queueP: Specified queue to check
+ * @return boolean indicating whether the queue is empty or not.
+ */
 bool uint8_IsQueueEmpty(uint8_queue *queueP)
 {
-    return (bool) (queueP->cnt == 0);
+    return (queueP->cnt == 0);
 }
 
+/**
+ * Description: Checks if the specified queue is full.
+ * @param queueP: Specified queue to check
+ * @return boolean indicating whether the queue is full or not.
+ */
 bool uint8_IsQueueFull(uint8_queue *queueP)
 {
-    return (bool) (queueP->cnt == queueP->maxSize);
+    return (queueP->cnt == queueP->maxSize);
 }
 
+/**
+ * Description: Resets the specified queue - clearing all values
+ * @param queueP: Specified queue to reset
+ * @return boolean indicating whether the queue was emptied or not.
+ */
 bool uint8_ClearQueue(uint8_queue *queueP)
 {
     queueP->front = -1;
@@ -110,6 +165,12 @@ bool uint8_ClearQueue(uint8_queue *queueP)
     return true;
 }
 
+/**
+ * Description: Push one element to the specified FIFO queue.
+ * @param queueP: Specified queue to push to
+ * @param element: Element to push into the queue
+ * @return boolean indicating whether the push was successful
+ */
 bool uint8_PushQueue(uint8_queue *queueP, uint8_t element)
 {
     if (uint8_IsQueueFull(queueP))
@@ -129,6 +190,11 @@ bool uint8_PushQueue(uint8_queue *queueP, uint8_t element)
     }
 }
 
+/**
+ * Description: Pull one element from the specified FIFO queue.
+ * @param queueP: Specified queue to pull from
+ * @return uint8_t value that was pulled from the queue.
+ */
 uint8_t uint8_PullQueue(uint8_queue *queueP)
 {
     if (uint8_IsQueueEmpty(queueP))
@@ -147,6 +213,13 @@ uint8_t uint8_PullQueue(uint8_queue *queueP)
     }
 }
 
+/**
+ * Description: Inits a float queue
+ * @param queueP: Pointer to where you want the queue to go
+ * @param queueSize: maxLengh of queue desired.
+ *                   max = FLOAT_QUEUE_SIZE
+ * @return boolean indicating whether the queue was init'ed successfully.
+ */
 bool float_InitQueue(float_queue *queueP, uint8_t queueSize)
 {
     //float newContents[queueSize];
@@ -160,14 +233,31 @@ bool float_InitQueue(float_queue *queueP, uint8_t queueSize)
     return true;
 }
 
+/**
+ * Description: Checks if the specified queue is empty
+ * @param queueP: Specified queue to check
+ * @return boolean indicating whether the queue is empty or not.
+ */
 bool float_IsQueueEmpty(float_queue *queueP)
 {
-    return (bool) (queueP->cnt == 0);
+    return (queueP->cnt == 0);
 }
+
+/**
+ * Description: Checks if the specified queue is full.
+ * @param queueP: Specified queue to check
+ * @return boolean indicating whether the queue is full or not.
+ */
 bool float_IsQueueFull(float_queue *queueP)
 {
-    return (bool) (queueP->cnt == queueP->maxSize);
+    return (queueP->cnt == queueP->maxSize);
 }
+
+/**
+ * Description: Resets the specified queue - clearing all values
+ * @param queueP: Specified queue to reset
+ * @return boolean indicating whether the queue was emptied or not.
+ */
 bool float_ClearQueue(float_queue *queueP)
 {
     queueP->front = -1;
@@ -176,6 +266,13 @@ bool float_ClearQueue(float_queue *queueP)
     
     return true;
 }
+
+/**
+ * Description: Push one element to the specified FIFO queue.
+ * @param queueP: Specified queue to push to
+ * @param element: Element to push into the queue
+ * @return boolean indicating whether the push was successful
+ */
 bool float_PushQueue(float_queue *queueP, float element)
 {
     if (float_IsQueueFull(queueP))
@@ -194,6 +291,12 @@ bool float_PushQueue(float_queue *queueP, float element)
         return true;
     }
 }
+
+/**
+ * Description: Pull one element from the specified FIFO queue.
+ * @param queueP: Specified queue to pull from
+ * @return float value that was pulled from the queue.
+ */
 float float_PullQueue(float_queue *queueP)
 {
     if (float_IsQueueEmpty(queueP))
@@ -211,6 +314,12 @@ float float_PullQueue(float_queue *queueP)
         return queueP->contents[(queueP->front % queueP->maxSize)];
     }
 }
+
+/**
+ * Description: Averages all of the elements of the specified float_queue
+ * @param queueP: Specified float queue
+ * @return float average value of the elements.
+ */
 float float_AverageQueueElements(float_queue *queueP)
 {
     float_queue *fq = queueP;
