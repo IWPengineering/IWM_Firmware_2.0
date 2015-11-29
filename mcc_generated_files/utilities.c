@@ -11,7 +11,7 @@
 #include "string.h"
 #include "utilities.h"
 
-#define FCY         2000000UL // Instruction cycle frequency
+#define FCY         4000000UL // Instruction cycle frequency
 #include <libpic30.h>
 
 char TextMessageString[MESSAGE_LENGTH] = {
@@ -575,16 +575,16 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
     TurnOnSim();
     
     int timeOutMS = 0;
-    while(!IsSimOnNetwork())
-    {
-        if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
-        {
-            break;
-        }
-        
-        DelayMS(1);
-        timeOutMS++;
-    }
+//    while(!IsSimOnNetwork())
+//    {
+//        if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
+//        {
+//            break;
+//        }
+//        
+//        DelayMS(1);
+//        timeOutMS++;
+//    }
     
     // Enter text mode
     UART_Write_Buffer("AT+CMGF=1\r\n", sizeof("AT+CMFG=1\r\n"));
