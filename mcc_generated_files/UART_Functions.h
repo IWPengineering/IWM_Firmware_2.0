@@ -7,8 +7,8 @@
 #include "mcc.h"
 #include "queue.h"
 
-#define TX_QUEUE_SIZE       32
-#define RX_QUEUE_SIZE       32
+#define TX_QUEUE_SIZE       16
+#define RX_QUEUE_SIZE       16
 
 typedef enum {
             NO_TX_RX = 0x00,

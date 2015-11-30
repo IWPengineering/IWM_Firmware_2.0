@@ -10,8 +10,8 @@
  */
 
 #define BATTERY_LOW_THRESHOLD           2880 // Should be 3.5VDC [(3.5 * 4.11523) / 2.048] * 2^12
-#define MESSAGE_LENGTH                  160
-#define NETWORK_SEARCH_TIMEOUT          300000 // Time in MS to search for
+#define MESSAGE_LENGTH                  160 // maximum length of a text message
+#define NETWORK_SEARCH_TIMEOUT_MS       300000 // Time in MS to search for
                                                //  the network
 #define HANDLE_MOVEMENT_THRESHOLD       5 // Degrees that handle must move
                                           //  to be considered moving

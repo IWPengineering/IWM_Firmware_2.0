@@ -12,6 +12,10 @@
 uint8_queue TX_Queue;
 uint8_queue RX_Queue;
 
+/**
+ * Description: Initializes UART TX & RX queues, then sets UART config
+ *                  bits for desired operation, as notated below.
+ */
 void UART_Init(void)
 {
     // Assemble the queues
@@ -46,6 +50,10 @@ void UART_Init(void)
     
 }
 
+/**
+ * Description: TX ISR Handler. Pulls elements from the queue, turns off
+ *                  tx interrupts when the queue is empty.
+ */
 void __attribute__((interrupt, no_auto_psv)) _U1TXInterrupt(void)
 {
     if(!uint8_IsQueueEmpty(&TX_Queue) && !U1STAbits.UTXBF)
@@ -66,6 +74,9 @@ void __attribute__((interrupt, no_auto_psv)) _U1TXInterrupt(void)
     IFS0bits.U1TXIF = false;
 }
 
+/**
+ * Description: RX ISR Handler. Pushes new data into the queue
+ */
 void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt(void)
 {
     // Clear the interrupt flag
@@ -78,6 +89,11 @@ void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt(void)
     }
 }
 
+/**
+ * Description: Function to write one byte of information to UART1.
+ * @param byte: Information to write.
+ * @return UART_STATUS enum, indicating if the function was successful.
+ */
 UART_STATUS UART_Write(char byte)
 {
 //    U1STAbits.UTXEN = 1;
@@ -114,6 +130,12 @@ UART_STATUS UART_Write(char byte)
     }
 }
 
+/**
+ * Description: Write an entire buffer to UART. This function is blocking.
+ * @param dataPtr: Pointer to data block to write
+ * @param dataLen: Length of data block
+ * @return UART_STATUS enum, indicating whether the function was successful.
+ */
 UART_STATUS UART_Write_Buffer(char *dataPtr, uint8_t dataLen)
 {
     
@@ -155,7 +177,12 @@ UART_STATUS UART_Write_Buffer(char *dataPtr, uint8_t dataLen)
     return TX_STARTED;
 }
 
-// Returns amount of valid data in the provided buffer
+/**
+ * Description: Read the uart RX buffer into the specified buffer
+ * @param dataPtr: Pointer to specified buffer
+ * @param dataLen: Maximum length of data
+ * @return uint8_t amount of data read from buffer
+ */
 uint8_t UART_Read(char *dataPtr, uint8_t dataLen)
 {
     char *pD = dataPtr;
