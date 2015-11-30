@@ -82,7 +82,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #pragma config PWRTEN = ON    // Power-up Timer Enable bit->PWRT enabled
 
 // FICD
-#pragma config ICS = PGx1    // ICD Pin Placement Select bits->EMUC/EMUD share PGC2/PGD2
+#pragma config ICS = PGx2    // ICD Pin Placement Select bits->EMUC/EMUD share PGC2/PGD2
 
 // FDS
 #pragma config DSWDTPS = DSWDTPSF    // Deep Sleep Watchdog Timer Postscale Select bits->1:2,147,483,648 (25.7 Days)

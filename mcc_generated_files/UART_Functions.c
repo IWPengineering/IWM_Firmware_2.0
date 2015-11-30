@@ -24,10 +24,10 @@ void UART_Init(void)
      * UART enabled, Continue operation in idle, IrDA disabled,
      * UxRTS in Flow Control, UxCTS and UxRTS unused by UART,
      * Wake on start bit during sleep disabled, loopback disabled
-     * autobaud disabled, reverse polarity disabled, high baud enabled,
+     * autobaud disabled, reverse polarity disabled, high baud disabled,
      * parity and data selection = 8 bit, no parity, one stop bit
      */
-    U1MODE  = 0x8008;
+    U1MODE  = 0x8000;
     
     /*
      * UART TX interrupt when there is a char open in TX Buffer, IrDA idle = 1
@@ -37,11 +37,11 @@ void UART_Init(void)
      */
     U1STA   = 0x0000;
     
-    // Baud rate set @ 38400
-    U1BRG = 0x000C;
+    // Baud rate set @ 9600 (U1BRG = 25)
+    U1BRG = 0x0019; 
     
     // Enable interrupts for TX and RX
-    IEC0bits.U1RXIE = 1;
+    //IEC0bits.U1RXIE = 1;
     //IEC0bits.U1TXIE = 1; 
     
 }
@@ -58,8 +58,8 @@ void __attribute__((interrupt, no_auto_psv)) _U1TXInterrupt(void)
     else if(uint8_IsQueueEmpty(&TX_Queue) && U1STAbits.TRMT)
     {
         // If queue is empty and everything is transmitted, disable UTXEN
-        U1STAbits.UTXEN = 0;
-        IEC0bits.U1TXIE = 0;
+        //U1STAbits.UTXEN = 0;
+        //IEC0bits.U1TXIE = 0;
         return;
     }
     // Clear the interrupt flag
@@ -104,6 +104,8 @@ UART_STATUS UART_Write(char byte)
     if(!U1STAbits.UTXBF)
     {
         U1TXREG = byte;
+        int delayIndex;
+        for(delayIndex = 0; delayIndex < 1000; delayIndex++) {}
         return TX_STARTED;
     }
     else
@@ -114,22 +116,41 @@ UART_STATUS UART_Write(char byte)
 
 UART_STATUS UART_Write_Buffer(char *dataPtr, uint8_t dataLen)
 {
+    
     char *pD = dataPtr;
     int i;
-    for(i = 0; i < dataLen; i++)
+    while(i < dataLen)
     {
-        UART_STATUS stat = UART_Write((char)*pD);
-        if(stat == TX_STARTED)
+        if(*pD == NULL)
         {
-            // If we started TX, then we are free to move to the next char
-            pD++;              
+            // Don't send a NULL char over the UART bus
+            pD++;
+            i++;
         }
         else
         {
-            i--; // Run the loop again
+            UART_STATUS stat = UART_Write(*pD);
+            if(stat == TX_STARTED)
+            {
+                pD++;
+                i++;
+            }
         }
-        
     }
+//    for(i = 0; i < dataLen; i++)
+//    {
+//        UART_STATUS stat = UART_Write((char)*pD);
+//        if(stat == TX_STARTED)
+//        {
+//            // If we started TX, then we are free to move to the next char
+//            pD++;              
+//        }
+//        else
+//        {
+//            i--; // Run the loop again
+//        }
+//        
+//    }
     
     return TX_STARTED;
 }

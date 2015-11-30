@@ -483,6 +483,8 @@ void TurnOnSim(void)
     }
     // Set PwrKey back to high
     simPwrKey_SetHigh();
+    
+    DelayMS(100); // wait for the SIM to be ready to go
 }
 
 void TurnOffSim(void)
@@ -574,7 +576,7 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
 {
     TurnOnSim();
     
-    int timeOutMS = 0;
+//    int timeOutMS = 0;
 //    while(!IsSimOnNetwork())
 //    {
 //        if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
@@ -589,7 +591,7 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
     // Enter text mode
     UART_Write_Buffer("AT+CMGF=1\r\n", sizeof("AT+CMFG=1\r\n"));
     // Give SIM time to switch
-    DelayMS(10);
+    DelayMS(250);
     // Tell it we're about to send a phone number
     UART_Write_Buffer("AT+CMGS=\"", sizeof("AT+CMGS=\""));
     // Send the phone number
@@ -597,15 +599,16 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
     // Tell it the phone number is done
     UART_Write_Buffer("\"\r\n", sizeof("\"\r\n"));
     // Wait for it to be ready to send a text
-    DelayMS(100);
+    DelayMS(250);
     // Tell it what we want our text to say
     UART_Write_Buffer(msgPtr, msgLen);
     // Wait for it to finish receiving
-    DelayMS(10);
+    DelayMS(250);
     // Control character ending to text
     UART_Write_Buffer("\x1A", sizeof("\x1A"));
     
     // Wait for either our text to send, or our timeout to be reached
+    DelayMS(5000);
     bool suc = false;
     int timeout = 0;
     while((!suc) && (timeout < TEXT_SEND_TIMEOUT_SECONDS))
