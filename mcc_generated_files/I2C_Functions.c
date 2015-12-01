@@ -16,6 +16,18 @@
 
 #define I2C_TIMEOUT_VALUE           1300
 
+/**
+ * I2C_Init
+ * Initializes the I2C Bus' parameters and speed
+ * I2C1BRG is set to 0x0012 - ~100kHz
+ * I2C1CON is set to 0x0200 - not enabled, continue op in idle mode,
+ *      IPMI disabled, 10 bit slave address, slew rate cont. disabled,
+ *      general call address disabled, disable software clock stretch,
+ *      ACK during acknowledge, ACK not in progress, Receive not in progress,
+ *      Stop condition not in progress, repeat start not in progress, start
+ *      not in progress.
+ * At the end, I2CEN = 1 is set to start the I2C bus at the correct clock speed.
+ */
 void I2C_Init(void)
 {
     I2C1CON  = 0x0200;
@@ -24,6 +36,14 @@ void I2C_Init(void)
     I2C1CONbits.I2CEN = 1;
 }
 
+/**
+ * Description: Gets the current time from the RTCC, returned as a time_s
+ *      struct with all of the information filled.
+ * @return time_s struct with current time, according to the RTCC.
+ * 
+ * Note: This function has no time constraint - if I2C keeps failing, it
+ *          can continue forever.
+ */
 time_s I2C_GetTime(void)
 {
     time_s t;
@@ -69,6 +89,9 @@ time_s I2C_GetTime(void)
     return t;
 }
 
+/**
+ * Description: Toggles the SCL line to assist in a software reset.
+ */
 void ToggleSCL(void)
 {
     PORTBbits.RB8 = 1;
@@ -78,6 +101,14 @@ void ToggleSCL(void)
     PORTBbits.RB8 = 1;
 }
 
+/**
+ * Description: Performs a software reset on the I2C bus.
+ *      This is achieved by taking control of the GPIO lines related to SCL and SDA.
+ *      SCL is repeatedly toggled 9 times, or until SDA is 0. This hypothetically
+ *      guarantees a clean reset. After reset is successful, it stops the bus.
+ * 
+ * This code is currently untested - 11/23/15
+ */
 void SoftwareReset(void)
 {
     // Procedure:
@@ -117,6 +148,11 @@ void SoftwareReset(void)
     StopI2C();
 }
 
+/**
+ * Description: Waits for the bus to become idle, then returns
+ * @return I2C_STATUS enum, indicating if the function was successful,
+ *          or if a software reset was required to break.
+ */
 I2C_STATUS IdleI2C(void)
 {
     int i = 0;
@@ -134,6 +170,11 @@ I2C_STATUS IdleI2C(void)
     return I2C_SUCCESS;
 }
 
+/**
+ * Description: Starts the I2C bus, then returns.
+ * @return I2C_STATUS enum, indicating if the function was successful,
+ *          or if a software reset was required to break.
+ */
 I2C_STATUS StartI2C(void)
 {
     I2C1CONbits.SEN = 1; // Generate a start condition
@@ -154,6 +195,11 @@ I2C_STATUS StartI2C(void)
     return I2C_SUCCESS;
 }
 
+/**
+ * Description: Stops the I2C bus, then returns.
+ * @return I2C_STATUS enum, indicating if the function was successful,
+ *          or if a software reset was required to break.
+ */
 I2C_STATUS StopI2C(void)
 {
     I2C1CONbits.PEN = 1; // Generate a stop condition
@@ -174,6 +220,11 @@ I2C_STATUS StopI2C(void)
     return I2C_SUCCESS;
 }
 
+/**
+ * Description: Restarts the I2C bus, then returns.
+ * @return I2C_STATUS enum, indicating if the function was successful,
+ *          or if a software reset was required to break.
+ */
 I2C_STATUS RestartI2C(void)
 {
     I2C1CONbits.RSEN = 1; // Generate a reset cond.
@@ -193,6 +244,10 @@ I2C_STATUS RestartI2C(void)
     return I2C_SUCCESS;
 }
 
+/**
+ * Description: Nack's the I2C bus.
+ * @return I2C_STATUS indicating whether the NACK was successful.
+ */
 I2C_STATUS NackI2C(void)
 {
     I2C1CONbits.ACKDT = 1; // Send NACK during Acknowledge phase
@@ -214,6 +269,10 @@ I2C_STATUS NackI2C(void)
     return I2C_SUCCESS;
 }
 
+/**
+ * Description: Ack's the I2C Bus
+ * @return I2C_STATUS indicating whether the ACK was successful.
+ */
 I2C_STATUS AckI2C(void)
 {
     I2C1CONbits.ACKDT = 0; // Send ACK during Acknowledge phase
@@ -235,6 +294,12 @@ I2C_STATUS AckI2C(void)
     return I2C_SUCCESS;
 }
 
+/**
+ * Description: Writes one char of data to the I2C bus.
+ * @param data: Data to write onto the bus (address or byte)
+ * @return I2C_STATUS indicating whether the function was successful,
+ *          or if a reset was required.
+ */
 I2C_STATUS WriteI2C(unsigned char data)
 {
     int i = 0;
@@ -270,6 +335,14 @@ I2C_STATUS WriteI2C(unsigned char data)
     return stat;
 }
 
+/**
+ * Description: Read's the I2C bus. Designed for sequential read functionality.
+ * @param dataPtr: Place to put one byte of data that is read
+ * @param isEoT: If this is end of transmission. If true, the bus is nack'ed,
+ *          otherwise the bus is ack'ed.
+ * @return I2C_STATUS indicating if the function was successful (and data
+ *          inside the pointer is valid)
+ */
 I2C_STATUS ReadI2C(uint8_t *dataPtr, bool isEoT)
 {
     uint8_t *pD = dataPtr; // Give this function the ptr
@@ -289,7 +362,7 @@ I2C_STATUS ReadI2C(uint8_t *dataPtr, bool isEoT)
         i++;
     }
     
-    I2C1CONbits.ACKDT = 0;
+    I2C1CONbits.ACKDT = !isEoT;
     I2C1CONbits.ACKEN = 1;
     
     i = 0;
@@ -309,6 +382,11 @@ I2C_STATUS ReadI2C(uint8_t *dataPtr, bool isEoT)
     return I2C_SUCCESS;
 }
 
+/**
+ * Description: Turns off the Oscillator on the RTCC
+ * @return I2C_STATUS indicating if the function was successful,
+ *          or if a software reset was required.
+ */
 I2C_STATUS TurnOffRTCCOscillator(void)
 {
     I2C_STATUS stat = I2C_NO_TRY;
@@ -327,6 +405,16 @@ I2C_STATUS TurnOffRTCCOscillator(void)
     return I2C_SUCCESS;
 }
 
+/**
+ * Description: Sets the current time on the RTCC
+ * @param curTime: Time to be set to the RTCC
+ * @return I2C_STATUS indicating if the function was successful,
+ *          or if a software reset was required.
+ * 
+ * Note: This function assumes all decimal input, and expects values
+ *          to not be modified to fit the scheme of the RTCC (such as 12 vs 24 hr time)
+ *           - it does that modification on its own.
+ */
 I2C_STATUS SetRTCCTime(time_s *curTime)
 {
     uint8_t sec = DecToBcd(curTime->second);

@@ -64,6 +64,7 @@ void PIN_MANAGER_Initialize(void) {
      ***************************************************************************/
     LATB = 0x8000;
     TRISB = 0x7F37;
+    simPwrKey_SetHigh();
 
     /****************************************************************************
      * Setting the Analog/Digital Configuration SFR

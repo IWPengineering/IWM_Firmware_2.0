@@ -11,7 +11,7 @@
 #include "string.h"
 #include "utilities.h"
 
-#define FCY         2000000UL // Instruction cycle frequency
+#define FCY         4000000UL // Instruction cycle frequency
 #include <libpic30.h>
 
 char TextMessageString[MESSAGE_LENGTH] = {
@@ -121,16 +121,31 @@ float volumeArray[12] = { 0 };
 float fastestLeakRate = 0;
 float longestPrime = 0;
 
+/**
+ * Description: Delays the processor by the specified number of microseconds.
+ * @param us: Number of microseconds to delay.
+ */
 void DelayUS(int us)
 {
     __delay_us(us);
 }
+
+/**
+ * Description: Delays the processor by the specified number of milliseconds.
+ *                  also resets the watchdog timer
+ * @param ms: Number of ms to delay
+ */
 void DelayMS(int ms)
 {
     KickWatchdog();
     __delay_ms(ms);
 }
 
+/**
+ * Description: Delays the processor by the specified number of seconds,
+ *                  this function resets the watchdog timer every 1 second.
+ * @param s: Number of seconds to delay
+ */
 void DelayS(int s)
 {
     int i;
@@ -141,11 +156,23 @@ void DelayS(int s)
     }
 }
 
+/**
+ * Description: Resets the watchdog timer.
+ */
 void KickWatchdog(void)
 {
     ClrWdt();
 }
 
+/**
+ * Description: Given an x and y axis 12 bit ADC value, calculates the handle
+ *                  angle.
+ * @param xAxis: 12 bit ADC value from xAxis
+ * @param yAxis: 12 bit ADC value from yAxis
+ * @return float indicating current handle angle.
+ * 
+ * Note: Angle Limits are 20 and -30 degrees, because those are approximate pump limits.
+ */
 float GetHandleAngle(uint16_t xAxis, uint16_t yAxis)
 {
     signed int xValue = xAxis - c_AdjustmentFactor;
@@ -165,6 +192,12 @@ float GetHandleAngle(uint16_t xAxis, uint16_t yAxis)
     return angle;
 }
 
+/**
+ * Description: Takes volume accumulator bins and pushes them as ASCII to the
+ *                  text message.
+ * 
+ * Note: Format of each volume element is XXX.X Liters
+ */
 void UpdateMessageVolume(void)
 {
     // 49 is the starting location for volume 1
@@ -179,6 +212,10 @@ void UpdateMessageVolume(void)
     }
 }
 
+/**
+ * Description: Takes the total battery voltage accumulated throughout the day,
+ *                  and converts it to ASCII in the text message array.
+ */
 void UpdateMessageBattery(void)
 {
     float avgBatVoltage = 0;
@@ -197,11 +234,20 @@ void UpdateMessageBattery(void)
     FloatToAscii(avgBat, 3, &(TextMessageString[38]), 5);
 }
 
+/**
+ * Description: Turns a raw battery ADC value to a floating point.
+ * @param avgBatVoltage: Raw ADC value to convert
+ * @return float representation of that battery voltage.
+ */
 float TurnBattADCToFloat(uint32_t avgBatVoltage)
 {
     return avgBatVoltage * c_BattADCToFloat;
 }
 
+/**
+ * Description: Takes the longest prime global value and pushes it to the text
+ *                  message as an ASCII representation
+ */
 void UpdateMessagePrime(void)
 {
     // Update the text message
@@ -209,6 +255,10 @@ void UpdateMessagePrime(void)
     FloatToAscii(longestPrime, 1, &(TextMessageString[28]), 5); // Assumes priming is always less than 1000
 }
 
+/**
+ * Description: Takes the fastest leak rate in L/s and pushes it to the text
+ *                  message as an ASCII representation of L/hr
+ */
 void UpdateMessageLeakage(void)
 {
     // Update the text message
@@ -217,6 +267,15 @@ void UpdateMessageLeakage(void)
     FloatToAscii((fastestLeakRate * 3600), 1, &(TextMessageString[18]), 5);
 }
 
+/**
+ * Description: Converts a floating point value to ASCII
+ * @param value: Float value to convert
+ * @param decimalPrecision: Number of digits after the decimal point
+ * @param dataPtr: char pointer to put the data
+ * @param dataLen: Total length of the data (including the decimal pt)
+ * 
+ * Example: Value x = 100.10, call FtoA(x, 2, ptr, 6);
+ */
 void FloatToAscii(float value, uint8_t decimalPrecision,
         char *dataPtr, uint8_t dataLen)
 {
@@ -259,8 +318,6 @@ void FloatToAscii(float value, uint8_t decimalPrecision,
             
             // Get the value of the digit
             *pD = (char)(singleDigitVal + 48);
-//            // Decrement numDigits when we calc a value
-//            nDigits--;
         }
         
         // We always have to increment the pointer
@@ -270,12 +327,10 @@ void FloatToAscii(float value, uint8_t decimalPrecision,
     
 }
 
-/*
- Function: numDigits
- Params: num
-    uint32_t num: value to get number of digits of
- Return: int
-    Returns number of digits in num
+/**
+ * Description: Returns the number of digits in the specified 32 bit integer
+ * @param num: 32 bit integer
+ * @return int number of digits
  */
 int NumDigits(uint32_t num)
 {
@@ -294,7 +349,11 @@ int NumDigits(uint32_t num)
     return 10;
 }
 
-// returns 10^exponent
+/**
+ * Description: Returns 10^exponent as a uin32_t
+ * @param exponent: Power to raise 10 to.
+ * @return uint32_t 10^exponent.
+ */
 uint32_t TenToPower(int exponent)
 {
     int i;
@@ -307,9 +366,11 @@ uint32_t TenToPower(int exponent)
     return val;
 }
 
-/*
- Checks if value is too big for dataLen
- This function is used in floatToAscii
+/**
+ * Description: Checks if value is too small to fit into dataLen bytes
+ * @param value: Value to check
+ * @param dataLen: Length of bytes that value must fit in
+ * @return bool indicating whether it fits or not.
  */
 bool IsNumberTooBig(uint32_t value, uint8_t dataLen)
 {
@@ -331,9 +392,12 @@ bool IsNumberTooBig(uint32_t value, uint8_t dataLen)
     }
 }
 
-/*
- Checks if value has too much precision to fit in len
- This function is used in float to Ascii
+/**
+ * Description: Checks if value is too high to fit into the specified bin w/ prec as spefieid
+ * @param value: Value to check
+ * @param prec: Desired decimal precision
+ * @param len: Total length of the bin to put value in
+ * @return boolean indicating whether the desired prec is possible.
  */
 bool IsBinTooSmall(float value, uint8_t prec, uint8_t len)
 {
@@ -354,16 +418,28 @@ bool IsBinTooSmall(float value, uint8_t prec, uint8_t len)
     }
 }
 
+/**
+ * Description: Checks if the SIM800 is on by its status light
+ * @return boolean indicating whether the sim is on or not.
+ */
 bool IsSimOn(void)
 {
     return simStatus_GetValue();
 }
 
+/**
+ * Description: Checks if the SIM800 is reporting as connected to the network.
+ * @return boolean indicating whether it is connected or not.
+ */
 bool IsSimOnNetwork(void)
 {
     return isNetlightOn;
 }
 
+/**
+ * Description: Checks if the WPS is currently sensing water
+ * @return boolean indicating whether water is present or not.
+ */
 bool IsThereWater(void)
 {
     if(IsWPSIOCOn())
@@ -468,6 +544,9 @@ bool IsThereWater(void)
 //    }
 //}
 
+/**
+ * Description: Turns on the SIM800 by cycling its pwrkey
+ */
 void TurnOnSim(void)
 {
     simVioPin_SetHigh();
@@ -483,8 +562,13 @@ void TurnOnSim(void)
     }
     // Set PwrKey back to high
     simPwrKey_SetHigh();
+    
+    DelayMS(100); // wait for the SIM to be ready to go
 }
 
+/**
+ * Description: Turns off the SIM800 by cycling its pwrkey
+ */
 void TurnOffSim(void)
 {
     if(IsSimOn())
@@ -499,6 +583,9 @@ void TurnOffSim(void)
     simPwrKey_SetHigh();
 }
 
+/**
+ * Description: Assembles the midnight message array using accumulated values
+ */
 void AssembleMidnightMessage(void)
 {
     UpdateMessageVolume();
@@ -507,6 +594,10 @@ void AssembleMidnightMessage(void)
     UpdateMessageLeakage();
 }
 
+/**
+ * Description: Checks if the SIM800 successfully sent a text message
+ * @return boolean indicating whether the SIM800 was successful or not.
+ */
 bool DidMessageSend(void)
 {
 //    char buf[8]; // Build an array to hold a response
@@ -558,6 +649,10 @@ bool DidMessageSend(void)
 
 }
 
+/**
+ * Description: Assembles neccesary accumulators into the char array in order
+ *                  to send the midnight message
+ */
 void SendMidnightMessage(void)
 {
     // Update values in text message
@@ -570,6 +665,13 @@ void SendMidnightMessage(void)
     ResetAccumulators();
 }
 
+/**
+ * Description: Sends a text message via the SIM800.
+ * @param msgPtr: Pointer to first byte of the message
+ * @param msgLen: Length of the message
+ * @param numPtr: Pointer to first byte of the phone number to send to
+ * @param numLen: Length of the phone number to send to
+ */
 void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
 {
     TurnOnSim();
@@ -577,7 +679,7 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
     int timeOutMS = 0;
     while(!IsSimOnNetwork())
     {
-        if(timeOutMS >= NETWORK_SEARCH_TIMEOUT)
+        if(timeOutMS >= NETWORK_SEARCH_TIMEOUT_MS)
         {
             break;
         }
@@ -589,7 +691,7 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
     // Enter text mode
     UART_Write_Buffer("AT+CMGF=1\r\n", sizeof("AT+CMFG=1\r\n"));
     // Give SIM time to switch
-    DelayMS(10);
+    DelayMS(250);
     // Tell it we're about to send a phone number
     UART_Write_Buffer("AT+CMGS=\"", sizeof("AT+CMGS=\""));
     // Send the phone number
@@ -597,15 +699,16 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
     // Tell it the phone number is done
     UART_Write_Buffer("\"\r\n", sizeof("\"\r\n"));
     // Wait for it to be ready to send a text
-    DelayMS(100);
+    DelayMS(250);
     // Tell it what we want our text to say
     UART_Write_Buffer(msgPtr, msgLen);
     // Wait for it to finish receiving
-    DelayMS(10);
+    DelayMS(250);
     // Control character ending to text
     UART_Write_Buffer("\x1A", sizeof("\x1A"));
     
     // Wait for either our text to send, or our timeout to be reached
+    DelayMS(5000);
     bool suc = false;
     int timeout = 0;
     while((!suc) && (timeout < TEXT_SEND_TIMEOUT_SECONDS))
@@ -625,6 +728,9 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen)
     TurnOffSim();
 }
 
+/**
+ * Description: Resets accumulators back to their 0 states.
+ */
 void ResetAccumulators(void)
 {
     memset(volumeArray, 0, sizeof(volumeArray));
@@ -641,6 +747,12 @@ static uint16_t leakTime = 0;
 bool lastEventWasPriming = false;
 bool lastEventWasLeaking = false;
 
+/**
+ * Description: Processes the ADXL queue by removing one value from X and Y queues
+ *                  and turning that value into an angle. It then reports the angle
+ *                  change and decides where we currently are in the water pumping state
+ *                  machine - Not pumping, priming, extracting, or leaking.
+ */
 void ProcessAccelQueue(void)
 {
     // We get here when both x and y queues are not empty
@@ -702,7 +814,14 @@ void ProcessAccelQueue(void)
     prevAngle = curAngle;
 }
 
-pumping_state GetPumpingState(float curAngle, float prevAngle)
+/**
+ * Description: Figures out which state we are pumping in based on angle delta and
+ *                  whether water is currently present
+ * @param curAngle: Current angle to compare to get angle delta
+ * @param prevAngle: Previous angle to compare to get angle delta
+ * @return PUMPING_STATE enum to indicate what state we are currently pumping in.
+ */
+PUMPING_STATE GetPumpingState(float curAngle, float prevAngle)
 {
     if((curAngle - prevAngle) > HANDLE_MOVEMENT_THRESHOLD )
     {
@@ -728,6 +847,11 @@ pumping_state GetPumpingState(float curAngle, float prevAngle)
     }
 }
 
+/**
+ * Description: Accumulates volume into the correct bin based on current time
+ *                  and the angle change. This correctly takes into account leaking
+ * @param angleDelta: Angle change to convert to volume
+ */
 void AccumulateVolume(float angleDelta)
 {
     // Get the current hour
@@ -752,24 +876,43 @@ void AccumulateVolume(float angleDelta)
     } 
 }
 
+/**
+ * Description: Conversion function to turn upstroke in degrees to meters
+ * @param upstroke: Degrees of upstroke
+ * @return float meters of upstroke
+ */
 float UpstrokeToMeters(float upstroke)
 {
     // Returns Meters from degrees of upstroke
     return (upstroke * c_UpstrokeToMeters);
 }
 
+/**
+ * Description: Conversion function to turn upstroke in degrees to liters
+ * @param upstroke: Degrees of upstroke
+ * @return float liters of dispensed water
+ */
 float UpstrokeToLiters(float upstroke)
 {
     // Returns liters from degrees of upstroke
     return (upstroke * c_MKIILiterPerDegree);
 }
 
+/**
+ * Description: Conversion function to turn leak time to L/s
+ * @param milsec: leak time in ms
+ * @return float leak rate in L/s
+ */
 float LeakMSToRate(uint16_t milsec)
 {
     // Returns liters per second (L/s)
     return (c_MaxLitersToLeak / (milsec * 1000));
 }
 
+/**
+ * Description: Sum up the battery buffer, and keep the values in the 
+ *                  daily accumulator
+ */
 void HandleBatteryBufferEvent(void)
 {
     // Accumulates battery voltage for an end of day

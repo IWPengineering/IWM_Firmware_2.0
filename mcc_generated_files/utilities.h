@@ -19,7 +19,7 @@ typedef enum {
             EXTRACTING_VOLUME,
             LEAKING,
             NO_ACTION
-} pumping_state;
+} PUMPING_STATE;
 
 /*
  Public Variables
@@ -81,7 +81,7 @@ void SendTextMessage(char *msgPtr, int msgLen, char *numPtr, int numLen);
 void ResetAccumulators(void);
 
 void ProcessAccelQueue(void);
-pumping_state GetPumpingState(float curAngle, float prevAngle);
+PUMPING_STATE GetPumpingState(float curAngle, float prevAngle);
 void AccumulateVolume(float angleDelta);
 float UpstrokeToMeters(float upstroke);
 float UpstrokeToLiters(float upstroke);

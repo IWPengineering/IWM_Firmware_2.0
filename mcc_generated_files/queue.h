@@ -9,8 +9,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define UINT16_QUEUE_SIZE       8
+#define UINT8_QUEUE_SIZE        16
+#define FLOAT_QUEUE_SIZE        12
+
 typedef struct uint16_queue {
-    uint16_t contents[16];
+    uint16_t contents[UINT16_QUEUE_SIZE];
     int front;
     int back;
     int maxSize;
@@ -18,7 +22,7 @@ typedef struct uint16_queue {
 } uint16_queue;
 
 typedef struct uint8_queue {
-    uint8_t contents[16];
+    uint8_t contents[UINT8_QUEUE_SIZE];
     int front;
     int back;
     int maxSize;
@@ -26,7 +30,7 @@ typedef struct uint8_queue {
 } uint8_queue;
 
 typedef struct float_queue {
-    float contents[16];
+    float contents[FLOAT_QUEUE_SIZE];
     int front;
     int back;
     int maxSize;
